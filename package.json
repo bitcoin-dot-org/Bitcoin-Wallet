@@ -1,0 +1,86 @@
+{
+  "name": "bitcoin-wallet",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "electron:build": "vue-cli-service electron:build",
+    "electron:serve": "vue-cli-service electron:serve",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
+  },
+  "main": "background.js",
+  "dependencies": {
+    "@keep-network/electrum-client-js": "https://github.com/keep-network/electrum-client-js",
+    "@spectrum-css/alert": "^3.0.0-beta.3",
+    "@spectrum-css/button": "^3.0.0-beta.3",
+    "@spectrum-css/card": "^3.0.0-beta.3",
+    "@spectrum-css/dialog": "^3.0.0-beta.3",
+    "@spectrum-css/page": "^2.0.7",
+    "@spectrum-css/pagination": "^3.0.0-beta.4",
+    "@spectrum-css/statuslight": "^3.0.0-beta.2",
+    "@spectrum-css/table": "^3.0.0-beta.3",
+    "@spectrum-css/tabs": "^3.0.0-beta.3",
+    "@spectrum-css/tags": "^3.0.0-beta.3",
+    "@spectrum-css/textfield": "^3.0.0-beta.3",
+    "@spectrum-css/vars": "^2.3.0",
+    "@spectrum-web-components/dropdown": "^0.7.1",
+    "@spectrum-web-components/menu": "^0.3.1",
+    "axios": "^0.19.2",
+    "bignumber.js": "^9.0.0",
+    "bip32": "^2.0.5",
+    "bip39": "^3.0.2",
+    "bitcoinjs-lib": "^5.1.10",
+    "coinselect": "^3.1.12",
+    "core-js": "^3.6.5",
+    "dexie": "^3.0.1",
+    "qrcode.vue": "^1.7.0",
+    "vue": "^2.6.11",
+    "vue-axios": "^2.1.5",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^8.4.2",
+    "vue-router": "^3.2.0",
+    "vuex": "^3.4.0",
+    "vuex-module-decorators": "^0.17.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "@vue/cli-plugin-babel": "~4.4.0",
+    "@vue/cli-plugin-eslint": "~4.4.0",
+    "@vue/cli-plugin-router": "~4.4.0",
+    "@vue/cli-plugin-typescript": "~4.4.0",
+    "@vue/cli-plugin-vuex": "~4.4.0",
+    "@vue/cli-service": "~4.4.0",
+    "@vue/eslint-config-typescript": "^5.0.2",
+    "babel-eslint": "^10.1.0",
+    "electron": "^9.0.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "typescript": "~3.9.3",
+    "vue-cli-plugin-electron-builder": "~2.0.0-rc.2",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended"
+    ],
+    "parserOptions": {
+      "parser": "@typescript-eslint/parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
