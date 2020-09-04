@@ -50,13 +50,13 @@ var ca = <Language> {
 
     // Send
     address: 'Adreça',
-    enter_address: 'Escriu l'adreça i la quantitat:',
+    enter_address: 'Escriu la direcció i la quantitat:',
     low_priority: 'Prioritat baixa',
     standard: 'Estàndard',
     important: 'Important',
     low_priority_desc: "Pagues menys comissions però considerant que aquesta transacció és de baixa prioritat i no et fa res esperar més temps a la confirmació.",
     standard_desc: "S'utilitzarà una comissió moderada tot i que en moments de gran congestió això pot comportar un temps de confirmació més llarg (passa poques vegades)",
-    important_desc: "Se usará una comisión premium para asegurar la confirmación en menos de 30 minutos, esta es una transacción de alta prioridad para cuando se desea una confirmación rápida.",
+    important_desc: "S'utilitzarà una comissió premium per assegurar una confirmació en menys de 30 minuts, aquesta és una transacció de prioritat alta per quan es necessita una confirmació ràpida.",
     not_enough: "No tens suficients fons per enviar la quantitat especificada i pagar la comissió dels miners. Prova amb l'opció 'Enviar el màxim'.",
     dust_error: "Quantitat massa petita per fer l'enviament...",
 
