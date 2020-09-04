@@ -24,7 +24,7 @@ var es = <Language> {
 
     // Wallet home
     refresh: 'Actualizar',
-    overview: 'Visión de conjunto',
+    overview: 'Resumen',
     send: 'Enviar',
     receive: 'Recibir',
     settings: 'Configuraciones',
