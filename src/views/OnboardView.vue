@@ -1,19 +1,24 @@
 <template>
-  <div id="onboard">
-    <div id="button-container">
-      <div class="spectrum-IllustratedMessage spectrum-IllustratedMessage--cta">
-        <img src="../assets/wallet.svg" style="width: 64px;height: 64px;margin-bottom: 20px;" />
-        <h2
-          class="spectrum-Heading--pageTitle spectrum-IllustratedMessage-heading"
-        >{{ lang.getting_started }}</h2>
-        <p class="spectrum-Body--secondary spectrum-IllustratedMessage-description">
-          <router-link to="/create" class="spectrum-link">{{ lang.create_new }}</router-link>
-          {{ lang.to_start }}
-          <br />
-          {{lang.or }}
-          <router-link to="/restore" class="spectrum-Link">{{ lang.restore_existing }}</router-link>
-        </p>
-      </div>
+  <div class="view onboard-view">
+    <h1 class="onboard-view__title">
+      {{ lang.welcome }} <span>Bitcoin Wallet</span>
+    </h1>
+    <p class="onboard-view__subtitle page-subtitle">{{ lang.onboard_subtitle }}</p>
+    <div class="onboard-view__row">
+      <router-link to="/create" class="onboarding-link">
+        <img src="../assets/images/create.svg" />
+        <h2 class="onboarding-link__title">{{ lang.create_new }}</h2>
+        <p class="onboarding-link__text">Amet minim mollit non deserunt ullamco est sit aliqua dolor.</p>
+      </router-link>
+      <router-link to="/restore" class="onboarding-link">
+        <img src="../assets/images/create.svg" />
+        <h2 class="onboarding-link__title">{{ lang.restore_existing }}</h2>
+        <p class="onboarding-link__text">Amet minim mollit non deserunt ullamco est sit aliqua dolor.</p>
+      </router-link>
+    </div>
+    <div class="language-select">
+      <p class="language-select__text">{{ lang.change_language }}</p>
+      <router-link to="/language" class="language-select__link">English</router-link>
     </div>
   </div>
 </template>
@@ -21,7 +26,6 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
-
 /* eslint-disable no-unused-vars */
 
 import Language from "@/lang/langInterface";
@@ -40,68 +44,83 @@ export default class Onboard extends Vue {
 }
 </script>
 
+
+
 <style scoped>
-#onboard a {
-  color: #fbaa16;
-}
+  .onboard-view {
+    align-items: center;
+    justify-content: center;
+    padding: 40px 30px 44px;
+    text-align: center;
+  }
 
-#onboard {
-  height: 100%;
-  display: flex;
-  flex-flow: column;
-}
-
-#button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  flex: 1 1 auto;
-}
-
-input[type="checkbox"],
-input[type="radio"] {
-  box-sizing: border-box;
-  padding: 0;
-}
-
-.helper-user-radio {
-  position: absolute;
-  z-index: -1;
-  opacity: 0;
-  margin: 0;
-}
-
-button,
-input {
-  line-height: normal;
-}
-
-.helper-user-radio-title {
-  margin: 15px 0 5px;
-  font-weight: 600;
-  font-size: 18px;
-  text-align: center;
-  line-height: 30px;
-}
-
-.helper-user-radio-text {
-  max-width: 50%;
-  margin: 0 auto;
-  font-size: 16px;
-  text-align: center;
-  line-height: 22px;
-}
-
-.helper-user-radio-custom {
-  padding: 20px;
-  text-align: center;
-  background: #ff9500;
-  color: #ffffff;
-  cursor: pointer;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 10px;
-  width: 400px;
-}
+  .onboard-view__title {
+    margin-bottom: 16px;
+    font-weight: normal;
+    font-size: 40px;
+    line-height: 56px;
+    color: #fff;
+  }
+  .onboard-view__title span {
+    color: #F7931A;
+  }
+  .onboard-view__subtitle {
+    margin-bottom: 40px;
+  }
+  .onboard-view__row {
+    display: flex;
+  }
+  .onboarding-link {
+    padding: 40px 32px;
+    background: linear-gradient(180deg, #1F232E 0%, #13161F 100%);
+    border: 1px solid #2B2F3A;
+    box-shadow: 0px 12px 28px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    text-decoration: none;
+  }
+  .onboarding-link:hover {
+    border: 1px solid #F7931A;
+  }
+  .onboarding-link + .onboarding-link {
+    margin-left: 16px;
+  }
+  .onboarding-link__title {
+    margin: 16px 0 8px;
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 32px;
+    color: #FFFFFF;
+  }
+  .onboarding-link__text {
+    max-width: 236px;
+    margin: 0 auto;
+    font-size: 14px;
+    line-height: 20px;
+    color: #ACB2BB;
+  }
+  .onboard-view__footer {
+    display: flex;
+  }
+  .language-select {
+    display: flex;
+    align-items: center;
+    margin-top: 56px;
+  }
+  .language-select__text {
+    margin-right: 8px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #ACB2BB;
+  }
+  .language-select__link {
+    padding: 1px 8px; 
+    background: #F7931A;
+    border-radius: 2px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 22px;
+    color: #FFFFFF;
+    text-transform: uppercase;
+  }
 </style>
