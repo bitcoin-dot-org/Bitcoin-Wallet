@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-      <router-view></router-view>
+    <router-view></router-view>
   </div>
 </template>
-<style>
 
+<style>
 @font-face {
   font-family: 'Titillium Web';
   src:  url('assets/fonts/TitilliumWeb-Regular.woff2') format('woff2'),
@@ -12,95 +12,48 @@
 }
 
 * {
-    margin:0;
+   margin:0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
 }
 
-html, body{
-  height: 100vh;
+body {
   font-family: "Titillium Web", Arial, sans-serif;
   font-size: 16px;
-}
-
-a {
-  color: #FFFFFF;
-  text-decoration: none;
-  cursor: pointer;
-  outline: none;
-}
-
-#app {
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+	background: linear-gradient(360deg, #090C14 0%, #1A1E29 100%);
+	color: #ACB2BB
+}
+
+#app,
+#root {
+  min-height: 100vh;
+}
+button, a {
+  cursor: pointer;
+}
+.page-title {
+  font-size: 40px;
+  line-height: 56px;
+  color: #FFFFFF;
+}
+.page-subtitle {
+  max-width: 400px;
+  margin: 0 auto 0;
   text-align: center;
-  height: 100%;
-  /* background: url('assets/overview-bg.svg') top no-repeat; */
-  background-color: #efefef;
+  font-size: 16px;
+  line-height: 22px;
+  color: #ACB2BB;
 }
-
-.btn {
-    display: inline-block;
-    max-width: 100%;
-    padding: 16px 25px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    font-weight: 600;
-    font-size: 100%;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    outline: none;
+.view {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
-
-.btn-orange {
-    color: white;
-    background: #FF9500;
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 32px;
+  background: #13161F;
 }
-
-.btn-light {
-    background-color: #ffffff;
-    border: 1px solid #ff9500;
-    color: #ff9500;
-}
-
-.btn-home {
-    width: 200px;
-    height: 55px;
-}
-
-.btn:not(:first-child) {
-    margin-left: 20px;
-}
-
-#box {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-#inner {
-    padding: 20px;
-    width: 80%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-
-#inner h2 {
-    margin: 10px;
-}
-
-#notice {
-    padding: 20px;
-    color: #77767e;
-    background-color: #FFF9F3;
-
-}
-
-#navigation {
-    margin-top: 20px;
-}
-
 </style>

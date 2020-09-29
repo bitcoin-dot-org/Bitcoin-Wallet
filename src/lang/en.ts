@@ -7,12 +7,18 @@ import Language from '@/lang/langInterface'
 var en = <Language> {
     // Initial page
     getting_started: 'Getting Started',
+    welcome: 'Welcome to',
+    onboard_subtitle: 'You are just few steps away from using Bitcoin wallet. Please read the next sreens for your own safety.',
     create_new: 'Create new wallet',
     to_start: 'to start using Bitcoin',
     or: 'or',
-    restore_existing: 'restore existing wallet',
+    restore_existing: 'Restore existing wallet',
     something_wrong: 'Something went wrong with the connection',
     try_again: 'Try again',
+    change_language: 'Change language',
+
+    // Choose language page
+    choose_language: 'Choose Language',
 
     // Create page
     generate_notice: "We will generate for you a 12 word seed phrase. It's very important that you write down each word in the correct order and store it securely.",
@@ -75,7 +81,8 @@ var en = <Language> {
     restore_button: 'Restore',
     next_button: 'Next',
     ok_button: 'OK',
-    copy_button: 'Copy'
+    copy_button: 'Copy',
+    save_button: 'Save',
 }
 
 export default en
