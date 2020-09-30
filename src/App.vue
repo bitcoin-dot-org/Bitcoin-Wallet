@@ -32,11 +32,6 @@ body {
 button, a {
   cursor: pointer;
 }
-.page-title {
-  font-size: 40px;
-  line-height: 56px;
-  color: #FFFFFF;
-}
 .page-subtitle {
   max-width: 400px;
   margin: 0 auto 0;
@@ -44,16 +39,5 @@ button, a {
   font-size: 16px;
   line-height: 22px;
   color: #ACB2BB;
-}
-.view {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-.footer {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 32px;
-  background: #13161F;
 }
 </style>

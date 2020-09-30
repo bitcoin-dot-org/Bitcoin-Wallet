@@ -1,7 +1,7 @@
 <template>
-  <div class="view language-view">
+  <Screen class="language-view">
     <div class="language-view__main">
-      <h1 class="page-title language-view__title">{{ lang.choose_language }}</h1>
+      <PageTitle class="language-view__title">{{ lang.choose_language }}</PageTitle>
       <ul class="lang-list">
         <li class="lang-list__item">
           <button class="lang-button">Bahasa Indonesia</button>
@@ -29,18 +29,23 @@
         </li>
       </ul>
     </div>
-    <div class="footer">
-      <a class="back-link" @click="$router.go(-1)">{{ lang.back_button }}</a>
-      <button class="btn-primary">{{ lang.save_button }}</button>
-    </div>
-  </div>
+    <Footer>
+      <BackLink />
+      <ButtonPrimary>{{ lang.save_button }}</ButtonPrimary>
+    </Footer>
+  </Screen>
 </template>
 
 <script lang="ts">
   import { Vue, Component } from "vue-property-decorator";
   import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+  import PageTitle from "@/components/Text/PageTitle.vue";
+  import Screen from "@/components/Layout/Screen.vue";
+  import Footer from "@/components/Layout/Footer.vue";
+  import ButtonPrimary from "@/components/Buttons/ButtonPrimary.vue";
+  import BackLink from "@/components/Buttons/BackLink.vue";
 
-  @Component
+  @Component({ components: { PageTitle, Screen, Footer, ButtonPrimary, BackLink } })
   export default class ChooseLanguage extends Vue {
     private lang = WalletHandlerModule.currentLanguage;
   }
@@ -83,38 +88,5 @@
   .lang-button--active {
     background: #2B2F3A;
     color: #F7931A;
-  }
-  .back-link {
-    position: relative;
-    padding: 8px 24px 8px 48px;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    text-transform: uppercase;
-    color: #DCE0E7;
-    border: 1px solid #434854;
-    border-radius: 2px;
-  }
-  .back-link::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 24px;
-    width: 16px;
-    height: 16px;
-    transform: translateY(-50%);
-    background: url('./../assets/images/arrow-left.svg') center no-repeat;
-    background-size: contain;
-  }
-  .btn-primary {
-    padding: 8px 24px;
-    background: #F7931A;
-    border-radius: 2px;
-    border: none;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    text-transform: uppercase;
-    color: #FFFFFF;
   }
 </style>

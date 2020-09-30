@@ -1,5 +1,5 @@
 <template>
-  <div class="view onboard-view">
+  <Screen class="onboard-view">
     <h1 class="onboard-view__title">
       {{ lang.welcome }} <span>Bitcoin Wallet</span>
     </h1>
@@ -20,19 +20,20 @@
       <p class="language-select__text">{{ lang.change_language }}</p>
       <router-link to="/language" class="language-select__link">English</router-link>
     </div>
-  </div>
+  </Screen>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+import Screen from "@/components/Layout/Screen.vue";
 /* eslint-disable no-unused-vars */
 
 import Language from "@/lang/langInterface";
 
 /* eslint-enable no-unused-vars */
 
-@Component
+@Component({ components: { Screen } })
 export default class Onboard extends Vue {
   @Prop() language!: Language;
 
