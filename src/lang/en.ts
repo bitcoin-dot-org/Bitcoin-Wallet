@@ -21,9 +21,18 @@ var en = <Language> {
     choose_language: 'Choose Language',
 
     // Create page
+    seed_phrase: "Seed phrase",
+    create_subtitle_1: "We will generate for you a 12 word seed phrase.",
+    create_subtitle_2: "Your wallet generation seed phrase is:",
     generate_notice: "We will generate for you a 12 word seed phrase. It's very important that you write down each word in the correct order and store it securely.",
     wrote_it_down: 'I wrote it down',
     generate: 'Generate',
+    warning: 'Warning',
+    warning_text_1: 'With this seed phrase you can always get your key back. Write the seed phrase down and keep it safe, offline. If you loose your seed phrase you will be not able to recover your wallet.',
+    warning_text_2: 'This seed will alow you to recover your wallet.  Write the seed phrase down and keep it safe, offline.',
+    write_it_down: 'Write it down',
+    keep_it_safe: 'Keep it safe',
+    do_not_loose_it: 'Don’t loose it',
 
     // Restore page
     restore_notice: 'Enter your 12 word seed phrase to restore your wallet',

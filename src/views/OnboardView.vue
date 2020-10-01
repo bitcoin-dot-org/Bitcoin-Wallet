@@ -3,7 +3,7 @@
     <h1 class="onboard-view__title">
       {{ lang.welcome }} <span>Bitcoin Wallet</span>
     </h1>
-    <p class="onboard-view__subtitle page-subtitle">{{ lang.onboard_subtitle }}</p>
+    <PageSubtitle class="onboard-view__subtitle">{{ lang.onboard_subtitle }}</PageSubtitle>
     <div class="onboard-view__row">
       <router-link to="/create" class="onboarding-link">
         <img src="../assets/images/create.svg" />
@@ -27,13 +27,14 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
 import Screen from "@/components/Layout/Screen.vue";
+import PageSubtitle from "@/components/Text/PageSubtitle.vue";
 /* eslint-disable no-unused-vars */
 
 import Language from "@/lang/langInterface";
 
 /* eslint-enable no-unused-vars */
 
-@Component({ components: { Screen } })
+@Component({ components: { Screen, PageSubtitle } })
 export default class Onboard extends Vue {
   @Prop() language!: Language;
 

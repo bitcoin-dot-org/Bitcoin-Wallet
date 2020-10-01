@@ -1,54 +1,61 @@
 <template>
-  <div id="box">
-    <div id="inner">
-      <div class="spectrum-Alert spectrum-Alert--warning">
-        <svg
-          class="spectrum-Icon spectrum-UIIcon-AlertMedium spectrum-Alert-icon"
-          focusable="false"
-          aria-hidden="true"
-        >
-          <use xlink:href="#spectrum-css-icon-AlertMedium" />
-        </svg>
-        <div class="spectrum-Alert-content">{{ lang.generate_notice }}</div>
+  <Screen>
+    <ScreenContent>
+      <CreateStep1 v-if="!generated"/>
+      <div v-if="generated">
+        <CreateStep2/>
+        <ol class="phrases-list">
+          <li
+            class="phrases-list__item"
+            v-for="(word, index) in mnemonic"
+            :key="index"
+          >
+            <span>{{ word }}</span>
+          </li>
+        </ol>
+        <button class="refresh-button">Regenerate Phrase</button>
       </div>
-      <div class="spectrum-Tags" role="list" aria-label="list">
-        <div
-          class="spectrum-Tags-item"
-          role="listitem"
-          v-for="(word, index) in mnemonic"
-          :key="index"
-        >
-          <span class="spectrum-Tags-itemLabel">{{ word }}</span>
-        </div>
-      </div>
-    </div>
-    <div id="navigation">
-      <button class="spectrum-Button spectrum-Button--primary" v-on:click="backPressed()">
-        <span class="spectrum-Button-label">{{ lang.back_button }}</span>
-      </button>
-      <button
-        class="spectrum-Button spectrum-Button--cta"
-        style="margin-left: 10px;"
-        v-on:click="generatePressed()"
+    </ScreenContent>
+    <Footer>
+      <BackLink/>
+      <ButtonPrimary
+        v-if="!loading"
+        :onClick="generatePressed"
       >
-        <span class="spectrum-Button-label">
-          <span v-if="!loading">{{ generated ? lang.wrote_it_down : lang.generate }}</span>
-          <img v-if="loading" src="../assets/tail-spin.svg" height="16" />
-        </span>
-      </button>
-    </div>
-  </div>
+        {{ generated ? lang.wrote_it_down : lang.generate }}
+      </ButtonPrimary>
+      <img v-if="loading" src="../assets/tail-spin.svg" height="16" />
+    </Footer>
+  </Screen>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+import Screen from "@/components/Layout/Screen.vue";
+import ScreenContent from "@/components/Layout/ScreenContent.vue";
+import CreateStep1 from "@/components/CreateStep1.vue";
+import CreateStep2 from "@/components/CreateStep2.vue";
+import Footer from "@/components/Layout/Footer.vue";
+import ButtonPrimary from "@/components/Buttons/ButtonPrimary.vue";
+import BackLink from "@/components/Buttons/BackLink.vue";
 
 import * as bip39 from "bip39";
 
-@Component
+@Component({
+  components: {
+    Screen,
+    ScreenContent,
+    CreateStep1,
+    CreateStep2,
+    Footer,
+    ButtonPrimary,
+    BackLink,
+  }
+})
 export default class Create extends Vue {
   private generated = false
+  private seedPhraseSaved = false
   private loading = false
   private mnemonic: string[] = []
   private lang = WalletHandlerModule.currentLanguage
@@ -56,7 +63,7 @@ export default class Create extends Vue {
   backPressed(): void {
     this.$router.back();
   }
-
+  
   async generatePressed() {
     this.loading = true;
 
@@ -74,3 +81,43 @@ export default class Create extends Vue {
   }
 }
 </script>
+<style scoped>
+  .phrases-list {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 676px;
+    padding: 0;
+    margin: 32px auto 8px;
+  }
+  .phrases-list__item {
+    width: 33.3%;
+    padding-left: 8px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    line-height: 22px;
+    color: #ACB2BB;
+  }
+  .phrases-list__item span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 164px;
+    height: 40px;
+    border: 1px solid #2B2F3A;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    text-transform: uppercase;
+    color: #DCE0E7;
+  }
+  .refresh-button {
+    display: block;
+    padding: 0 0 0 24px;
+    margin: 0 auto;
+    font-size: 14px;
+    line-height: 20px;
+    color: #7E858F;
+    border: none;
+    background: url('../assets/images/refresh.svg') center left no-repeat;
+  }
+</style>

@@ -1,8 +1,26 @@
 <template>
-  <button class="btn-primary">
+  <button
+    @click="onClick"
+    class="btn-primary"
+    :disabled="disabled"
+  >
     <slot></slot>
   </button>
 </template>
+
+<script lang="ts">
+export default {
+  props: {
+    onClick: {
+      type: Function
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  }
+}
+</script>
 
 <style scoped>
   .btn-primary {
@@ -15,5 +33,8 @@
     line-height: 24px;
     text-transform: uppercase;
     color: #FFFFFF;
+  }
+  .btn-primary:disabled {
+    background: gray;
   }
 </style>
