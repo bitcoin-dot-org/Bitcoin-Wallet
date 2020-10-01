@@ -18,12 +18,21 @@
     </ScreenContent>
     <Footer>
       <BackLink/>
-      <ButtonPrimary
-        v-if="!loading"
-        :onClick="generatePressed"
-      >
-        {{ generated ? lang.wrote_it_down : lang.generate }}
+      <div>
+        <Checkbox
+          v-if="generated"
+          class="seed-phrase-checkbox"
+          v-model="seedPhraseSaved"
+          label="I have saved my seed phrase safely."
+        />
+        <ButtonPrimary
+          v-if="!loading"
+          :disabled="generated && !seedPhraseSaved"
+          :onClick="generatePressed"
+        >
+          {{ generated ? lang.wrote_it_down : lang.generate }}
       </ButtonPrimary>
+      </div>
       <img v-if="loading" src="../assets/tail-spin.svg" height="16" />
     </Footer>
   </Screen>
@@ -39,6 +48,7 @@ import CreateStep2 from "@/components/CreateStep2.vue";
 import Footer from "@/components/Layout/Footer.vue";
 import ButtonPrimary from "@/components/Buttons/ButtonPrimary.vue";
 import BackLink from "@/components/Buttons/BackLink.vue";
+import Checkbox from "@/components/Form/Checkbox.vue";
 
 import * as bip39 from "bip39";
 
@@ -51,15 +61,21 @@ import * as bip39 from "bip39";
     Footer,
     ButtonPrimary,
     BackLink,
+    Checkbox,
   }
 })
 export default class Create extends Vue {
   private generated = false
-  private seedPhraseSaved = false
   private loading = false
   private mnemonic: string[] = []
   private lang = WalletHandlerModule.currentLanguage
 
+  data() {
+    return {
+      seedPhraseSaved: false
+    }
+  }
+  
   backPressed(): void {
     this.$router.back();
   }
@@ -119,5 +135,8 @@ export default class Create extends Vue {
     color: #7E858F;
     border: none;
     background: url('../assets/images/refresh.svg') center left no-repeat;
+  }
+  .seed-phrase-checkbox {
+    margin-right: 24px;
   }
 </style>
