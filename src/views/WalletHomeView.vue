@@ -1,53 +1,98 @@
 <template>
-  <div>
-    <div id="topbar">
-      <div id="contain">
-        <div id="balance">
-          <a href="#" v-on:click="refresh()" style="font-size: 12px;margin-bottom: -10px;">
-            {{ lang.refresh }}
-            <img v-if="refreshing" src="../assets/tail-spin.svg" height="16" />
-          </a>
-          <br />
-          <span>{{ this.fiatSymbol + btcToFiat(balance.toString()) }}</span>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="balance">
+        <div class="balance__row">
+          <p class="balance__title">{{ lang.total_balance }}:</p>
+          <button
+            v-on:click="refresh()"
+            v-if="!refreshing"
+            class="refresh-button"
+          >
+            <img src="../assets/images/refresh.svg" alt="refresh">
+          </button>
+          <img v-if="refreshing" src="../assets/tail-spin.svg" height="16" />
         </div>
+        <p class="balance__amount">
+          <span class="balance__amount-large">109.82124293</span>
+          <span class="balance__currency-abbr">mBTC</span>
+        </p>
+        <p class="balance__amount">
+          $ 18.479,79
+          <!-- {{ this.fiatSymbol + btcToFiat(balance.toString()) }} -->
+          <span class="balance__currency-abbr">USD</span>
+        </p>
       </div>
-    </div>
-    <div class="spectrum-Tabs spectrum-Tabs--horizontal spectrum-Tabs--quiet">
-      <div
-        class="spectrum-Tabs-item"
-        v-on:click="currentTab = 'Overview'"
-        style="padding: 10px;"
-        tabindex="0"
-      >
-        <span class="spectrum-Tabs-itemLabel">{{ lang.overview }}</span>
-      </div>
-      <div
-        class="spectrum-Tabs-item"
-        style="padding: 10px;"
-        v-on:click="currentTab = 'Send'"
-        tabindex="0"
-      >
-        <span class="spectrum-Tabs-itemLabel">{{ lang.send }}</span>
-      </div>
-      <div
-        class="spectrum-Tabs-item"
-        v-on:click="currentTab = 'Receive'"
-        style="padding: 10px;"
-        tabindex="0"
-      >
-        <span class="spectrum-Tabs-itemLabel">{{ lang.receive }}</span>
-      </div>
-      <div
-        class="spectrum-Tabs-item"
-        v-on:click="currentTab = 'Settings'"
-        style="padding: 10px;"
-        tabindex="0"
-      >
-        <span class="spectrum-Tabs-itemLabel">{{ lang.settings }}</span>
-      </div>
-    </div>
+      <nav class="nav">
+        <ul class="nav__list">
+          <li>
+            <button
+              v-on:click="currentTab = 'Overview'"
+              :class="['nav__btn', currentTab === 'Overview' && 'active']"
+            >
+              <img class="nav__icon nav__icon--inactive" src="../assets/images/collection.svg">
+              <img class="nav__icon nav__icon--active" src="../assets/images/collection-active.svg" hidden>
+              {{ lang.overview }}
+            </button>
+          </li>
+          <li>
+            <button
+              v-on:click="currentTab = 'Send'"
+              :class="['nav__btn', currentTab === 'Send' && 'active']"
+            >
+              <img class="nav__icon nav__icon--inactive" src="../assets/images/send.svg">
+              <img class="nav__icon nav__icon--active" src="../assets/images/send-active.svg" hidden>
+              {{ lang.send }}
+            </button>
+          </li>
+          <li>
+            <button
+              v-on:click="currentTab = 'Receive'"
+              :class="['nav__btn', currentTab === 'Receive' && 'active']"
+            >
+              <img class="nav__icon nav__icon--inactive" src="../assets/images/received.svg">
+              <img class="nav__icon nav__icon--active" src="../assets/images/received-active.svg" hidden>
+              {{ lang.receive }}
+            </button>
+          </li>
+          <li>
+            <button
+              v-on:click="currentTab = 'Settings'"
+              :class="['nav__btn', currentTab === 'Settings' && 'active']"
+            >
+              <img class="nav__icon nav__icon--inactive" src="../assets/images/gear.svg">
+              <img class="nav__icon nav__icon--active" src="../assets/images/gear-active.svg" hidden>
+              {{ lang.settings }}
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </aside>
 
-    <div id="amountModal" :style="this.seedModal ? '' : 'display: none;'">
+    <div class="dashboard__content">
+      <OverView
+        v-if="currentTab == 'Overview'"
+        :language="lang"
+        :transactions="allTransactions"
+      ></OverView>
+      <Receive v-if="currentTab == 'Receive'" :language="lang"></Receive>
+      <Send
+        v-if="currentTab == 'Send'"
+        :language="lang"
+        @show-amount-modal="showModal()"
+        @show-transaction-confirm="showTransaction"
+        :amount="btcAmount"
+      ></Send>
+      <Settings
+        v-if="currentTab == 'Settings'"
+        :language="lang"
+        @show-seed="showSeed()"
+        @close="close()"
+        @currency-changed="switchCurrency()"
+        @language-changed="switchLanguage()"
+      ></Settings>
+
+      <div id="amountModal" :style="this.seedModal ? '' : 'display: none;'">
       <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
         <div class="spectrum-Dialog-header">
           <h2 class="spectrum-Dialog-title">{{ lang.seed_modal }}</h2>
@@ -64,128 +109,108 @@
       </div>
     </div>
 
-    <div id="amountModal" :style="this.modalShowing? '' : 'display: none;'">
-      <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
-        <div class="spectrum-Dialog-header">
-          <h2 class="spectrum-Dialog-title">{{ lang.amount_to_send }}</h2>
+      <div id="amountModal" :style="this.modalShowing? '' : 'display: none;'">
+        <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
+          <div class="spectrum-Dialog-header">
+            <h2 class="spectrum-Dialog-title">{{ lang.amount_to_send }}</h2>
+          </div>
+          <div class="spectrum-Dialog-content">
+            <h3>{{ fiatName }}</h3>
+            <div
+              class="spectrum-Textfield spectrum-Textfield--quiet"
+              style="width: 120px; margin-bottom: 20px;"
+            >
+              <span style="margin-top: 5px;">{{ this.fiatSymbol }}</span>
+              <input
+                type="text"
+                placeholder="0"
+                v-on:keyup="fiatToBTC()"
+                v-model="fiatAmount"
+                class="spectrum-Textfield-input"
+              />
+            </div>
+            <br />
+            <h3>BTC</h3>
+            <div class="spectrum-Textfield spectrum-Textfield--quiet" style="width: 120px;">
+              <input
+                type="text"
+                placeholder="0"
+                name="text"
+                v-on:keyup="convertBtcToFiat()"
+                v-model="btcAmount"
+                class="spectrum-Textfield-input"
+              />
+            </div>
+
+            <p class="notenoughbalance" v-if="notEnoughBalance">{{ lang.not_enough_balance }}</p>
+
+            <div id="modalButtons">
+              <button
+                class="spectrum-Button spectrum-Button--primary spectrum-Button"
+                v-on:click="sendMax()"
+              >
+                <span class="spectrum-Button-label">{{ lang.send_max }}</span>
+              </button>
+
+              <button
+                class="spectrum-Button spectrum-Button--cta"
+                v-on:click="hideModal()"
+                :disabled="notEnoughBalance"
+                style="margin-left: 10px;"
+              >
+                <span class="spectrum-Button-label">{{ lang.ok_button }}</span>
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="spectrum-Dialog-content">
-          <h3>{{ fiatName }}</h3>
-          <div
-            class="spectrum-Textfield spectrum-Textfield--quiet"
-            style="width: 120px; margin-bottom: 20px;"
-          >
-            <span style="margin-top: 5px;">{{ this.fiatSymbol }}</span>
-            <input
-              type="text"
-              placeholder="0"
-              v-on:keyup="fiatToBTC()"
-              v-model="fiatAmount"
-              class="spectrum-Textfield-input"
-            />
+      </div>
+
+      <div id="amountModal" :style="this.transactionModalShowing? '' : 'display: none;'">
+        <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
+          <div class="spectrum-Dialog-header">
+            <h2 class="spectrum-Dialog-title">Transaction details</h2>
           </div>
-          <br />
-          <h3>BTC</h3>
-          <div class="spectrum-Textfield spectrum-Textfield--quiet" style="width: 120px;">
-            <input
-              type="text"
-              placeholder="0"
-              name="text"
-              v-on:keyup="convertBtcToFiat()"
-              v-model="btcAmount"
-              class="spectrum-Textfield-input"
-            />
-          </div>
+          <div class="spectrum-Dialog-content" style="text-align: left;">
+            <h3>{{ lang.amount }}</h3>
+            <p>{{ this.btcAmount + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.btcAmount) }}</p>
+            <br />
+            <h3>{{ lang.miner_fee }}</h3>
+            <p>{{ this.fee + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.fee) }}</p>
+            <br />
+            <h3>{{ lang.total }}</h3>
+            <p>{{ this.total + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.total)}}</p>
+            <br />
 
-          <p class="notenoughbalance" v-if="notEnoughBalance">{{ lang.not_enough_balance }}</p>
-
-          <div id="modalButtons">
-            <button
-              class="spectrum-Button spectrum-Button--primary spectrum-Button"
-              v-on:click="sendMax()"
-            >
-              <span class="spectrum-Button-label">{{ lang.send_max }}</span>
-            </button>
-
-            <button
-              class="spectrum-Button spectrum-Button--cta"
-              v-on:click="hideModal()"
-              :disabled="notEnoughBalance"
-              style="margin-left: 10px;"
-            >
-              <span class="spectrum-Button-label">{{ lang.ok_button }}</span>
-            </button>
+            <h3>
+              <b>{{ lang.confirmation }}</b>
+            </h3>
+            <p>
+              {{ lang.sending}} {{ this.confirmationAmount + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.confirmationAmount) }} {{ lang.to }}
+              <b>{{ this.receivingAddress }}</b>
+            </p>
+            <br />
+            <div id="modalButtons" style="text-align:center;">
+              <button
+                class="spectrum-Button spectrum-Button--primary"
+                v-on:click="hideTransaction()"
+                style="margin-left: 10px;"
+              >
+                <span class="spectrum-Button-label">{{ lang.back_button }}</span>
+              </button>
+              <button
+                class="spectrum-Button spectrum-Button--cta"
+                v-on:click="sendTransaction()"
+                style="margin-left: 10px;"
+              >
+                <span v-if="!this.sending" class="spectrum-Button-label">{{ lang.im_sure }}</span>
+                <img v-if="this.sending" src="../assets/tail-spin.svg" height="16" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div id="amountModal" :style="this.transactionModalShowing? '' : 'display: none;'">
-      <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
-        <div class="spectrum-Dialog-header">
-          <h2 class="spectrum-Dialog-title">Transaction details</h2>
-        </div>
-        <div class="spectrum-Dialog-content" style="text-align: left;">
-          <h3>{{ lang.amount }}</h3>
-          <p>{{ this.btcAmount + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.btcAmount) }}</p>
-          <br />
-          <h3>{{ lang.miner_fee }}</h3>
-          <p>{{ this.fee + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.fee) }}</p>
-          <br />
-          <h3>{{ lang.total }}</h3>
-          <p>{{ this.total + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.total)}}</p>
-          <br />
-
-          <h3>
-            <b>{{ lang.confirmation }}</b>
-          </h3>
-          <p>
-            {{ lang.sending}} {{ this.confirmationAmount + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.confirmationAmount) }} {{ lang.to }}
-            <b>{{ this.receivingAddress }}</b>
-          </p>
-          <br />
-          <div id="modalButtons" style="text-align:center;">
-            <button
-              class="spectrum-Button spectrum-Button--primary"
-              v-on:click="hideTransaction()"
-              style="margin-left: 10px;"
-            >
-              <span class="spectrum-Button-label">{{ lang.back_button }}</span>
-            </button>
-            <button
-              class="spectrum-Button spectrum-Button--cta"
-              v-on:click="sendTransaction()"
-              style="margin-left: 10px;"
-            >
-              <span v-if="!this.sending" class="spectrum-Button-label">{{ lang.im_sure }}</span>
-              <img v-if="this.sending" src="../assets/tail-spin.svg" height="16" />
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <OverView
-      :style="currentTab == 'Overview' ? '' : 'display: none;'"
-      :language="lang"
-      :transactions="allTransactions"
-    ></OverView>
-    <Receive :style="currentTab == 'Receive' ? '' : 'display: none;'" :language="lang"></Receive>
-    <Send
-      :style="currentTab == 'Send' ? '' : 'display: none;'"
-      :language="lang"
-      @show-amount-modal="showModal()"
-      @show-transaction-confirm="showTransaction"
-      :amount="btcAmount"
-    ></Send>
-    <Settings
-      :style="currentTab == 'Settings' ? '' : 'display: none;'"
-      :language="lang"
-      @show-seed="showSeed()"
-      @close="close()"
-      @currency-changed="switchCurrency()"
-      @language-changed="switchLanguage()"
-    ></Settings>
   </div>
 </template>
 
@@ -487,6 +512,90 @@ export default class WalletHomeView extends Vue {
 </script>
 
 <style>
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+.dashboard__content {
+  padding: 16px 30px;
+}
+.sidebar {
+  flex-grow: 1;
+  max-width: 180px;
+  background: #090C14;
+}
+.balance {
+  padding: 24px 10px 8px;
+  margin-bottom: 40px;
+}
+.balance__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.balance__amount + .balance__amount {
+  margin-top: 2px;
+}
+.balance__amount {
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  color: #7E858F;
+}
+.balance__amount-large {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  color: #FFFFFF;
+}
+.balance__currency-abbr {
+  margin-left: 4px;
+  font-size: 11px;
+  line-height: 18px;
+  color: #555B65;
+}
+.refresh-button {
+  padding: 0;
+  border: none;
+  background: none;
+}
+.nav__list {
+  padding: 0;
+  list-style: none;
+}
+.nav__btn {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  width: 100%;
+  padding: 16px 13px;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 24px;
+  color: #7E858F;
+  border: none;
+  border-left: 3px solid transparent;
+  background: none;
+  outline: none;
+}
+.nav__btn.active {
+  color: #FFFFFF;
+  background: #13161F;
+  border-left: 3px solid #F7931A;
+}
+.nav__icon {
+  margin-right: 16px;
+}
+.nav__btn.active .nav__icon--inactive {
+  display: none;
+}
+.nav__btn.active .nav__icon--active {
+  display: block;
+}
 #topbar {
   background-color: #090c14;
   color: #ffffff;
@@ -511,16 +620,6 @@ export default class WalletHomeView extends Vue {
   font-size: 13px;
 }
 
-#exit {
-  padding: 20px;
-  background-color: #ff9500;
-  cursor: pointer;
-}
-
-#tabControl {
-  margin: 20px;
-}
-
 #white-container {
   background: white;
   padding: 30px;
@@ -540,16 +639,5 @@ export default class WalletHomeView extends Vue {
   height: 100%;
   z-index: 10;
   background-color: rgba(0, 0, 0, 0.5);
-}
-
-#modalButtons {
-  margin-top: 30px;
-}
-
-.notenoughbalance {
-  font-size: 12px;
-  margin: 5px;
-  text-align: center;
-  color: red;
 }
 </style>

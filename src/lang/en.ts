@@ -56,6 +56,7 @@ var en = <Language> {
     seed_modal: 'Seed phrase',
 
     // Overview
+    total_balance: "Total Balance",
     no_transactions: "Unfortunately you don't have any transactions yet...",
     block_height: 'Block Height',
     status: 'Status',
