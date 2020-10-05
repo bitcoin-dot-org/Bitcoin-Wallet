@@ -57,7 +57,8 @@ var en = <Language> {
 
     // Overview
     total_balance: "Total Balance",
-    no_transactions: "Unfortunately you don't have any transactions yet...",
+    no_transactions: "You  have not made any transactions yet",
+    what_to_do: "What would you like to do?",
     block_height: 'Block Height',
     status: 'Status',
     processing: 'Processing',
