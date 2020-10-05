@@ -517,6 +517,7 @@ export default class WalletHomeView extends Vue {
   min-height: 100vh;
 }
 .dashboard__content {
+  width: 100%;
   padding: 16px 30px;
 }
 .sidebar {
