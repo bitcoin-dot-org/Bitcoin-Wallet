@@ -79,6 +79,7 @@ var en = <Language> {
 
     // Receive
     receive_only: 'Receive only Bitcoin',
+    wallet_address: 'Wallet address',
     address_below: 'to the address below',
 
     // Settings
