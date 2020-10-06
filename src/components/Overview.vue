@@ -1,66 +1,68 @@
 <template>
-  <div id="overview">
-    <DashboardTitle>{{ language.overview }}</DashboardTitle>
-    <div class="overview__header-row">
-      <p class="transactions-amount">12 transactions</p>
-      <div class="pagination">
-        <button
-          class="pagination__button pagination__prev"
-          v-on:click="previousPage()"
-          :disabled="this.currentPage == 1"
-        ></button>
-        <p class="pagination__text">Page 1 of 3</p>
-        <button
-          class="pagination__button pagination__next"
-          v-on:click="nextPage()"
-          :disabled="this.currentPage == this.totalPages"
-        ></button>
+  <DashboardContent>
+    <div id="overview">
+      <DashboardTitle>{{ language.overview }}</DashboardTitle>
+      <div class="overview__header-row">
+        <p class="transactions-amount">12 transactions</p>
+        <div class="pagination">
+          <button
+            class="pagination__button pagination__prev"
+            v-on:click="previousPage()"
+            :disabled="this.currentPage == 1"
+          ></button>
+          <p class="pagination__text">Page 1 of 3</p>
+          <button
+            class="pagination__button pagination__next"
+            v-on:click="nextPage()"
+            :disabled="this.currentPage == this.totalPages"
+          ></button>
+        </div>
+      </div>
+      <OverviewTable></OverviewTable>
+      <OverviewEmpty v-if="transactions.length !== 0"></OverviewEmpty>
+      <div id="transactionsList" v-if="transactions.length > 0">
+        <table
+          class="spectrum-Table"
+          style="margin: 0 auto;margin-top: 20px;border: 1px solid #d6d2d2;border-radius: 5px;border-bottom: none; width: 500px;"
+        >
+          <thead class="spectrum-Table-head">
+            <tr>
+              <th
+                class="spectrum-Table-headCell is-sortable is-sorted-desc"
+                aria-sort="descending"
+                tabindex="0"
+              >{{ language.block_height }}</th>
+              <th class="spectrum-Table-headCell is-sortable" aria-sort="none">{{ language.amount }}</th>
+              <th class="spectrum-Table-headCell">{{ language.status }}</th>
+            </tr>
+          </thead>
+          <tbody class="spectrum-Table-body">
+            <tr
+              class="spectrum-Table-row"
+              v-for="(tx, index) in displayedTransactions"
+              :key="'conf' + index"
+            >
+              <td
+                class="spectrum-Table-cell"
+                tabindex="0"
+              >{{ tx.blockHeight == 0 ? '?' : tx.blockHeight }}</td>
+              <td class="spectrum-Table-cell" tabindex="0">
+                <div :style="zero.gt(tx.amount) ? 'color: red;' : 'color: green;'">
+                  <span>{{ !zero.gt(tx.amount) ? '+' : '' }}</span>
+                  {{ tx.amount }}
+                </div>
+              </td>
+              <td class="spectrum-Table-cell" tabindex="0">
+                <div
+                  :class="'spectrum-StatusLight spectrum-StatusLight--' + getStatusLight(tx)"
+                >{{ getText(tx) }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <OverviewTable></OverviewTable>
-    <OverviewEmpty v-if="transactions.length !== 0"></OverviewEmpty>
-    <div id="transactionsList" v-if="transactions.length > 0">
-      <table
-        class="spectrum-Table"
-        style="margin: 0 auto;margin-top: 20px;border: 1px solid #d6d2d2;border-radius: 5px;border-bottom: none; width: 500px;"
-      >
-        <thead class="spectrum-Table-head">
-          <tr>
-            <th
-              class="spectrum-Table-headCell is-sortable is-sorted-desc"
-              aria-sort="descending"
-              tabindex="0"
-            >{{ language.block_height }}</th>
-            <th class="spectrum-Table-headCell is-sortable" aria-sort="none">{{ language.amount }}</th>
-            <th class="spectrum-Table-headCell">{{ language.status }}</th>
-          </tr>
-        </thead>
-        <tbody class="spectrum-Table-body">
-          <tr
-            class="spectrum-Table-row"
-            v-for="(tx, index) in displayedTransactions"
-            :key="'conf' + index"
-          >
-            <td
-              class="spectrum-Table-cell"
-              tabindex="0"
-            >{{ tx.blockHeight == 0 ? '?' : tx.blockHeight }}</td>
-            <td class="spectrum-Table-cell" tabindex="0">
-              <div :style="zero.gt(tx.amount) ? 'color: red;' : 'color: green;'">
-                <span>{{ !zero.gt(tx.amount) ? '+' : '' }}</span>
-                {{ tx.amount }}
-              </div>
-            </td>
-            <td class="spectrum-Table-cell" tabindex="0">
-              <div
-                :class="'spectrum-StatusLight spectrum-StatusLight--' + getStatusLight(tx)"
-              >{{ getText(tx) }}</div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  </DashboardContent>
 </template>
 
 <script lang="ts">
@@ -69,6 +71,7 @@ import BigNumber from "bignumber.js";
 import DashboardTitle from "@/components/Text/DashboardTitle.vue";
 import OverviewEmpty from "@/components/OverviewEmpty.vue";
 import OverviewTable from "@/components/OverviewTable.vue";
+import DashboardContent from "@/components/Layout/DashboardContent.vue";
 
 /* eslint-disable no-unused-vars */
 
@@ -76,7 +79,7 @@ import Language from "@/lang/langInterface";
 
 /* eslint-enable no-unused-vars */
 
-@Component({ components: { OverviewEmpty, DashboardTitle, OverviewTable }})
+@Component({ components: { OverviewEmpty, DashboardTitle, OverviewTable, DashboardContent }})
 export default class Overview extends Vue {
   @Prop() transactions!: [{}];
   @Prop() language!: Language;

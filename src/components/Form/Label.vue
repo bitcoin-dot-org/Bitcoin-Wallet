@@ -5,6 +5,7 @@
 </template>
 <style scoped>
   .label {
+    display: block;
     font-weight: 600;
     font-size: 12px;
     line-height: 22px;

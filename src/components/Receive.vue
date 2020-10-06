@@ -1,28 +1,31 @@
 <template>
-  <div class="receive-view">
-    <DashboardTitle>{{ language.receive }}</DashboardTitle>
-    <DashboardSubtitle>
-      {{ language.receive_only }} Bitcoin (BTC) {{ language.address_below }}
-    </DashboardSubtitle>
-    <Label>
-      {{ language.wallet_address }}
-      <div class="input-wrapper">
-        <Input type="text" name="field" :value="address" disabled />
-        <button class="copy-button" v-on:click="copyAddress()">
-          <img src="../assets/images/copy.svg" alt="Copy">
-        </button>
+  <DashboardContent>
+    <div class="receive-view">
+      <DashboardTitle>{{ language.receive }}</DashboardTitle>
+      <DashboardSubtitle>
+        {{ language.receive_only }} Bitcoin (BTC) {{ language.address_below }}
+      </DashboardSubtitle>
+      <Label>
+        {{ language.wallet_address }}
+        <div class="input-wrapper">
+          <Input type="text" name="field" :value="address" disabled />
+          <button class="copy-button" v-on:click="copyAddress()">
+            <img src="../assets/images/copy.svg" alt="Copy">
+          </button>
+        </div>
+      </Label>
+      <div class="qr-code-wrapper">
+        <qrcode-vue :value="address" size="138" level="H"></qrcode-vue>
       </div>
-    </Label>
-    <div class="qr-code-wrapper">
-      <qrcode-vue :value="address" size="138" level="H"></qrcode-vue>
     </div>
-  </div>
+  </DashboardContent>
 </template>
 
 <script lang="ts">
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import WalletHandlerModule from '@/store/modules/WalletHandlerModule'
+import DashboardContent from "@/components/Layout/DashboardContent.vue";
 import DashboardTitle from "@/components/Text/DashboardTitle.vue";
 import DashboardSubtitle from "@/components/Text/DashboardSubtitle.vue";
 import Input from "@/components/Form/Input.vue";
@@ -35,7 +38,7 @@ import Language from '@/lang/langInterface'
 
 /* eslint-enable no-unused-vars */
 
-@Component({components: { QrcodeVue, DashboardTitle, DashboardSubtitle, Input, Label }})
+@Component({components: { QrcodeVue, DashboardTitle, DashboardSubtitle, Input, Label, DashboardContent }})
 export default class Overview extends Vue {
 
   @Prop() language! : Language

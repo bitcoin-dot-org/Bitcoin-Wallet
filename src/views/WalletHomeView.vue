@@ -69,30 +69,29 @@
       </nav>
     </aside>
 
-    <div class="dashboard__content">
-      <OverView
-        v-if="currentTab == 'Overview'"
-        :language="lang"
-        :transactions="allTransactions"
-      ></OverView>
-      <Receive v-if="currentTab == 'Receive'" :language="lang"></Receive>
-      <Send
-        v-if="currentTab == 'Send'"
-        :language="lang"
-        @show-amount-modal="showModal()"
-        @show-transaction-confirm="showTransaction"
-        :amount="btcAmount"
-      ></Send>
-      <Settings
-        v-if="currentTab == 'Settings'"
-        :language="lang"
-        @show-seed="showSeed()"
-        @close="close()"
-        @currency-changed="switchCurrency()"
-        @language-changed="switchLanguage()"
-      ></Settings>
+    <OverView
+      v-if="currentTab == 'Overview'"
+      :language="lang"
+      :transactions="allTransactions"
+    ></OverView>
+    <Receive v-if="currentTab == 'Receive'" :language="lang"></Receive>
+    <Send
+      v-if="currentTab == 'Send'"
+      :language="lang"
+      @show-amount-modal="showModal()"
+      @show-transaction-confirm="showTransaction"
+      :amount="btcAmount"
+    ></Send>
+    <Settings
+      v-if="currentTab == 'Settings'"
+      :language="lang"
+      @show-seed="showSeed()"
+      @close="close()"
+      @currency-changed="switchCurrency()"
+      @language-changed="switchLanguage()"
+    ></Settings>
 
-      <div id="amountModal" :style="this.seedModal ? '' : 'display: none;'">
+    <div id="amountModal" :style="this.seedModal ? '' : 'display: none;'">
       <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
         <div class="spectrum-Dialog-header">
           <h2 class="spectrum-Dialog-title">{{ lang.seed_modal }}</h2>
@@ -109,103 +108,102 @@
       </div>
     </div>
 
-      <div id="amountModal" :style="this.modalShowing? '' : 'display: none;'">
-        <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
-          <div class="spectrum-Dialog-header">
-            <h2 class="spectrum-Dialog-title">{{ lang.amount_to_send }}</h2>
+    <div id="amountModal" :style="this.modalShowing? '' : 'display: none;'">
+      <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
+        <div class="spectrum-Dialog-header">
+          <h2 class="spectrum-Dialog-title">{{ lang.amount_to_send }}</h2>
+        </div>
+        <div class="spectrum-Dialog-content">
+          <h3>{{ fiatName }}</h3>
+          <div
+            class="spectrum-Textfield spectrum-Textfield--quiet"
+            style="width: 120px; margin-bottom: 20px;"
+          >
+            <span style="margin-top: 5px;">{{ this.fiatSymbol }}</span>
+            <input
+              type="text"
+              placeholder="0"
+              v-on:keyup="fiatToBTC()"
+              v-model="fiatAmount"
+              class="spectrum-Textfield-input"
+            />
           </div>
-          <div class="spectrum-Dialog-content">
-            <h3>{{ fiatName }}</h3>
-            <div
-              class="spectrum-Textfield spectrum-Textfield--quiet"
-              style="width: 120px; margin-bottom: 20px;"
+          <br />
+          <h3>BTC</h3>
+          <div class="spectrum-Textfield spectrum-Textfield--quiet" style="width: 120px;">
+            <input
+              type="text"
+              placeholder="0"
+              name="text"
+              v-on:keyup="convertBtcToFiat()"
+              v-model="btcAmount"
+              class="spectrum-Textfield-input"
+            />
+          </div>
+
+          <p class="notenoughbalance" v-if="notEnoughBalance">{{ lang.not_enough_balance }}</p>
+
+          <div id="modalButtons">
+            <button
+              class="spectrum-Button spectrum-Button--primary spectrum-Button"
+              v-on:click="sendMax()"
             >
-              <span style="margin-top: 5px;">{{ this.fiatSymbol }}</span>
-              <input
-                type="text"
-                placeholder="0"
-                v-on:keyup="fiatToBTC()"
-                v-model="fiatAmount"
-                class="spectrum-Textfield-input"
-              />
-            </div>
-            <br />
-            <h3>BTC</h3>
-            <div class="spectrum-Textfield spectrum-Textfield--quiet" style="width: 120px;">
-              <input
-                type="text"
-                placeholder="0"
-                name="text"
-                v-on:keyup="convertBtcToFiat()"
-                v-model="btcAmount"
-                class="spectrum-Textfield-input"
-              />
-            </div>
+              <span class="spectrum-Button-label">{{ lang.send_max }}</span>
+            </button>
 
-            <p class="notenoughbalance" v-if="notEnoughBalance">{{ lang.not_enough_balance }}</p>
-
-            <div id="modalButtons">
-              <button
-                class="spectrum-Button spectrum-Button--primary spectrum-Button"
-                v-on:click="sendMax()"
-              >
-                <span class="spectrum-Button-label">{{ lang.send_max }}</span>
-              </button>
-
-              <button
-                class="spectrum-Button spectrum-Button--cta"
-                v-on:click="hideModal()"
-                :disabled="notEnoughBalance"
-                style="margin-left: 10px;"
-              >
-                <span class="spectrum-Button-label">{{ lang.ok_button }}</span>
-              </button>
-            </div>
+            <button
+              class="spectrum-Button spectrum-Button--cta"
+              v-on:click="hideModal()"
+              :disabled="notEnoughBalance"
+              style="margin-left: 10px;"
+            >
+              <span class="spectrum-Button-label">{{ lang.ok_button }}</span>
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <div id="amountModal" :style="this.transactionModalShowing? '' : 'display: none;'">
-        <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
-          <div class="spectrum-Dialog-header">
-            <h2 class="spectrum-Dialog-title">Transaction details</h2>
-          </div>
-          <div class="spectrum-Dialog-content" style="text-align: left;">
-            <h3>{{ lang.amount }}</h3>
-            <p>{{ this.btcAmount + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.btcAmount) }}</p>
-            <br />
-            <h3>{{ lang.miner_fee }}</h3>
-            <p>{{ this.fee + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.fee) }}</p>
-            <br />
-            <h3>{{ lang.total }}</h3>
-            <p>{{ this.total + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.total)}}</p>
-            <br />
+    <div id="amountModal" :style="this.transactionModalShowing? '' : 'display: none;'">
+      <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
+        <div class="spectrum-Dialog-header">
+          <h2 class="spectrum-Dialog-title">Transaction details</h2>
+        </div>
+        <div class="spectrum-Dialog-content" style="text-align: left;">
+          <h3>{{ lang.amount }}</h3>
+          <p>{{ this.btcAmount + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.btcAmount) }}</p>
+          <br />
+          <h3>{{ lang.miner_fee }}</h3>
+          <p>{{ this.fee + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.fee) }}</p>
+          <br />
+          <h3>{{ lang.total }}</h3>
+          <p>{{ this.total + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.total)}}</p>
+          <br />
 
-            <h3>
-              <b>{{ lang.confirmation }}</b>
-            </h3>
-            <p>
-              {{ lang.sending}} {{ this.confirmationAmount + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.confirmationAmount) }} {{ lang.to }}
-              <b>{{ this.receivingAddress }}</b>
-            </p>
-            <br />
-            <div id="modalButtons" style="text-align:center;">
-              <button
-                class="spectrum-Button spectrum-Button--primary"
-                v-on:click="hideTransaction()"
-                style="margin-left: 10px;"
-              >
-                <span class="spectrum-Button-label">{{ lang.back_button }}</span>
-              </button>
-              <button
-                class="spectrum-Button spectrum-Button--cta"
-                v-on:click="sendTransaction()"
-                style="margin-left: 10px;"
-              >
-                <span v-if="!this.sending" class="spectrum-Button-label">{{ lang.im_sure }}</span>
-                <img v-if="this.sending" src="../assets/tail-spin.svg" height="16" />
-              </button>
-            </div>
+          <h3>
+            <b>{{ lang.confirmation }}</b>
+          </h3>
+          <p>
+            {{ lang.sending}} {{ this.confirmationAmount + ' (BTC) ' + this.fiatSymbol + btcToFiat(this.confirmationAmount) }} {{ lang.to }}
+            <b>{{ this.receivingAddress }}</b>
+          </p>
+          <br />
+          <div id="modalButtons" style="text-align:center;">
+            <button
+              class="spectrum-Button spectrum-Button--primary"
+              v-on:click="hideTransaction()"
+              style="margin-left: 10px;"
+            >
+              <span class="spectrum-Button-label">{{ lang.back_button }}</span>
+            </button>
+            <button
+              class="spectrum-Button spectrum-Button--cta"
+              v-on:click="sendTransaction()"
+              style="margin-left: 10px;"
+            >
+              <span v-if="!this.sending" class="spectrum-Button-label">{{ lang.im_sure }}</span>
+              <img v-if="this.sending" src="../assets/tail-spin.svg" height="16" />
+            </button>
           </div>
         </div>
       </div>
@@ -515,10 +513,6 @@ export default class WalletHomeView extends Vue {
 .dashboard {
   display: flex;
   min-height: 100vh;
-}
-.dashboard__content {
-  width: 100%;
-  padding: 16px 30px;
 }
 .sidebar {
   flex-grow: 1;
