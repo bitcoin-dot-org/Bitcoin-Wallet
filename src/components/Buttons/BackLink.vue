@@ -34,4 +34,11 @@
     background: url('./../../assets/images/arrow-left.svg') center no-repeat;
     background-size: contain;
   }
+  .back-link:hover {
+    border: 1px solid #ACB2BB;
+  }
+  .back-link:active {
+    background: #1F232E;
+    border: 1px solid #434854;
+  }
 </style>

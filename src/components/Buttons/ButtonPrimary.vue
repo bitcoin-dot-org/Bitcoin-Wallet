@@ -35,7 +35,13 @@ export default {
     text-transform: uppercase;
     color: #FFFFFF;
   }
+  .btn-primary:hover:not(:disabled) {
+    background: #FFA02D;
+  }
+  .btn-primary:active:not(:disabled) {
+    background: #F38B0C;
+  }
   .btn-primary:disabled {
-    background: gray;
+    opacity: 0.4;
   }
 </style>

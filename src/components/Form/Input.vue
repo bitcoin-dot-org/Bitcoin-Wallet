@@ -25,4 +25,8 @@ export default {
     line-height: 20px;
     color: #FFFFFF;
   }
+  .input:focus {
+    border: 1px solid #555B65;
+    outline: none;
+  }
 </style>

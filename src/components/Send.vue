@@ -245,6 +245,12 @@ export default class Send extends Vue {
     background: #2B2F3A;
     border-radius: 2px;
   }
+  .send-max:hover {
+    background: #434854;
+  }
+  .send-max:active {
+    background: #1F232E;
+  }
   .radio-row {
     display: flex;
   }

@@ -17,6 +17,9 @@ export default {
 </script>
 
 <style scoped>
+  .checkbox {
+    cursor: pointer;
+  }
   .checkbox__input {
     position: absolute;
     z-index: -1;
@@ -36,8 +39,9 @@ export default {
     left: 0;
     width: 16px;
     height: 16px;
-    background: #fff;
-    border-radius: 1px;
+    background: none;
+    border: 1px solid #F7931A;
+    border-radius: 2px;
   }
   .checkbox__input:checked + .checkbox__label::before {
     background: #F7931A url('../../assets/images/checkmark.svg') center no-repeat;

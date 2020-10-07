@@ -125,4 +125,10 @@ export default class Onboard extends Vue {
     color: #FFFFFF;
     text-transform: uppercase;
   }
+  .language-select__link:hover {
+    background: #FFA02D;
+  }
+  .language-select__link:active {
+    background: #F38B0C;
+  }
 </style>

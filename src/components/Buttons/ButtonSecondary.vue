@@ -29,4 +29,14 @@ export default {
     background: none;
     border-radius: 2px;
   }
+  .btn-secondary:hover:not(:disabled) {
+    border: 1px solid #ACB2BB;
+  }
+  .btn-secondary:active:not(:disabled) {
+    background: #1F232E;
+    border: 1px solid #434854;
+  }
+  .btn-secondary:disabled {
+    opacity: 0.4;
+  }
 </style>
