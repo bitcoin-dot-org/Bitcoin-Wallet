@@ -519,10 +519,18 @@ export default class WalletHomeView extends Vue {
   max-width: 180px;
   width: 100%;
   background: #090C14;
+  border-right: 1px solid #1F232E;
 }
 .balance {
   padding: 24px 10px 8px;
   margin-bottom: 40px;
+}
+.balance__title {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 22px;
+  text-transform: uppercase;
+  color: #7E858F;
 }
 .balance__row {
   display: flex;

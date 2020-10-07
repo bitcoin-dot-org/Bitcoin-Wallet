@@ -1,6 +1,6 @@
 <template>
   <button
-    @click="onClick"
+    @click="click"
     class="btn-secondary"
   >
     <slot/>
@@ -10,7 +10,7 @@
 <script lang="ts">
 export default {
   props: {
-    onClick: {
+    click: {
       type: Function
     },
   }

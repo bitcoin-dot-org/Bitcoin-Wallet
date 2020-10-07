@@ -31,7 +31,7 @@
     </div>
     <Footer>
       <BackLink />
-      <ButtonPrimary>{{ lang.save_button }}</ButtonPrimary>
+      <ButtonPrimary :click="() => {}">{{ lang.save_button }}</ButtonPrimary>
     </Footer>
   </Screen>
 </template>
@@ -87,6 +87,5 @@
   }
   .lang-button--active {
     background: #2B2F3A;
-    color: #F7931A;
   }
 </style>

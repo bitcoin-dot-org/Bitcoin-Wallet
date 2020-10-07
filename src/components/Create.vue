@@ -28,7 +28,7 @@
         <ButtonPrimary
           v-if="!loading"
           :disabled="generated && !seedPhraseSaved"
-          :onClick="generatePressed"
+          :click="generatePressed"
         >
           {{ generated ? lang.wrote_it_down : lang.generate }}
       </ButtonPrimary>
@@ -101,17 +101,21 @@ export default class Create extends Vue {
   .phrases-list {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     max-width: 676px;
     padding: 0;
     margin: 32px auto 8px;
   }
   .phrases-list__item {
-    width: 33.3%;
     padding-left: 8px;
+    margin-right: 4.4%;
     margin-bottom: 8px;
     font-size: 16px;
     line-height: 22px;
     color: #ACB2BB;
+  }
+  .phrases-list__item:nth-child(3n) {
+    margin-right: 0;
   }
   .phrases-list__item span {
     display: flex;

@@ -33,8 +33,8 @@
     </DashboardContent>
 
     <Footer>
-      <ButtonSecondary :onClick="showSeed">{{ language.show_seed }}</ButtonSecondary>
-      <ButtonSecondary class="exit-button" :onClick="closeWallet">
+      <ButtonSecondary :click="showSeed">{{ language.show_seed }}</ButtonSecondary>
+      <ButtonSecondary class="exit-button" :click="closeWallet">
         <img src="../assets/images/exit.svg" alt="exit">
         {{language.exit_wallet }}
       </ButtonSecondary>

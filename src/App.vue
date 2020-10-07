@@ -31,6 +31,7 @@ body {
 }
 button, a {
   cursor: pointer;
+  font-family: "Titillium Web", Arial, sans-serif;
 }
 button:disabled {
   cursor: not-allowed;

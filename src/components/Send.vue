@@ -88,7 +88,7 @@
         </div>
       </div>
       <ButtonPrimary
-        :onClick="sendButtonClicked"
+        :click="sendButtclicked"
         :disabled="this.sendDisabled"
       >
         {{ language.send }}
@@ -170,7 +170,7 @@ export default class Send extends Vue {
     }
   }
 
-  async sendButtonClicked() {
+  async sendButtclicked() {
     let sendingMax = false;
     this.addressError = false;
     this.dustError = false;

@@ -1,6 +1,6 @@
 <template>
   <button
-    @click="onClick"
+    @click="click"
     class="btn-primary"
     :disabled="disabled"
   >
@@ -11,7 +11,7 @@
 <script lang="ts">
 export default {
   props: {
-    onClick: {
+    click: {
       type: Function,
       required: true
     },
