@@ -66,6 +66,8 @@ var en = <Language> {
     complete: 'Complete',
 
     // Send
+    send_to: 'Send only to Bitcoin (BTC) addresses',
+    bitcoin_address: 'Bitcoin address',
     address: 'Address',
     enter_address: 'Enter address to send too and amount:',
     low_priority: 'Low priority',
@@ -76,6 +78,7 @@ var en = <Language> {
     important_desc: "Uses a premium fee to target confirmation within 30 minutes, this is a high priority transaction and you want it confirmed quickly.",
     not_enough: "You don't have enough to send the specified amount while also paying the miner fee. Try 'Send Max'.",
     dust_error: "Amount too small to send...",
+    bitcoin_network_fee: "Bitcoin Network fee",
 
     // Receive
     receive_only: 'Receive only Bitcoin',

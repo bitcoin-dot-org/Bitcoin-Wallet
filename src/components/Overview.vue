@@ -19,7 +19,7 @@
         </div>
       </div>
       <OverviewTable></OverviewTable>
-      <OverviewEmpty v-if="transactions.length !== 0"></OverviewEmpty>
+      <!-- <OverviewEmpty v-if="transactions.length === 0"></OverviewEmpty> -->
       <div id="transactionsList" v-if="transactions.length > 0">
         <table
           class="spectrum-Table"

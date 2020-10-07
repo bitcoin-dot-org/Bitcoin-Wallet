@@ -3,7 +3,7 @@
     <div class="receive-view">
       <DashboardTitle>{{ language.receive }}</DashboardTitle>
       <DashboardSubtitle>
-        {{ language.receive_only }} Bitcoin (BTC) {{ language.address_below }}
+        {{ language.receive_only }} (BTC) {{ language.address_below }}
       </DashboardSubtitle>
       <Label>
         {{ language.wallet_address }}
@@ -54,7 +54,7 @@ export default class Overview extends Vue {
 
 <style scoped>
   .receive-view {
-    max-width: 560px;
+    max-width: 620px;
   }
 
   .input-wrapper {

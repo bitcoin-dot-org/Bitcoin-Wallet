@@ -1,5 +1,5 @@
 <template>
-  <div class="settings">
+  <Screen>
     <DashboardContent>
       <DashboardTitle class="settings__title">{{ language.settings }}</DashboardTitle>
       <Label class="settings-label">
@@ -39,7 +39,7 @@
         {{language.exit_wallet }}
       </ButtonSecondary>
     </Footer>
-  </div>
+  </Screen>
 </template>
 
 <script lang="ts">
@@ -48,6 +48,7 @@ import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
 import DashboardTitle from "@/components/Text/DashboardTitle.vue";
 import Label from "@/components/Form/Label.vue";
 import DashboardContent from "@/components/Layout/DashboardContent.vue";
+import Screen from "@/components/Layout/Screen.vue";
 import Footer from "@/components/Layout/Footer.vue";
 import ButtonSecondary from "@/components/Buttons/ButtonSecondary.vue";
 import '@spectrum-web-components/styles/all-medium-darkest.css';
@@ -58,7 +59,7 @@ import Language from "@/lang/langInterface";
 
 /* eslint-enable no-unused-vars */
 
-@Component({components: { DashboardTitle, Label, Footer, DashboardContent, ButtonSecondary }})
+@Component({components: { DashboardTitle, Label, Screen, Footer, DashboardContent, ButtonSecondary }})
 export default class Settings extends Vue {
   @Prop() language!: Language;
 
@@ -114,12 +115,6 @@ export default class Settings extends Vue {
 <style scoped>
   .dropdown-wrapper {
     width: 100%;
-  }
-  .settings {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100vh;
   }
   .settings-label + .settings-label {
     margin-top: 16px;

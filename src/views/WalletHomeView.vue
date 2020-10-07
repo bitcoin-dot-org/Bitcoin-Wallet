@@ -517,6 +517,7 @@ export default class WalletHomeView extends Vue {
 .sidebar {
   flex-grow: 1;
   max-width: 180px;
+  width: 100%;
   background: #090C14;
 }
 .balance {

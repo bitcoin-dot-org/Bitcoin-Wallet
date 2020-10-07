@@ -1,75 +1,116 @@
 <template>
-  <div id="white-container">
-    <p>{{ language.enter_address }}</p>
-    <div class="spectrum-Textfield spectrum-Textfield--quiet" style="width: 320px;">
-      <input
-        type="text"
-        :placeholder="language.address"
-        :style="addressError ? 'border-bottom: 1px solid red;' : ''"
-        v-on:keyup="verifyAddress()"
-        v-model="address"
-        class="spectrum-Textfield-input"
-      />
-    </div>
+  <Screen class="send">
+    <DashboardContent class="send-view">
+      <DashboardTitle>{{ language.send }}</DashboardTitle>
+      <DashboardSubtitle>{{ language.send_to }}.</DashboardSubtitle>
+      <Label>
+        {{ language.bitcoin_address }}
+        <Input
+          :placeholder="language.address"
+          :style="addressError ? 'border: 1px solid red;' : ''"
+          v-on:keyup="verifyAddress()"
+          v-model="address"
+        />
+      </Label>
 
-    <div
-      class="spectrum-Textfield spectrum-Textfield--quiet"
-      style="width: 120px;margin-left: 20px;"
-    >
-      <input
-        type="text"
-        :placeholder="language.amount"
-        v-on:keyup="enableSend()"
-        v-on:click="showModal()"
-        name="field"
-        :value="amount"
-        class="spectrum-Textfield-input"
-      />
-    </div>
-    <div class="divider" />
-    <div id="flex">
-      <div
-        id="feebox"
-        v-on:click="setSelectedFeeRate(0)"
-        :style=" selectedFeeRate == 0 ? 'border: 1px solid orange;' : ''"
-      >
-        <h1>{{ language.low_priority }}</h1>
-        <p>{{ language.low_priority_desc }}</p>
+      <div class="send-row">
+        <div class="send-row__item">
+          <Label>
+            {{ language.amount_to_send }}
+            <Input />
+            <p class="currency">BTC</p>
+          </Label>
+        </div>
+        <button class="swap-btn">
+          <img src="../assets/images/swap.svg">
+        </button>
+        <div class="send-row__item">
+          <button class="send-max">Send max</button>
+          <Input />
+          <p class="currency">USD</p>
+        </div>
       </div>
-      <div
-        id="feebox"
-        v-on:click="setSelectedFeeRate(1)"
-        :style=" selectedFeeRate == 1 ? 'border: 1px solid orange;' : ''"
+      
+      <!-- <div
+        class="spectrum-Textfield spectrum-Textfield--quiet"
+        style="width: 120px;margin-left: 20px;"
       >
-        <h1>{{ language.standard }}</h1>
-        <p>{{ language.standard_desc }}</p>
+        <input
+          type="text"
+          :placeholder="language.amount"
+          v-on:keyup="enableSend()"
+          v-on:click="showModal()"
+          name="field"
+          :value="amount"
+          class="spectrum-Textfield-input"
+        />
+      </div> -->
+      <div class="radio-row">
+        <div
+          class="radio"
+          id="feebox"
+          v-on:click="setSelectedFeeRate(0)"
+          :style=" selectedFeeRate == 0 ? 'border: 1px solid #F7931A;' : ''"
+        >
+          <h3 class="radio__title">{{ language.low_priority }}</h3>
+          <p class="radio__text">{{ language.low_priority_desc }}</p>
+        </div>
+        <div
+          class="radio"
+          id="feebox"
+          v-on:click="setSelectedFeeRate(1)"
+          :style=" selectedFeeRate == 1 ? 'border: 1px solid #F7931A;' : ''"
+        >
+          <h3 class="radio__title">{{ language.standard }}</h3>
+          <p class="radio__text">{{ language.standard_desc }}</p>
+        </div>
+        <div
+          class="radio"
+          id="feebox"
+          v-on:click="setSelectedFeeRate(2)"
+          :style=" selectedFeeRate == 2 ? 'border: 1px solid #F7931A;' : ''"
+        >
+          <h3 class="radio__title">{{ language.important }}</h3>
+          <p class="radio__text">{{ language.important_desc }}</p>
+        </div>
       </div>
-      <div
-        id="feebox"
-        v-on:click="setSelectedFeeRate(2)"
-        :style=" selectedFeeRate == 2 ? 'border: 1px solid orange;' : ''"
+      <div id="error" v-if="dustError">{{ language.dust_error }}</div>
+      <div id="error" v-if="transactionError">{{ language.not_enough }}</div>
+    </DashboardContent>
+    <Footer class="send-footer">
+      <div class="send-footer__info">
+        <div class="send-footer__item">
+          <p class="send-footer__label">{{ language.bitcoin_network_fee }}</p>
+          <p class="send-footer__amount">0.00023271 BTC</p>
+          <p class="send-footer__amount-alt">$2.32 USD</p>
+        </div>
+        <div class="send-footer__item">
+          <p class="send-footer__label">{{ language.total }}</p>
+          <p class="send-footer__amount">0.00 BTC</p>
+          <p class="send-footer__amount-alt">$0.00 USD</p>
+        </div>
+      </div>
+      <ButtonPrimary
+        v-on:click="sendButtonClicked()"
+        :disabled="this.sendDisabled"
       >
-        <h1>{{ language.important }}</h1>
-        <p>{{ language.important_desc }}</p>
-      </div>
-    </div>
-
-    <button
-      class="spectrum-Button spectrum-Button--cta"
-      v-on:click="sendButtonClicked()"
-      :disabled="this.sendDisabled"
-    >
-      <span class="spectrum-Button-label">{{ language.send }}</span>
-    </button>
-
-    <div id="error" v-if="dustError">{{ language.dust_error }}</div>
-    <div id="error" v-if="transactionError">{{ language.not_enough }}</div>
-  </div>
+        {{ language.send }}
+      </ButtonPrimary>
+    </Footer>
+  </Screen>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+import DashboardContent from "@/components/Layout/DashboardContent.vue";
+import DashboardTitle from "@/components/Text/DashboardTitle.vue";
+import DashboardSubtitle from "@/components/Text/DashboardSubtitle.vue";
+import Input from "@/components/Form/Input.vue";
+import Label from "@/components/Form/Label.vue";
+import Screen from "@/components/Layout/Screen.vue";
+import Footer from "@/components/Layout/Footer.vue";
+import ButtonPrimary from "@/components/Buttons/ButtonPrimary.vue";
 import BigNumber from "bignumber.js";
 import * as bitcoin from "bitcoinjs-lib";
 
@@ -79,7 +120,7 @@ import Language from "@/lang/langInterface";
 
 /* eslint-enable no-unused-vars */
 
-@Component
+@Component({components: { DashboardTitle, DashboardSubtitle, DashboardContent, Input, Label, Screen, Footer, ButtonPrimary }})
 export default class Send extends Vue {
   private address = "";
   private selectedFeeRate = 1;
@@ -95,6 +136,7 @@ export default class Send extends Vue {
     this.$emit("show-amount-modal");
   }
 
+id="feebox"
   setSelectedFeeRate(r: number) {
     this.selectedFeeRate = r;
   }
@@ -165,40 +207,111 @@ export default class Send extends Vue {
 </script>
 
 <style scoped>
-.divider {
-  border: 0.2px solid #d2caca;
-  width: 100%;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-#flex {
-  display: flex;
-}
-
-#feebox {
-  width: 300px;
-  border: 1px solid #d8d8d8;
-  font-size: 11px;
-  text-align: center;
-  padding: 10px;
-  background-color: whitesmoke;
-  cursor: pointer;
-  margin: 5px;
-}
-
-#feebox:hover {
-  border: 1px solid orange;
-}
-
-#feebox h1 {
-  font-size: 12px;
-}
-
-#error {
-  margin: 0 auto;
-  font-size: 12px;
-  color: red;
-  width: 320px;
-}
+  .send-view {
+    max-width: 620px;
+  }
+  .swap-btn {
+    margin: 0 28px 6px;
+    padding: 0;
+    border: none;
+    background: none;
+  }
+  .send-row {
+    display: flex;
+    align-items: flex-end;
+    margin: 24px 0 32px;
+  }
+  .send-row__item {
+    position: relative;
+    width: 100%;
+  }
+  .currency {
+    position: absolute;
+    bottom: 10px;
+    right: 16px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555B65;
+  }
+  .send-max {
+    width: 72px;
+    height: 22px;
+    display: block;
+    padding: 0;
+    margin: 0 0 8px auto;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 22px;
+    text-transform: uppercase;
+    color: #DCE0E7;
+    border: none;
+    background: #2B2F3A;
+    border-radius: 2px;
+  }
+  .radio-row {
+    display: flex;
+  }
+  .radio {
+    padding: 16px;
+    background: linear-gradient(180deg, #1F232E 0%, #13161F 100%);
+    border: 1px solid #2B2F3A;
+    box-shadow: 0px 12px 28px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .radio + .radio {
+    margin-left: 10px;
+  }
+  .radio__title {
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 20px;
+    color: #DCE0E7;
+  }
+  .radio__text {
+    font-size: 11px;
+    line-height: 18px;
+    color: #ACB2BB;
+  }
+  .send-footer {
+    display: flex;
+    justify-content: space-between;
+  }
+  .send-footer__info {
+    max-width: 333px;
+    width: 100%;
+  }
+  .send-footer__label {
+    font-size: 11px;
+    line-height: 18px;
+    color: #7E858F;
+  }
+  .send-footer__amount {
+    display: flex;
+    align-items: center;
+  }
+  .send-footer__amount {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: #DCE0E7;
+    margin-right: 48px;
+    margin-left: auto;
+  }
+  .send-footer__amount-alt {
+    font-size: 11px;
+    line-height: 18px;
+    text-align: right;
+    color: #7E858F;
+  }
+  .send-footer__item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .send-footer__item + .send-footer__item {
+    margin-top: 2px;
+  } 
 </style>
