@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-content">
-    <slot></slot>
+    <slot/>
   </div>  
 </template>
 <style scoped>

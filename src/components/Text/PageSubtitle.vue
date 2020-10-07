@@ -1,6 +1,6 @@
 <template>
   <p class="page-subtitle">
-    <slot></slot>
+    <slot/>
   </p>  
 </template>
 <style>

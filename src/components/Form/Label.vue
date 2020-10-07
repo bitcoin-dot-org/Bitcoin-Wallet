@@ -1,6 +1,6 @@
 <template>
   <label class="label">
-    <slot></slot>
+    <slot/>
   </label>  
 </template>
 <style scoped>

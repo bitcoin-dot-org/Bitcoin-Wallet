@@ -3,7 +3,7 @@
     @click="onClick"
     class="btn-secondary"
   >
-    <slot></slot>
+    <slot/>
   </button>
 </template>
 

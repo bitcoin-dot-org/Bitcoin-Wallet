@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <slot></slot>
+    <slot/>
   </footer>  
 </template>
 <style scoped>

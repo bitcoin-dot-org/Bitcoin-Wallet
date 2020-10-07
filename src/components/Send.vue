@@ -48,7 +48,6 @@
       <div class="radio-row">
         <div
           class="radio"
-          id="feebox"
           v-on:click="setSelectedFeeRate(0)"
           :style=" selectedFeeRate == 0 ? 'border: 1px solid #F7931A;' : ''"
         >
@@ -57,7 +56,6 @@
         </div>
         <div
           class="radio"
-          id="feebox"
           v-on:click="setSelectedFeeRate(1)"
           :style=" selectedFeeRate == 1 ? 'border: 1px solid #F7931A;' : ''"
         >
@@ -66,7 +64,6 @@
         </div>
         <div
           class="radio"
-          id="feebox"
           v-on:click="setSelectedFeeRate(2)"
           :style=" selectedFeeRate == 2 ? 'border: 1px solid #F7931A;' : ''"
         >
@@ -91,7 +88,7 @@
         </div>
       </div>
       <ButtonPrimary
-        v-on:click="sendButtonClicked()"
+        :onClick="sendButtonClicked"
         :disabled="this.sendDisabled"
       >
         {{ language.send }}
@@ -136,7 +133,6 @@ export default class Send extends Vue {
     this.$emit("show-amount-modal");
   }
 
-id="feebox"
   setSelectedFeeRate(r: number) {
     this.selectedFeeRate = r;
   }

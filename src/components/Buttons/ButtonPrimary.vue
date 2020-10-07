@@ -4,7 +4,7 @@
     class="btn-primary"
     :disabled="disabled"
   >
-    <slot></slot>
+    <slot/>
   </button>
 </template>
 
@@ -12,7 +12,8 @@
 export default {
   props: {
     onClick: {
-      type: Function
+      type: Function,
+      required: true
     },
     disabled: {
       type: Boolean,

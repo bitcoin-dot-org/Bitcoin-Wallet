@@ -1,6 +1,6 @@
 <template>
   <div class="view__content">
-    <slot></slot>
+    <slot/>
   </div>  
 </template>
 <style scoped>

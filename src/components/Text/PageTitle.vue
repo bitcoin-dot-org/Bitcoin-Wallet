@@ -1,6 +1,6 @@
 <template>
   <h1 class="page-title">
-    <slot></slot>
+    <slot/>
   </h1>  
 </template>
 <style scoped>
