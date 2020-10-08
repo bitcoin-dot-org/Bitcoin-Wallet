@@ -104,19 +104,6 @@ export default class Create extends Vue {
   .list {
     margin-top: 32px;
   }
-  .phrase {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 164px;
-    height: 40px;
-    border: 1px solid #2B2F3A;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    text-transform: uppercase;
-    color: #DCE0E7;
-  }
   .refresh-button {
     display: block;
     padding: 0 0 0 24px;

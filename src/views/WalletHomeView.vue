@@ -91,21 +91,17 @@
       @language-changed="switchLanguage()"
     ></Settings>
 
-    <div id="amountModal" :style="this.seedModal ? '' : 'display: none;'">
-      <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
-        <div class="spectrum-Dialog-header">
-          <h2 class="spectrum-Dialog-title">{{ lang.seed_modal }}</h2>
-        </div>
-        <div class="spectrum-Dialog-content">
-          <p>{{ this.seed }}</p>
-
-          <div id="modalButtons">
-            <button class="spectrum-Button spectrum-Button--cta" v-on:click="hideSeed()">
-              <span class="spectrum-Button-label">{{ lang.ok_button }}</span>
-            </button>
-          </div>
-        </div>
-      </div>
+    <div class="modal" :style="this.seedModal ? '' : 'display: none;'">
+      <button v-on:click="hideSeed()" class="modal__close">
+        <img src="../assets/images/close.svg" alt="close">
+      </button>
+      <PageTitle>{{ lang.seed_modal }}</PageTitle>
+      <PageSubtitle>{{ lang.create_subtitle_2 }}</PageSubtitle>
+      <OL>
+        <LI v-for="(seedItem, index) in this.seed.split(' ')" :key="index">
+          <span class="phrase">{{ seedItem }}</span>
+        </LI>
+      </OL>
     </div>
 
     <div id="amountModal" :style="this.modalShowing? '' : 'display: none;'">
@@ -214,6 +210,10 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
+import PageTitle from "@/components/Text/PageTitle.vue";
+import PageSubtitle from "@/components/Text/PageSubtitle.vue";
+import OL from "@/components/List/OL.vue";
+import LI from "@/components/List/LI.vue";
 import OverView from "@/components/Overview.vue";
 import Receive from "@/components/Receive.vue";
 import Send from "@/components/Send.vue";
@@ -227,7 +227,7 @@ import Language from "@/lang/langInterface";
 
 /* eslint-enable no-unused-vars */
 
-@Component({ components: { OverView, Receive, Send, Settings } })
+@Component({ components: { OverView, Receive, Send, Settings, PageTitle, PageSubtitle, OL, LI } })
 export default class WalletHomeView extends Vue {
   private currentTab = "Overview";
 
@@ -605,43 +605,43 @@ export default class WalletHomeView extends Vue {
   color: #ffffff;
   padding: 5px;
 }
-
-#contain {
+.modal-overlay {
+  background: #03050B;
+  opacity: 0.8;
+}
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  max-width: 716px;
+  width: 100%;
+  padding: 40px 32px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(360deg, #090C14 0%, #13161F 100%);
+  border: 1px solid #1F232E;
+  z-index: 10;
+}
+.modal__close {
+  position: absolute;
+  top: 8px;
+  right: 10px;  
   display: flex;
-  flex-direction: row;
+  align-items: center;
   justify-content: center;
-}
-
-#balance {
-  font-size: 30px;
-  text-align: center;
-  flex: 1;
-}
-
-.coin {
-  position: relative;
-  bottom: 15px;
-  font-size: 13px;
-}
-
-#white-container {
-  background: white;
-  padding: 30px;
-  margin: 20px;
-  border-radius: 5px;
-  width: 600px;
-  border: 1px solid #cccccc;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
 }
 
 #amountModal {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 10;
   width: 100%;
   height: 100%;
-  z-index: 10;
   background-color: rgba(0, 0, 0, 0.5);
 }
 </style>
