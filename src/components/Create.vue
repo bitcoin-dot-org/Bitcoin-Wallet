@@ -4,15 +4,14 @@
       <CreateStep1 v-if="!generated"/>
       <div v-if="generated">
         <CreateStep2/>
-        <ol class="phrases-list">
-          <li
-            class="phrases-list__item"
+        <OL class="list">
+          <LI
             v-for="(word, index) in mnemonic"
             :key="index"
           >
-            <span>{{ word }}</span>
-          </li>
-        </ol>
+            <span class="phrase">{{ word }}</span>
+          </LI>
+        </OL>
         <button class="refresh-button">Regenerate Phrase</button>
       </div>
     </ScreenContent>
@@ -49,6 +48,8 @@ import Footer from "@/components/Layout/Footer.vue";
 import ButtonPrimary from "@/components/Buttons/ButtonPrimary.vue";
 import BackLink from "@/components/Buttons/BackLink.vue";
 import Checkbox from "@/components/Form/Checkbox.vue";
+import OL from "@/components/List/OL.vue";
+import LI from "@/components/List/LI.vue";
 
 import * as bip39 from "bip39";
 
@@ -62,6 +63,8 @@ import * as bip39 from "bip39";
     ButtonPrimary,
     BackLink,
     Checkbox,
+    OL,
+    LI,
   }
 })
 export default class Create extends Vue {
@@ -98,26 +101,10 @@ export default class Create extends Vue {
 }
 </script>
 <style scoped>
-  .phrases-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    max-width: 676px;
-    padding: 0;
-    margin: 32px auto 8px;
+  .list {
+    margin-top: 32px;
   }
-  .phrases-list__item {
-    padding-left: 8px;
-    margin-right: 4.4%;
-    margin-bottom: 8px;
-    font-size: 16px;
-    line-height: 22px;
-    color: #ACB2BB;
-  }
-  .phrases-list__item:nth-child(3n) {
-    margin-right: 0;
-  }
-  .phrases-list__item span {
+  .phrase {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -133,7 +120,7 @@ export default class Create extends Vue {
   .refresh-button {
     display: block;
     padding: 0 0 0 24px;
-    margin: 0 auto;
+    margin: 8px auto 0;
     font-size: 14px;
     line-height: 20px;
     color: #7E858F;

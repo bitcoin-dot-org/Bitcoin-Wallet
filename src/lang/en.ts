@@ -35,7 +35,7 @@ var en = <Language> {
     do_not_loose_it: 'Don’t loose it',
 
     // Restore page
-    restore_notice: 'Enter your 12 word seed phrase to restore your wallet',
+    restore_notice: 'Please enter 12 word seed phrase to restore your wallet.',
 
     // Wallet home
     refresh: 'Refresh',

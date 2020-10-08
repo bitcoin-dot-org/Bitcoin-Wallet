@@ -1,51 +1,55 @@
 <template>
-  <div id="box">
-    <div class="spectrum-Alert spectrum-Alert--info">
-      <div class="spectrum-Alert-content">{{ lang.restore_notice }}</div>
+  <Screen class="restore-screen">
+    <div class="restore__main">
+      <PageTitle>Restore existing wallet</PageTitle>
+      <PageSubtitle>{{ lang.restore_notice }}</PageSubtitle>
+      <OL class="list">
+        <LI v-for="(seed, index) in words" :key="index">
+          <Input v-model="words[index]"/>
+        </LI>
+      </OL>
     </div>
-    <div id="inner">
-      <div id="restore" v-for="(seed, index) in words" :key="index">
-        <div class="spectrum-Textfield">
-          <input
-            type="text"
-            :placeholder="index + 1 + '.'"
-            v-model="words[index]"
-            class="spectrum-Textfield-input"
-          />
-        </div>
-      </div>
-    </div>
-    <div id="navigation">
-      <button class="spectrum-Button spectrum-Button--primary" v-on:click="backPressed()">
-        <span class="spectrum-Button-label">{{ lang.back_button }}</span>
-      </button>
-      <button
-        class="spectrum-Button spectrum-Button--cta"
-        style="margin-left: 10px;"
-        v-on:click="nextPressed()"
-      >
-        <span class="spectrum-Button-label">
+    <Footer>
+      <BackLink>{{ lang.back_button }}</BackLink>
+      <ButtonPrimary v-on:click="nextPressed()">
           <span v-if="!restoring">{{ lang.restore_button }}</span>
           <img v-if="restoring" src="../assets/tail-spin.svg" height="16" />
-        </span>
-      </button>
-    </div>
-  </div>
+      </ButtonPrimary>
+    </Footer>
+  </Screen>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+import PageTitle from "@/components/Text/PageTitle.vue";
+import PageSubtitle from "@/components/Text/PageSubtitle.vue";
+import Screen from "@/components/Layout/Screen.vue";
+import Footer from "@/components/Layout/Footer.vue";
+import ButtonPrimary from "@/components/Buttons/ButtonPrimary.vue";
+import BackLink from "@/components/Buttons/BackLink.vue";
+import OL from "@/components/List/OL.vue";
+import LI from "@/components/List/LI.vue";
+import Input from "@/components/Form/Input.vue";
 
-@Component
+@Component({
+  components:
+    {
+      PageTitle,
+      PageSubtitle,
+      Screen, 
+      Footer,
+      ButtonPrimary,
+      BackLink,
+      OL,
+      LI,
+      Input
+    }
+})
 export default class Restore extends Vue {
   private words = ["", "", "", "", "", "", "", "", "", "", "", ""];
   private restoring = false;
   private lang = WalletHandlerModule.currentLanguage;
-
-  backPressed() {
-    this.$router.back();
-  }
 
   async nextPressed() {
     this.restoring = true;
@@ -57,8 +61,14 @@ export default class Restore extends Vue {
 </script>
 
 <style scoped>
-#restore input {
-  margin: 10px;
-  width: 80%;
-}
+  .restore-screen {
+    padding-top: 40px;
+  }
+  .restore__main {
+    flex-grow: 1;
+    padding: 40px 30px;
+  }
+  .list {
+    margin-top: 40px;
+  }
 </style>
