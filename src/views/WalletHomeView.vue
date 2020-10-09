@@ -97,7 +97,7 @@
       </button>
       <PageTitle>{{ lang.seed_modal }}</PageTitle>
       <PageSubtitle>{{ lang.create_subtitle_2 }}</PageSubtitle>
-      <OL>
+      <OL class="list">
         <LI v-for="(seedItem, index) in this.seed.split(' ')" :key="index">
           <span class="phrase">{{ seedItem }}</span>
         </LI>
@@ -634,7 +634,10 @@ export default class WalletHomeView extends Vue {
   background: none;
   border: none;
 }
-
+.modal ol.list {
+  max-width: 609px;
+  margin-top: 48px;
+}
 #amountModal {
   position: absolute;
   top: 0;
