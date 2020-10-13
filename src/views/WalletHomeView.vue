@@ -91,17 +91,20 @@
       @language-changed="switchLanguage()"
     ></Settings>
 
-    <div class="modal" :style="this.seedModal ? '' : 'display: none;'">
-      <button v-on:click="hideSeed()" class="modal__close">
-        <img src="../assets/images/close.svg" alt="close">
-      </button>
-      <PageTitle>{{ lang.seed_modal }}</PageTitle>
-      <PageSubtitle>{{ lang.create_subtitle_2 }}</PageSubtitle>
-      <OL class="list">
-        <LI v-for="(seedItem, index) in this.seed.split(' ')" :key="index">
-          <span class="phrase">{{ seedItem }}</span>
-        </LI>
-      </OL>
+    <div class="modal-wrapper" :style="this.seedModal ? '' : 'display: none;'">
+      <div class="modal-overlay"></div>
+      <div class="modal">
+        <button v-on:click="hideSeed()" class="modal__close">
+          <img src="../assets/images/close.svg" alt="close">
+        </button>
+        <PageTitle>{{ lang.seed_modal }}</PageTitle>
+        <PageSubtitle>{{ lang.create_subtitle_2 }}</PageSubtitle>
+        <OL class="list">
+          <LI v-for="(seedItem, index) in this.seed.split(' ')" :key="index">
+            <span class="phrase">{{ seedItem }}</span>
+          </LI>
+        </OL>
+      </div>
     </div>
 
     <div id="amountModal" :style="this.modalShowing? '' : 'display: none;'">
@@ -606,6 +609,15 @@ export default class WalletHomeView extends Vue {
   padding: 5px;
 }
 .modal-overlay {
+  background: #03050B;
+  opacity: 0.8;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: #03050B;
   opacity: 0.8;
 }

@@ -1,20 +1,18 @@
 <template>
-  <Screen>
+  <Screen class="settings">
     <DashboardContent>
       <DashboardTitle class="settings__title">{{ language.settings }}</DashboardTitle>
       <Label class="settings-label">
         {{ language.currency }}
-        <div>
-          <sp-dropdown class="dropdown-wrapper" :label="module.settings.currency">
-            <sp-menu>
-              <sp-menu-item
-                v-for="(currency, index) in currencies"
-                :key="'cur' + index"
-                v-on:click="currencySelected(index)"
-              >{{ currency }}</sp-menu-item>
-            </sp-menu>
-          </sp-dropdown>
-        </div>
+        <sp-dropdown class="dropdown-wrapper" :label="module.settings.currency">
+          <sp-menu>
+            <sp-menu-item
+              v-for="(currency, index) in currencies"
+              :key="'cur' + index"
+              v-on:click="currencySelected(index)"
+            >{{ currency }}</sp-menu-item>
+          </sp-menu>
+        </sp-dropdown>
       </Label>
       <Label class="settings-label">
         {{ language.language }}
@@ -51,7 +49,6 @@ import DashboardContent from "@/components/Layout/DashboardContent.vue";
 import Screen from "@/components/Layout/Screen.vue";
 import Footer from "@/components/Layout/Footer.vue";
 import ButtonSecondary from "@/components/Buttons/ButtonSecondary.vue";
-import '@spectrum-web-components/styles/all-medium-darkest.css';
 
 /* eslint-disable no-unused-vars */
 
@@ -112,9 +109,50 @@ export default class Settings extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
   .dropdown-wrapper {
     width: 100%;
+  }
+  sp-dropdown {
+    --spectrum-dropdown-height: 40px;
+    --spectrum-dropdown-padding-x: 16px;
+    --spectrum-fieldbutton-background-color: #090C14;
+    --spectrum-fieldbutton-background-color-hover: #090C14;
+    --spectrum-fieldbutton-background-color-down: #090C14;
+    --spectrum-dropdown-placeholder-text-color-hover: #fff;
+    --spectrum-global-dimension-size-50: 2px;
+    --spectrum-fieldbutton-border-color: #2B2F3A;
+    --spectrum-fieldbutton-border-color-hover: #2B2F3A;
+    --spectrum-fieldbutton-border-color-down: #2B2F3A;
+    --spectrum-fieldbutton-text-color: #fff;
+    --spectrum-fieldbutton-text-color-hover: #fff;
+    --spectrum-dropdown-placeholder-text-color: #fff;
+    --spectrum-dropdown-placeholder-text-font-style: normal;
+    --spectrum-dropdown-icon-color-hover: #7E858F;
+  }
+  sp-popover {
+    max-height: 250px;
+    --spectrum-popover-background-color: #090C14;
+    --spectrum-popover-border-color: #2B2F3A;
+  }
+  sp-menu {
+    padding: 15px 0;
+  }
+  sp-menu-item {
+    --spectrum-selectlist-option-text-color-selected: #F7931A;
+    --spectrum-selectlist-option-padding: 16px;
+    --spectrum-selectlist-option-text-color: #ACB2BB;
+    --spectrum-selectlist-option-text-color-hover: #ACB2BB;
+    --spectrum-selectlist-option-text-size: 14px;
+    --spectrum-selectlist-option-icon-color-selected: transparent;
+    --spectrum-selectlist-option-background-color-hover: transparent;
+  }
+  sp-menu-item[selected] {
+    display: block;
+    background-color: #13161F;
+  }
+  sp-icon {
+    display: none !important;
   }
   .settings-label + .settings-label {
     margin-top: 16px;
@@ -125,7 +163,7 @@ export default class Settings extends Vue {
   .settings__title {
     margin-bottom: 40px;
   }
-  button.exit-button {
+  button.btn-secondary.exit-button {
     display: flex;
     align-items: center;
     color: #F7931A;
