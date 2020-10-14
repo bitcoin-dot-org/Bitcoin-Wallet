@@ -201,8 +201,18 @@ export default {
     color: #7E858F;
   }
   .external-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
     margin-left: auto;
-    display: block;
-    width: 16px;
+    border-radius: 2px;
+  }
+  .external-link:hover {
+    background: #434854;
+  }
+  .external-link:active {
+    background: transparent;
   }
 </style>
