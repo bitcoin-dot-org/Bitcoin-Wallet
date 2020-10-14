@@ -33,6 +33,7 @@
     transform: translateY(-50%);
     background: url('./../../assets/images/arrow-left.svg') center no-repeat;
     background-size: contain;
+    transition: all 0.1s linear;
   }
   .back-link:hover {
     border: 1px solid #ACB2BB;
@@ -40,5 +41,8 @@
   .back-link:active {
     background: #1F232E;
     border: 1px solid #434854;
+  }
+  .back-link:hover::before {
+    left: 20px;
   }
 </style>
