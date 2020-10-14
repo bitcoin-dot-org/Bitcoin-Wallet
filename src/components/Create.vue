@@ -12,7 +12,10 @@
             <span class="phrase">{{ word }}</span>
           </LI>
         </OL>
-        <button class="refresh-button">Regenerate Phrase</button>
+        <button :class="['refresh-button', refreshButtonClass]" @click="rotateIcon">
+          <img class="refresh-button__icon" src="../assets/images/refresh.svg" alt="refresh">
+          Regenerate Phrase
+        </button>
       </div>
     </ScreenContent>
     <Footer>
@@ -72,11 +75,19 @@ export default class Create extends Vue {
   private loading = false
   private mnemonic: string[] = []
   private lang = WalletHandlerModule.currentLanguage
+  private refreshButtonClass = ''
 
   data() {
     return {
-      seedPhraseSaved: false
+      seedPhraseSaved: false,
     }
+  }
+
+  rotateIcon() {
+    this.refreshButtonClass = 'rotate';
+    setTimeout(() => {
+      this.refreshButtonClass = '';
+    }, 500);
   }
   
   backPressed(): void {
@@ -105,14 +116,31 @@ export default class Create extends Vue {
     margin-top: 32px;
   }
   .refresh-button {
-    display: block;
-    padding: 0 0 0 24px;
+    display: flex;
+    align-items: center;
+    padding: 0;
     margin: 8px auto 0;
     font-size: 14px;
     line-height: 20px;
     color: #7E858F;
     border: none;
-    background: url('../assets/images/refresh.svg') center left no-repeat;
+    background: none;
+    outline: none;
+  }
+  .refresh-button.rotate img {
+    animation: rotate .5s linear;
+  }
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .refresh-button__icon {
+    margin-right: 10px;
+    transition: all 0.3s linear;
   }
   .seed-phrase-checkbox {
     margin-right: 24px;
