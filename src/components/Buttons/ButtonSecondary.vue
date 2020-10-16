@@ -36,6 +36,10 @@ export default {
     background: #1F232E;
     border: 1px solid #434854;
   }
+  .btn-secondary:focus:not(:disabled) {
+    border: 1px solid #ACB2BB;
+    outline: none;
+  }
   .btn-secondary:disabled {
     opacity: 0.4;
   }

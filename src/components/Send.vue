@@ -248,6 +248,10 @@ export default class Send extends Vue {
   .send-max:hover {
     background: #434854;
   }
+  .send-max:focus {
+    background: #434854;
+    outline: none;
+  }
   .send-max:active {
     background: #1F232E;
   }

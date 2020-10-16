@@ -28,40 +28,32 @@
           <li>
             <button
               v-on:click="currentTab = 'Overview'"
-              :class="['nav__btn', currentTab === 'Overview' && 'active']"
+              :class="['nav__btn nav__btn--overview', currentTab === 'Overview' && 'active']"
             >
-              <img class="nav__icon nav__icon--inactive" src="../assets/images/collection.svg">
-              <img class="nav__icon nav__icon--active" src="../assets/images/collection-active.svg" hidden>
               {{ lang.overview }}
             </button>
           </li>
           <li>
             <button
               v-on:click="currentTab = 'Send'"
-              :class="['nav__btn', currentTab === 'Send' && 'active']"
+              :class="['nav__btn nav__btn--send', currentTab === 'Send' && 'active']"
             >
-              <img class="nav__icon nav__icon--inactive" src="../assets/images/send.svg">
-              <img class="nav__icon nav__icon--active" src="../assets/images/send-active.svg" hidden>
               {{ lang.send }}
             </button>
           </li>
           <li>
             <button
               v-on:click="currentTab = 'Receive'"
-              :class="['nav__btn', currentTab === 'Receive' && 'active']"
+              :class="['nav__btn nav__btn--receive', currentTab === 'Receive' && 'active']"
             >
-              <img class="nav__icon nav__icon--inactive" src="../assets/images/received.svg">
-              <img class="nav__icon nav__icon--active" src="../assets/images/received-active.svg" hidden>
               {{ lang.receive }}
             </button>
           </li>
           <li>
             <button
               v-on:click="currentTab = 'Settings'"
-              :class="['nav__btn', currentTab === 'Settings' && 'active']"
+              :class="['nav__btn nav__btn--settings', currentTab === 'Settings' && 'active']"
             >
-              <img class="nav__icon nav__icon--inactive" src="../assets/images/gear.svg">
-              <img class="nav__icon nav__icon--active" src="../assets/images/gear-active.svg" hidden>
               {{ lang.settings }}
             </button>
           </li>
@@ -566,20 +558,32 @@ export default class WalletHomeView extends Vue {
   color: #555B65;
 }
 .refresh-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: none;
   background: none;
+}
+.refresh-button:hover,
+.refresh-button:focus {
+  background: #434854;
+  outline: none;
+  border-radius: 2px;
 }
 .nav__list {
   padding: 0;
   list-style: none;
 }
 .nav__btn {
+  position: relative;
   display: flex;
   align-items: center;
   height: 56px;
   width: 100%;
-  padding: 16px 13px;
+  padding: 16px 13px 16px 48px;
   font-weight: 600;
   font-size: 17px;
   line-height: 24px;
@@ -594,14 +598,64 @@ export default class WalletHomeView extends Vue {
   background: #13161F;
   border-left: 3px solid #F7931A;
 }
-.nav__icon {
-  margin-right: 16px;
+.nav__btn:hover,
+.nav__btn:focus {
+  color: #F7931A;
+  outline: none;
 }
-.nav__btn.active .nav__icon--inactive {
-  display: none;
+.nav__btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
 }
-.nav__btn.active .nav__icon--active {
-  display: block;
+.nav__btn.active {
+  color: #FFFFFF;
+  background: #13161F;
+  border-left: 3px solid #F7931A;
+}
+.nav__btn--overview::before {
+  background: url('../assets/images/collection.svg') center no-repeat;
+}
+.nav__btn--overview:hover::before,
+.nav__btn--overview:focus::before {
+  background: url('../assets/images/collection-focus.svg') center no-repeat;
+}
+.nav__btn--overview.active::before {
+  background: url('../assets/images/collection-active.svg') center no-repeat;
+}
+.nav__btn--send::before {
+  background: url('../assets/images/send.svg') center no-repeat;
+}
+.nav__btn--send:hover::before,
+.nav__btn--send:focus::before {
+  background: url('../assets/images/send-focus.svg') center no-repeat;
+}
+.nav__btn--send.active::before {
+  background: url('../assets/images/send-active.svg') center no-repeat;
+}
+.nav__btn--receive::before {
+  background: url('../assets/images/received.svg') center no-repeat;
+}
+.nav__btn--receive:hover::before,
+.nav__btn--receive:focus::before {
+  background: url('../assets/images/received-focus.svg') center no-repeat;
+}
+.nav__btn--receive.active::before {
+  background: url('../assets/images/received-active.svg') center no-repeat;
+}
+.nav__btn--settings::before {
+  background: url('../assets/images/gear.svg') center no-repeat;
+}
+.nav__btn--settings:hover::before,
+.nav__btn--settings:focus::before {
+  background: url('../assets/images/gear-focus.svg') center no-repeat;
+}
+.nav__btn--settings.active::before {
+  background: url('../assets/images/gear-active.svg') center no-repeat;
 }
 #topbar {
   background-color: #090c14;
@@ -645,6 +699,12 @@ export default class WalletHomeView extends Vue {
   height: 24px;
   background: none;
   border: none;
+}
+.modal__close:hover,
+.modal__close:focus {
+  background: #434854;
+  outline: none;
+  border-radius: 2px;
 }
 .modal ol.list {
   max-width: 609px;

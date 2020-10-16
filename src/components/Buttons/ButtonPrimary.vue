@@ -41,6 +41,10 @@ export default {
   .btn-primary:active:not(:disabled) {
     background: #F38B0C;
   }
+  .btn-primary:focus:not(:disabled) {
+    background: #FFA02D;
+    outline: none;
+  }
   .btn-primary:disabled {
     opacity: 0.4;
   }

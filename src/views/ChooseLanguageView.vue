@@ -85,6 +85,16 @@
     border-radius: 3px;
     background: transparent;
   }
+  .lang-button:hover {
+    background: #13161F;
+  }
+  .lang-button:focus {
+    background: #13161F;
+    outline: none;
+  }
+  .lang-button:active {
+    background: #2B2F3A;
+  }
   .lang-button--active {
     background: #2B2F3A;
   }
