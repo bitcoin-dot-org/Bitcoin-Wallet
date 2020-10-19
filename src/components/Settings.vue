@@ -132,11 +132,13 @@ export default class Settings extends Vue {
   }
   sp-popover {
     max-height: 250px;
+    transform: translateY(0);
     --spectrum-popover-background-color: #090C14;
     --spectrum-popover-border-color: #2B2F3A;
   }
   sp-menu {
     padding: 15px 0;
+    border-radius: 2px;
   }
   sp-menu-item {
     --spectrum-selectlist-option-text-color-selected: #F7931A;
@@ -150,9 +152,6 @@ export default class Settings extends Vue {
   sp-menu-item[selected] {
     display: block;
     background-color: #13161F;
-  }
-  sp-icon {
-    display: none !important;
   }
   .settings-label + .settings-label {
     margin-top: 16px;

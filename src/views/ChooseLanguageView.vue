@@ -85,15 +85,12 @@
     border-radius: 3px;
     background: transparent;
   }
-  .lang-button:hover {
-    background: #13161F;
+  .lang-button:not(.lang-button--active):hover {
+    color: #F7931A;
   }
-  .lang-button:focus {
-    background: #13161F;
+  .lang-button:not(.lang-button--active):focus {
+    color: #F7931A;
     outline: none;
-  }
-  .lang-button:active {
-    background: #2B2F3A;
   }
   .lang-button--active {
     background: #2B2F3A;

@@ -56,21 +56,28 @@ export default class Overview extends Vue {
   .receive-view {
     max-width: 620px;
   }
-
   .input-wrapper {
     position: relative;
   }
-
   .copy-button {
     position: absolute;
     top: 50%;
     right: 16px;
     padding: 0;
     transform: translateY(-50%);
+    width: 24px;
+    display: flex;
+    height: 24px;
+    align-items: center;
+    justify-content: center;
     border: none;
     background: none;
   }
-
+  .copy-button:focus {
+    background: #434854;
+    border-radius: 2px;
+    outline: none;
+  }
   .qr-code-wrapper {
     display: flex;
     justify-content: center;

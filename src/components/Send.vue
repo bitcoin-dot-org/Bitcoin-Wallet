@@ -207,10 +207,20 @@ export default class Send extends Vue {
     max-width: 620px;
   }
   .swap-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
     margin: 0 28px 6px;
     padding: 0;
     border: none;
     background: none;
+  }
+  .swap-btn:focus {
+    background: #434854;
+    border-radius: 2px;
+    outline: none;
   }
   .send-row {
     display: flex;

@@ -20,7 +20,7 @@
     </ScreenContent>
     <Footer>
       <BackLink/>
-      <div>
+      <div v-if="!loading">
         <Checkbox
           v-if="generated"
           class="seed-phrase-checkbox"
@@ -28,7 +28,6 @@
           label="I have saved my seed phrase safely."
         />
         <ButtonPrimary
-          v-if="!loading"
           :disabled="generated && !seedPhraseSaved"
           :click="generatePressed"
         >

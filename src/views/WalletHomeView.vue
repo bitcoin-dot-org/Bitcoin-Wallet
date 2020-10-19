@@ -6,12 +6,10 @@
           <p class="balance__title">{{ lang.total_balance }}:</p>
           <button
             v-on:click="refresh()"
-            v-if="!refreshing"
-            class="refresh-button"
+            :class="['refresh-button', refreshing ? 'spin' : '']"
           >
             <img src="../assets/images/refresh.svg" alt="refresh">
           </button>
-          <img v-if="refreshing" src="../assets/tail-spin.svg" height="16" />
         </div>
         <p class="balance__amount">
           <span class="balance__amount-large">109.82124293</span>
@@ -504,7 +502,7 @@ export default class WalletHomeView extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .dashboard {
   display: flex;
   min-height: 100vh;
@@ -572,6 +570,15 @@ export default class WalletHomeView extends Vue {
   background: #434854;
   outline: none;
   border-radius: 2px;
+}
+.refresh-button.spin {
+  animation:spin 1s linear infinite;
+  background: none;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .nav__list {
   padding: 0;

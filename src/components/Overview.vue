@@ -180,8 +180,14 @@ export default class Overview extends Vue {
   }
   .pagination__button {
     border: none;
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
+  }
+  .pagination__button:focus,
+  .pagination__button:hover {
+    background-color: #434854;
+    border-radius: 2px;
+    outline: none;
   }
   .pagination__prev {
     background: url('../assets/images/angle-right.svg') center no-repeat;

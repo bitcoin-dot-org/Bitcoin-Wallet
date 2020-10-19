@@ -99,6 +99,11 @@ export default {
     border: none;
     background: none;
   }
+  .sort-button:hover,
+  .sort-button:focus {
+    color: #fff;
+    outline: none;
+  }
   .sort-button--ascending,
   .sort-button--descending {
     padding-right: 20px;
@@ -209,8 +214,10 @@ export default {
     margin-left: auto;
     border-radius: 2px;
   }
+  .external-link:focus,
   .external-link:hover {
     background: #434854;
+    outline: none;
   }
   .external-link:active {
     background: transparent;
