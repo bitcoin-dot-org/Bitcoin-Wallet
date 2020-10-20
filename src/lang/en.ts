@@ -79,6 +79,8 @@ var en = <Language> {
     not_enough: "You don't have enough to send the specified amount while also paying the miner fee. Try 'Send Max'.",
     dust_error: "Amount too small to send...",
     bitcoin_network_fee: "Bitcoin Network fee",
+    you_just_send: 'You just sent',
+    view_transaction: 'You can view transaction details in',
 
     // Receive
     receive_only: 'Receive only Bitcoin',

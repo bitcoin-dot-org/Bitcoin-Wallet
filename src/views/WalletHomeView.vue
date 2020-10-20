@@ -81,6 +81,26 @@
       @language-changed="switchLanguage()"
     ></Settings>
 
+    <div class="modal-wrapper" hidden>
+      <div class="modal-overlay"></div>
+      <div class="modal modal--send">
+        <button v-on:click="hideSeed()" class="modal__close">
+          <img src="../assets/images/close.svg" alt="close">
+        </button>
+        <img class="send-modal-icon" src="./../assets/images/send-focus.svg" alt="send">
+        <PageTitle>{{ lang.you_just_send }}</PageTitle>
+        <PageSubtitle>0.0102327 BTC  ($119,27 USD)  to <br> 3Pv7sJ96vEdudHqJTq12x1UupGaeuqZHFB. </PageSubtitle>
+        <br>
+        <PageSubtitle>
+          {{ lang.view_transaction }}
+          <button
+            v-on:click="currentTab = 'Overview'"
+            class="link"
+          > {{ lang.overview }}</button>
+        </PageSubtitle>
+      </div>
+    </div>
+
     <div class="modal-wrapper" :style="this.seedModal ? '' : 'display: none;'">
       <div class="modal-overlay"></div>
       <div class="modal">
@@ -725,5 +745,23 @@ export default class WalletHomeView extends Vue {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+}
+.link {
+  font-size: 16px;
+  line-height: 22px;
+  border: none;
+  background: none;
+  text-decoration: underline;
+  color: #fff;
+}
+.modal--send {
+  width: 568px;
+  padding: 44px 32px 65px;
+}
+.send-modal-icon {
+  width: 24px;
+  height: 24px;
+  margin: 0 auto;
+  display: block;
 }
 </style>
