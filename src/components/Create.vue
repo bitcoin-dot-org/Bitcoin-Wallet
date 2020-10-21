@@ -34,7 +34,7 @@
           {{ generated ? lang.wrote_it_down : lang.generate }}
       </ButtonPrimary>
       </div>
-      <img v-if="loading" src="../assets/tail-spin.svg" height="16" />
+      <Loader v-if="loading" class="spiner"/>
     </Footer>
   </Screen>
 </template>
@@ -52,6 +52,7 @@ import BackLink from "@/components/Buttons/BackLink.vue";
 import Checkbox from "@/components/Form/Checkbox.vue";
 import OL from "@/components/List/OL.vue";
 import LI from "@/components/List/LI.vue";
+import Loader from "@/components/Loader.vue";
 
 import * as bip39 from "bip39";
 
@@ -67,6 +68,7 @@ import * as bip39 from "bip39";
     Checkbox,
     OL,
     LI,
+    Loader,
   }
 })
 export default class Create extends Vue {
@@ -143,5 +145,9 @@ export default class Create extends Vue {
   }
   .seed-phrase-checkbox {
     margin-right: 24px;
+  }
+  .spiner {
+    width: 40px;
+    height: 40px;
   }
 </style>
