@@ -144,10 +144,10 @@ export default class Settings extends Vue {
     --spectrum-selectlist-option-text-color-selected: #F7931A;
     --spectrum-selectlist-option-padding: 16px;
     --spectrum-selectlist-option-text-color: #ACB2BB;
-    --spectrum-selectlist-option-text-color-hover: #ACB2BB;
+    --spectrum-selectlist-option-text-color-hover: #F7931A;
     --spectrum-selectlist-option-text-size: 14px;
     --spectrum-selectlist-option-icon-color-selected: transparent;
-    --spectrum-selectlist-option-background-color-hover: transparent;
+    --spectrum-selectlist-option-background-color-hover: #13161F;
   }
   sp-menu-item[selected] {
     display: block;
@@ -165,7 +165,6 @@ export default class Settings extends Vue {
   button.btn-secondary.exit-button {
     display: flex;
     align-items: center;
-    color: #F7931A;
   }
   .exit-button img {
     margin-right: 8px;

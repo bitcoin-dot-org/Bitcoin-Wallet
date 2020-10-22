@@ -73,6 +73,7 @@ export default class Overview extends Vue {
     border: none;
     background: none;
   }
+  .copy-button:hover,
   .copy-button:focus {
     background: #434854;
     border-radius: 2px;

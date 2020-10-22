@@ -46,30 +46,30 @@
         />
       </div> -->
       <div class="radio-row">
-        <div
+        <button
           class="radio"
           v-on:click="setSelectedFeeRate(0)"
           :style=" selectedFeeRate == 0 ? 'border: 1px solid #F7931A;' : ''"
         >
           <h3 class="radio__title">{{ language.low_priority }}</h3>
           <p class="radio__text">{{ language.low_priority_desc }}</p>
-        </div>
-        <div
+        </button>
+        <button
           class="radio"
           v-on:click="setSelectedFeeRate(1)"
           :style=" selectedFeeRate == 1 ? 'border: 1px solid #F7931A;' : ''"
         >
           <h3 class="radio__title">{{ language.standard }}</h3>
           <p class="radio__text">{{ language.standard_desc }}</p>
-        </div>
-        <div
+        </button>
+        <button
           class="radio"
           v-on:click="setSelectedFeeRate(2)"
           :style=" selectedFeeRate == 2 ? 'border: 1px solid #F7931A;' : ''"
         >
           <h3 class="radio__title">{{ language.important }}</h3>
           <p class="radio__text">{{ language.important_desc }}</p>
-        </div>
+        </button>
       </div>
       <div id="error" v-if="dustError">{{ language.dust_error }}</div>
       <div id="error" v-if="transactionError">{{ language.not_enough }}</div>
@@ -217,6 +217,7 @@ export default class Send extends Vue {
     border: none;
     background: none;
   }
+  .swap-btn:hover,
   .swap-btn:focus {
     background: #434854;
     border-radius: 2px;
@@ -275,6 +276,11 @@ export default class Send extends Vue {
     box-shadow: 0px 12px 28px rgba(0, 0, 0, 0.3);
     border-radius: 2px;
     cursor: pointer;
+  }
+  .radio:hover,
+  .radio:focus {
+    border: 1px solid #555B65;
+    outline: none;
   }
   .radio + .radio {
     margin-left: 10px;
