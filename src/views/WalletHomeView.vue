@@ -1,66 +1,119 @@
 <template>
-  <div>
-    <div id="topbar">
-      <div id="contain">
-        <div id="balance">
-          <a href="#" v-on:click="refresh()" style="font-size: 12px;margin-bottom: -10px;">
-            {{ lang.refresh }}
-            <img v-if="refreshing" src="../assets/tail-spin.svg" height="16" />
-          </a>
-          <br />
-          <span>{{ this.fiatSymbol + btcToFiat(balance.toString()) }}</span>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="balance">
+        <div class="balance__row">
+          <p class="balance__title">{{ lang.total_balance }}:</p>
+          <button
+            v-on:click="refresh()"
+            :class="['refresh-button', refreshing ? 'spin' : '']"
+          >
+            <img src="../assets/images/refresh.svg" alt="refresh">
+          </button>
         </div>
+        <p class="balance__amount">
+          <span class="balance__amount-large">109.82124293</span>
+          <span class="balance__currency-abbr">mBTC</span>
+        </p>
+        <p class="balance__amount">
+          $ 18.479,79
+          <!-- {{ this.fiatSymbol + btcToFiat(balance.toString()) }} -->
+          <span class="balance__currency-abbr">USD</span>
+        </p>
       </div>
-    </div>
-    <div class="spectrum-Tabs spectrum-Tabs--horizontal spectrum-Tabs--quiet">
-      <div
-        class="spectrum-Tabs-item"
-        v-on:click="currentTab = 'Overview'"
-        style="padding: 10px;"
-        tabindex="0"
-      >
-        <span class="spectrum-Tabs-itemLabel">{{ lang.overview }}</span>
-      </div>
-      <div
-        class="spectrum-Tabs-item"
-        style="padding: 10px;"
-        v-on:click="currentTab = 'Send'"
-        tabindex="0"
-      >
-        <span class="spectrum-Tabs-itemLabel">{{ lang.send }}</span>
-      </div>
-      <div
-        class="spectrum-Tabs-item"
-        v-on:click="currentTab = 'Receive'"
-        style="padding: 10px;"
-        tabindex="0"
-      >
-        <span class="spectrum-Tabs-itemLabel">{{ lang.receive }}</span>
-      </div>
-      <div
-        class="spectrum-Tabs-item"
-        v-on:click="currentTab = 'Settings'"
-        style="padding: 10px;"
-        tabindex="0"
-      >
-        <span class="spectrum-Tabs-itemLabel">{{ lang.settings }}</span>
-      </div>
-    </div>
-
-    <div id="amountModal" :style="this.seedModal ? '' : 'display: none;'">
-      <div class="spectrum-Dialog spectrum-Dialog--small is-open spectrum-CSSExample-dialog">
-        <div class="spectrum-Dialog-header">
-          <h2 class="spectrum-Dialog-title">{{ lang.seed_modal }}</h2>
-        </div>
-        <div class="spectrum-Dialog-content">
-          <p>{{ this.seed }}</p>
-
-          <div id="modalButtons">
-            <button class="spectrum-Button spectrum-Button--cta" v-on:click="hideSeed()">
-              <span class="spectrum-Button-label">{{ lang.ok_button }}</span>
+      <nav class="nav">
+        <ul class="nav__list">
+          <li>
+            <button
+              v-on:click="currentTab = 'Overview'"
+              :class="['nav__btn nav__btn--overview', currentTab === 'Overview' && 'active']"
+            >
+              {{ lang.overview }}
             </button>
-          </div>
-        </div>
+          </li>
+          <li>
+            <button
+              v-on:click="currentTab = 'Send'"
+              :class="['nav__btn nav__btn--send', currentTab === 'Send' && 'active']"
+            >
+              {{ lang.send }}
+            </button>
+          </li>
+          <li>
+            <button
+              v-on:click="currentTab = 'Receive'"
+              :class="['nav__btn nav__btn--receive', currentTab === 'Receive' && 'active']"
+            >
+              {{ lang.receive }}
+            </button>
+          </li>
+          <li>
+            <button
+              v-on:click="currentTab = 'Settings'"
+              :class="['nav__btn nav__btn--settings', currentTab === 'Settings' && 'active']"
+            >
+              {{ lang.settings }}
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <OverView
+      v-if="currentTab == 'Overview'"
+      :language="lang"
+      :transactions="allTransactions"
+    ></OverView>
+    <Receive v-if="currentTab == 'Receive'" :language="lang"></Receive>
+    <Send
+      v-if="currentTab == 'Send'"
+      :language="lang"
+      @show-amount-modal="showModal()"
+      @show-transaction-confirm="showTransaction"
+      :amount="btcAmount"
+    ></Send>
+    <Settings
+      v-if="currentTab == 'Settings'"
+      :language="lang"
+      @show-seed="showSeed()"
+      @close="close()"
+      @currency-changed="switchCurrency()"
+      @language-changed="switchLanguage()"
+    ></Settings>
+
+    <div class="modal-wrapper" hidden>
+      <div class="modal-overlay"></div>
+      <div class="modal modal--send">
+        <button v-on:click="hideSeed()" class="modal__close">
+          <img src="../assets/images/close.svg" alt="close">
+        </button>
+        <img class="send-modal-icon" src="./../assets/images/send-focus.svg" alt="send">
+        <PageTitle>{{ lang.you_just_send }}</PageTitle>
+        <PageSubtitle>0.0102327 BTC  ($119,27 USD)  to <br> 3Pv7sJ96vEdudHqJTq12x1UupGaeuqZHFB. </PageSubtitle>
+        <br>
+        <PageSubtitle>
+          {{ lang.view_transaction }}
+          <button
+            v-on:click="currentTab = 'Overview'"
+            class="link"
+          > {{ lang.overview }}</button>
+        </PageSubtitle>
+      </div>
+    </div>
+
+    <div class="modal-wrapper" :style="this.seedModal ? '' : 'display: none;'">
+      <div class="modal-overlay"></div>
+      <div class="modal">
+        <button v-on:click="hideSeed()" class="modal__close">
+          <img src="../assets/images/close.svg" alt="close">
+        </button>
+        <PageTitle>{{ lang.seed_modal }}</PageTitle>
+        <PageSubtitle>{{ lang.create_subtitle_2 }}</PageSubtitle>
+        <OL class="list">
+          <LI v-for="(seedItem, index) in this.seed.split(' ')" :key="index">
+            <span class="phrase">{{ seedItem }}</span>
+          </LI>
+        </OL>
       </div>
     </div>
 
@@ -165,32 +218,15 @@
       </div>
     </div>
 
-    <OverView
-      :style="currentTab == 'Overview' ? '' : 'display: none;'"
-      :language="lang"
-      :transactions="allTransactions"
-    ></OverView>
-    <Receive :style="currentTab == 'Receive' ? '' : 'display: none;'" :language="lang"></Receive>
-    <Send
-      :style="currentTab == 'Send' ? '' : 'display: none;'"
-      :language="lang"
-      @show-amount-modal="showModal()"
-      @show-transaction-confirm="showTransaction"
-      :amount="btcAmount"
-    ></Send>
-    <Settings
-      :style="currentTab == 'Settings' ? '' : 'display: none;'"
-      :language="lang"
-      @show-seed="showSeed()"
-      @close="close()"
-      @currency-changed="switchCurrency()"
-      @language-changed="switchLanguage()"
-    ></Settings>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
+import PageTitle from "@/components/Text/PageTitle.vue";
+import PageSubtitle from "@/components/Text/PageSubtitle.vue";
+import OL from "@/components/List/OL.vue";
+import LI from "@/components/List/LI.vue";
 import OverView from "@/components/Overview.vue";
 import Receive from "@/components/Receive.vue";
 import Send from "@/components/Send.vue";
@@ -204,7 +240,7 @@ import Language from "@/lang/langInterface";
 
 /* eslint-enable no-unused-vars */
 
-@Component({ components: { OverView, Receive, Send, Settings } })
+@Component({ components: { OverView, Receive, Send, Settings, PageTitle, PageSubtitle, OL, LI } })
 export default class WalletHomeView extends Vue {
   private currentTab = "Overview";
 
@@ -486,70 +522,246 @@ export default class WalletHomeView extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  flex-grow: 1;
+  max-width: 180px;
+  width: 100%;
+  background: #090C14;
+  border-right: 1px solid #1F232E;
+}
+.balance {
+  padding: 24px 10px 8px;
+  margin-bottom: 40px;
+}
+.balance__title {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 22px;
+  text-transform: uppercase;
+  color: #7E858F;
+}
+.balance__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.balance__amount + .balance__amount {
+  margin-top: 2px;
+}
+.balance__amount {
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  color: #7E858F;
+}
+.balance__amount-large {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  color: #FFFFFF;
+}
+.balance__currency-abbr {
+  margin-left: 4px;
+  font-size: 11px;
+  line-height: 18px;
+  color: #555B65;
+}
+.refresh-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+}
+.refresh-button:hover,
+.refresh-button:focus {
+  background: #434854;
+  outline: none;
+  border-radius: 2px;
+}
+.refresh-button.spin {
+  animation:spin 1s linear infinite;
+  background: none;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.nav__list {
+  padding: 0;
+  list-style: none;
+}
+.nav__btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  width: 100%;
+  padding: 16px 13px 16px 48px;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 24px;
+  color: #7E858F;
+  border: none;
+  border-left: 3px solid transparent;
+  background: none;
+  outline: none;
+}
+.nav__btn.active {
+  color: #FFFFFF;
+  background: #13161F;
+  border-left: 3px solid #F7931A;
+}
+.nav__btn:hover,
+.nav__btn:focus {
+  color: #F7931A;
+  outline: none;
+}
+.nav__btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+}
+.nav__btn.active {
+  color: #FFFFFF;
+  background: #13161F;
+  border-left: 3px solid #F7931A;
+}
+.nav__btn--overview::before {
+  background: url('../assets/images/collection.svg') center no-repeat;
+}
+.nav__btn--overview:hover::before,
+.nav__btn--overview:focus::before {
+  background: url('../assets/images/collection-focus.svg') center no-repeat;
+}
+.nav__btn--overview.active::before {
+  background: url('../assets/images/collection-active.svg') center no-repeat;
+}
+.nav__btn--send::before {
+  background: url('../assets/images/send.svg') center no-repeat;
+}
+.nav__btn--send:hover::before,
+.nav__btn--send:focus::before {
+  background: url('../assets/images/send-focus.svg') center no-repeat;
+}
+.nav__btn--send.active::before {
+  background: url('../assets/images/send-active.svg') center no-repeat;
+}
+.nav__btn--receive::before {
+  background: url('../assets/images/received.svg') center no-repeat;
+}
+.nav__btn--receive:hover::before,
+.nav__btn--receive:focus::before {
+  background: url('../assets/images/received-focus.svg') center no-repeat;
+}
+.nav__btn--receive.active::before {
+  background: url('../assets/images/received-active.svg') center no-repeat;
+}
+.nav__btn--settings::before {
+  background: url('../assets/images/gear.svg') center no-repeat;
+}
+.nav__btn--settings:hover::before,
+.nav__btn--settings:focus::before {
+  background: url('../assets/images/gear-focus.svg') center no-repeat;
+}
+.nav__btn--settings.active::before {
+  background: url('../assets/images/gear-active.svg') center no-repeat;
+}
 #topbar {
   background-color: #090c14;
   color: #ffffff;
   padding: 5px;
 }
-
-#contain {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+.modal-overlay {
+  background: #03050B;
+  opacity: 0.8;
 }
-
-#balance {
-  font-size: 30px;
-  text-align: center;
-  flex: 1;
-}
-
-.coin {
-  position: relative;
-  bottom: 15px;
-  font-size: 13px;
-}
-
-#exit {
-  padding: 20px;
-  background-color: #ff9500;
-  cursor: pointer;
-}
-
-#tabControl {
-  margin: 20px;
-}
-
-#white-container {
-  background: white;
-  padding: 30px;
-  margin: 20px;
-  border-radius: 5px;
-  width: 600px;
-  border: 1px solid #cccccc;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#amountModal {
-  position: absolute;
+.modal-overlay {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background: #03050B;
+  opacity: 0.8;
+}
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  max-width: 716px;
+  width: 100%;
+  padding: 40px 32px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(360deg, #090C14 0%, #13161F 100%);
+  border: 1px solid #1F232E;
   z-index: 10;
+}
+.modal__close {
+  position: absolute;
+  top: 8px;
+  right: 10px;  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+}
+.modal__close:hover,
+.modal__close:focus {
+  background: #434854;
+  outline: none;
+  border-radius: 2px;
+}
+.modal ol.list {
+  max-width: 609px;
+  margin-top: 48px;
+}
+#amountModal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
-
-#modalButtons {
-  margin-top: 30px;
+.link {
+  font-size: 16px;
+  line-height: 22px;
+  border: none;
+  background: none;
+  text-decoration: underline;
+  color: #fff;
 }
-
-.notenoughbalance {
-  font-size: 12px;
-  margin: 5px;
-  text-align: center;
-  color: red;
+.modal--send {
+  width: 568px;
+  padding: 44px 32px 65px;
+}
+.send-modal-icon {
+  width: 24px;
+  height: 24px;
+  margin: 0 auto;
+  display: block;
 }
 </style>

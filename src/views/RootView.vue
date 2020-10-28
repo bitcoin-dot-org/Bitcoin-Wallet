@@ -1,7 +1,10 @@
 <template>
   <div id="root">
     <div id="loadingScreen" v-if="!this.loaded">
-      <img class="loading" src="../assets/ball-triangle.svg" v-if="!noConnection" />
+      <div class="loading">
+        <Loader/>
+      </div>
+      <!-- <img class="loading" src="../assets/ball-triangle.svg" v-if="!noConnection" /> -->
       <div class="loading" v-if="noConnection">
         <div class="spectrum-Alert spectrum-Alert--warning">
           <div class="spectrum-Alert-content">{{ lang.something_wrong }}</div>
@@ -27,11 +30,13 @@ import { Component, Vue } from "vue-property-decorator";
 import OnboardView from "@/views/OnboardView.vue";
 import WalletHomeView from "@/views/WalletHomeView.vue";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+import Loader from "@/components/Loader.vue";
 
 @Component({
   components: {
     OnboardView,
     WalletHomeView,
+    Loader
   },
 })
 export default class Main extends Vue {
@@ -108,9 +113,22 @@ export default class Main extends Vue {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #loadingScreen {
   height: 100%;
+  animation: fade-in 2s linear;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

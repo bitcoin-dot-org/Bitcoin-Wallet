@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-      <router-view></router-view>
+    <router-view></router-view>
   </div>
 </template>
-<style>
 
+<style>
 @font-face {
   font-family: 'Titillium Web';
   src:  url('assets/fonts/TitilliumWeb-Regular.woff2') format('woff2'),
@@ -12,95 +12,41 @@
 }
 
 * {
-    margin:0;
+   margin:0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
 }
 
-html, body{
-  height: 100vh;
+body {
   font-family: "Titillium Web", Arial, sans-serif;
   font-size: 16px;
-}
-
-a {
-  color: #FFFFFF;
-  text-decoration: none;
-  cursor: pointer;
-  outline: none;
-}
-
-#app {
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  height: 100%;
-  /* background: url('assets/overview-bg.svg') top no-repeat; */
-  background-color: #efefef;
+	background: linear-gradient(360deg, #090C14 0%, #1A1E29 100%);
+	color: #ACB2BB
 }
 
-.btn {
-    display: inline-block;
-    max-width: 100%;
-    padding: 16px 25px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    font-weight: 600;
-    font-size: 100%;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    outline: none;
+#app,
+#root {
+  min-height: 100vh;
 }
-
-.btn-orange {
-    color: white;
-    background: #FF9500;
+button, a {
+  cursor: pointer;
+  font-family: "Titillium Web", Arial, sans-serif;
 }
-
-.btn-light {
-    background-color: #ffffff;
-    border: 1px solid #ff9500;
-    color: #ff9500;
+button:disabled {
+  cursor: not-allowed;
 }
-
-.btn-home {
-    width: 200px;
-    height: 55px;
+.phrase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 164px;
+  height: 40px;
+  border: 1px solid #2B2F3A;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  text-transform: uppercase;
+  color: #DCE0E7;
 }
-
-.btn:not(:first-child) {
-    margin-left: 20px;
-}
-
-#box {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-#inner {
-    padding: 20px;
-    width: 80%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-
-#inner h2 {
-    margin: 10px;
-}
-
-#notice {
-    padding: 20px;
-    color: #77767e;
-    background-color: #FFF9F3;
-
-}
-
-#navigation {
-    margin-top: 20px;
-}
-
 </style>

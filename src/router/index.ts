@@ -9,6 +9,7 @@ import OnboardView from '../views/OnboardView.vue'
 import Create from '../components/Create.vue'
 import Restore from '../components/Restore.vue'
 import WalletHomeView from '../views/WalletHomeView.vue'
+import ChooseLanguageView from '../views/ChooseLanguageView.vue'
 
 Vue.use(VueRouter)
 
@@ -37,6 +38,10 @@ Vue.use(VueRouter)
     path: '/wallet_home',
     name: 'home',
     component: WalletHomeView
+  },
+  {
+    path: '/language',
+    component: ChooseLanguageView
   }
 ]
 
