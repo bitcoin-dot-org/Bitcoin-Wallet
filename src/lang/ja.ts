@@ -8,16 +8,24 @@ var ja = <Language> {
     // Initial page
     getting_started: '開始',
     create_new: '新規ウォレットの作成',
-    to_start: 'ビットコインの使用開始',
-    or: 'または',
+    create_subtext: "We'll create a new wallet for you so you can start using Bitcoin.",
     restore_existing: '既存ウォレットの復元',
+    restore_subtext: "You already have a wallet and wish to use your recovery phrase to restore it.",
     something_wrong: '接続に問題が発生しました。',
     try_again: '再試行',
 
     // Create page
-    generate_notice: "これから12語のシードフレーズを生成します。非常に重要なフレーズのため、各語を正しい順序で書き留め、安全な場所に保存しましょう。",
+    seed_phrase: "Recovery Words",
     wrote_it_down: '書き留めました。',
     generate: '生成',
+    warning: 'Warning',
+    we_will_generate: 'We will generate for you 12 recovery words.',
+    warning_text_1: "Write the words down in the correct order, and keep them safe, offline. If you lose these words, you won't be able to access your Bitcoin.",
+    warning_text_2: "These recovery words will allow you to recover your wallet. Write the words down and keep them safe, offline.",
+    write_it_down: 'Write it down',
+    keep_it_safe: 'Keep it safe',
+    do_not_lose_it: 'Don’t lose it',
+    have_saved: 'I have saved my recovery words safely.',
 
     // Restore page
     restore_notice: 'ウォレットを復元するために12語のシードフレーズを入力してください。',

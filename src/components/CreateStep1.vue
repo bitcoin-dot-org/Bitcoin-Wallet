@@ -2,9 +2,9 @@
   <div>
     <Step :currentStep="1" :maxSteps="2" />
     <PageTitle>{{ lang.create_new }}</PageTitle>
-    <PageSubtitle class="onboard-view__subtitle">{{ lang.create_subtitle_1 }}</PageSubtitle>
     <div class="warning">
       <p class="warning__title">{{ lang.warning }}</p>
+      <p class="warning__text">{{ lang.we_will_generate }}</p>
       <p class="warning__text">{{ lang.warning_text_1 }}</p>
       <ul class="warning-list">
         <li class="warning-list__item">
@@ -17,7 +17,7 @@
         </li>
         <li class="warning-list__item">
           <img src="./../assets/images/do_not_loose_it.svg">
-          <p class="warning-list__text">{{ lang.do_not_loose_it }}</p>
+          <p class="warning-list__text">{{ lang.do_not_lose_it }}</p>
         </li>
       </ul>
     </div>

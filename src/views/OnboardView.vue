@@ -1,19 +1,18 @@
 <template>
   <Screen class="onboard-view">
     <h1 class="onboard-view__title">
-      {{ lang.welcome }} <span>Bitcoin Wallet</span>
+      {{ lang.getting_started }}
     </h1>
-    <PageSubtitle class="onboard-view__subtitle">{{ lang.onboard_subtitle }}</PageSubtitle>
     <div class="onboard-view__row">
       <router-link to="/create" class="onboarding-link">
         <img src="../assets/images/create.svg" />
         <h2 class="onboarding-link__title">{{ lang.create_new }}</h2>
-        <p class="onboarding-link__text">Amet minim mollit non deserunt ullamco est sit aliqua dolor.</p>
+        <p class="onboarding-link__text">{{ lang.create_subtext }}</p>
       </router-link>
       <router-link to="/restore" class="onboarding-link">
-        <img src="../assets/images/create.svg" />
+        <img src="../assets/images/restore.svg" />
         <h2 class="onboarding-link__title">{{ lang.restore_existing }}</h2>
-        <p class="onboarding-link__text">Amet minim mollit non deserunt ullamco est sit aliqua dolor.</p>
+        <p class="onboarding-link__text">{{ lang.restore_subtext }}</p>
       </router-link>
     </div>
     <div class="language-select">

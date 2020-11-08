@@ -2,7 +2,6 @@
   <div>
     <Step :currentStep="2" :maxSteps="2" />
     <PageTitle>{{ lang.seed_phrase }}</PageTitle>
-    <PageSubtitle class="onboard-view__subtitle">{{ lang.create_subtitle_2 }}</PageSubtitle>
     <div class="warning">
       <span>{{ lang.warning }}</span>
       {{ lang.warning_text_2 }}

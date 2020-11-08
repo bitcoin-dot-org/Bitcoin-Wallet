@@ -4,18 +4,37 @@
       <CreateStep1 v-if="!generated"/>
       <div v-if="generated">
         <CreateStep2/>
+
+      
+  <div class="ol_parent">
+      <div class="ol_container">
         <OL class="list">
-          <LI
-            v-for="(word, index) in mnemonic"
-            :key="index"
-          >
-            <span class="phrase">{{ word }}</span>
-          </LI>
+        <LI><span class="phrase">{{ mnemonic[0] }}</span></LI>
+        <LI><span class="phrase">{{ mnemonic[1] }}</span></LI>
+        <LI><span class="phrase">{{ mnemonic[2] }}</span></LI>
+        <LI><span class="phrase">{{ mnemonic[3] }}</span></LI>
         </OL>
-        <button :class="['refresh-button', refreshButtonClass]" @click="rotateIcon">
-          <img class="refresh-button__icon" src="../assets/images/refresh.svg" alt="refresh">
-          Regenerate Phrase
-        </button>
+      </div>
+
+      <div class="ol_container">
+        <OL class="list" start="5">
+        <LI><span class="phrase">{{ mnemonic[4] }}</span></LI>
+        <LI><span class="phrase">{{ mnemonic[5] }}</span></LI>
+        <LI><span class="phrase">{{ mnemonic[6] }}</span></LI>
+        <LI><span class="phrase">{{ mnemonic[7] }}</span></LI>
+        </OL>
+      </div>
+
+      <div class="ol_container">
+        <OL class="list" start="9">
+        <LI><span class="phrase">{{ mnemonic[8] }}</span></LI>
+        <LI><span class="phrase">{{ mnemonic[9] }}</span></LI>
+        <LI><span class="phrase">{{ mnemonic[10] }}</span></LI>
+        <LI><span class="phrase">{{ mnemonic[11] }}</span></LI>
+        </OL>
+      </div>
+      </div>
+
       </div>
     </ScreenContent>
     <Footer>
@@ -25,7 +44,7 @@
           v-if="generated"
           class="seed-phrase-checkbox"
           v-model="seedPhraseSaved"
-          label="I have saved my seed phrase safely."
+          :label="lang.have_saved"
         />
         <ButtonPrimary
           :disabled="generated && !seedPhraseSaved"

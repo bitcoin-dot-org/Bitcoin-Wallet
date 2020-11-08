@@ -8,16 +8,24 @@ var fr = <Language> {
     // Initial page
     getting_started: 'Getting Started',
     create_new: 'Create new wallet',
-    to_start: 'to start using Bitcoin',
-    or: 'or',
+    create_subtext: "We'll create a new wallet for you so you can start using Bitcoin.",
     restore_existing: 'restore existing wallet',
+    restore_subtext: "You already have a wallet and wish to use your recovery phrase to restore it.",
     something_wrong: 'Something went wrong with the connection',
     try_again: 'Try again',
 
     // Create page
-    generate_notice: "We will generate for you a 12 word seed phrase. It's very important that you write down each word in the correct order and store it securely.",
+    seed_phrase: "Recovery Words",
     wrote_it_down: 'I wrote it down',
     generate: 'Generate',
+    warning: 'Warning',
+    we_will_generate: 'We will generate for you 12 recovery words.',
+    warning_text_1: "Write the words down in the correct order, and keep them safe, offline. If you lose these words, you won't be able to access your Bitcoin.",
+    warning_text_2: "These recovery words will allow you to recover your wallet. Write the words down and keep them safe, offline.",
+    write_it_down: 'Write it down',
+    keep_it_safe: 'Keep it safe',
+    do_not_lose_it: 'Don’t lose it',
+    have_saved: 'I have saved my recovery words safely.',
 
     // Restore page
     restore_notice: 'Enter your 12 word seed phrase to restore your wallet',

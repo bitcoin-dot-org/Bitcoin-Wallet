@@ -8,16 +8,24 @@ var es = <Language> {
     // Initial page
     getting_started: 'Empezando',
     create_new: 'Crear nuevo monedero',
-    to_start: 'para empezar a usar Bitcoin',
-    or: 'o',
+    create_subtext: "We'll create a new wallet for you so you can start using Bitcoin.",
     restore_existing: 'restaurar monedero existente',
+    restore_subtext: "You already have a wallet and wish to use your recovery phrase to restore it.",
     something_wrong: 'Algo salió mal con la conexión',
     try_again: 'Inténtalo de nuevo',
 
     // Create page
-    generate_notice: "Generaremos una semilla de 12 palabras para ti. Es muy importante que anotes cada palabra en el orden correcto y la guardes de forma segura.",
+    seed_phrase: "Recovery Words",
     wrote_it_down: 'La he guardado',
     generate: 'Generar',
+    warning: 'Warning',
+    we_will_generate: 'We will generate for you 12 recovery words.',
+    warning_text_1: "Write the words down in the correct order, and keep them safe, offline. If you lose these words, you won't be able to access your Bitcoin.",
+    warning_text_2: "These recovery words will allow you to recover your wallet. Write the words down and keep them safe, offline.",
+    write_it_down: 'Write it down',
+    keep_it_safe: 'Keep it safe',
+    do_not_lose_it: 'Don’t lose it',
+    have_saved: 'I have saved my recovery words safely.',
 
     // Restore page
     restore_notice: 'Ingresa la semilla de 12 palabras para restaurar tu monedero',

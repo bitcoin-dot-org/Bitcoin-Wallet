@@ -1,14 +1,22 @@
 export default interface Language {
     getting_started: string
     create_new : string
-    to_start: string
-    or: string
+    create_subtext: string
     restore_existing: string
+    restore_subtext: string
     something_wrong: string
     try_again: string
-    generate_notice: string
+    seed_phrase : string
     wrote_it_down: string
     generate: string
+    warning: string
+    we_will_generate: string
+    warning_text_1: string
+    warning_text_2: string
+    write_it_down: string
+    keep_it_safe: string
+    do_not_lose_it: string
+    have_saved: string
     restore_notice: string
     refresh: string
     overview: string

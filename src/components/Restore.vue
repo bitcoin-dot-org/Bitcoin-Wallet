@@ -3,11 +3,36 @@
     <div class="restore__main">
       <PageTitle>Restore existing wallet</PageTitle>
       <PageSubtitle>{{ lang.restore_notice }}</PageSubtitle>
-      <OL class="list">
-        <LI v-for="(seed, index) in words" :key="index">
-          <Input v-model="words[index]"/>
-        </LI>
-      </OL>
+
+  <div class="ol_parent">
+      <div class="ol_container">
+        <OL class="list">
+        <LI><Input v-model="words[0]"/></LI>
+        <LI><Input v-model="words[1]"/></LI>
+        <LI><Input v-model="words[2]"/></LI>
+        <LI><Input v-model="words[3]"/></LI>
+        </OL>
+      </div>
+
+      <div class="ol_container">
+        <OL class="list" start="5">
+        <LI><Input v-model="words[4]"/></LI>
+        <LI><Input v-model="words[5]"/></LI>
+        <LI><Input v-model="words[6]"/></LI>
+        <LI><Input v-model="words[7]"/></LI>
+        </OL>
+      </div>
+
+      <div class="ol_container">
+        <OL class="list" start="9">
+        <LI><Input v-model="words[8]"/></LI>
+        <LI><Input v-model="words[9]"/></LI>
+        <LI><Input v-model="words[10]"/></LI>
+        <LI><Input v-model="words[11]"/></LI>
+        </OL>
+      </div>
+      </div>
+      
     </div>
     <Footer>
       <BackLink>{{ lang.back_button }}</BackLink>
@@ -71,4 +96,6 @@ export default class Restore extends Vue {
   .list {
     margin-top: 40px;
   }
+
+
 </style>

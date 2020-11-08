@@ -8,16 +8,24 @@ var ca = <Language> {
     // Initial page
     getting_started: 'Començar',
     create_new: 'Generar nou moneder',
-    to_start: 'per començar a utilitzar Bitcoin',
-    or: 'o',
+    create_subtext: "We'll create a new wallet for you so you can start using Bitcoin.",
     restore_existing: 'restaurar moneder existent',
+    restore_subtext: "You already have a wallet and wish to use your recovery phrase to restore it.",
     something_wrong: 'Alguna cosa ha sortit malament amb la connexió',
     try_again: 'Intenta-ho de nou',
 
     // Create page
-    generate_notice: "Generarem una llavor consistent en 12 palabras de seguretat. És molt important que anotis cada paraula en l'ordre correcte i que ho guardis de forma segura.",
+    seed_phrase: "Recovery Words",
     wrote_it_down: 'Ho he guardat',
     generate: 'Generar',
+    warning: 'Warning',
+    we_will_generate: 'We will generate for you 12 recovery words.',
+    warning_text_1: "Write the words down in the correct order, and keep them safe, offline. If you lose these words, you won't be able to access your Bitcoin.",
+    warning_text_2: "These recovery words will allow you to recover your wallet. Write the words down and keep them safe, offline.",
+    write_it_down: 'Write it down',
+    keep_it_safe: 'Keep it safe',
+    do_not_lose_it: 'Don’t lose it',
+    have_saved: 'I have saved my recovery words safely.',
 
     // Restore page
     restore_notice: 'Escriu la llavor de 12 paraules per restaurar el teu moneder',

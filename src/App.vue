@@ -49,4 +49,16 @@ button:disabled {
   text-transform: uppercase;
   color: #DCE0E7;
 }
+
+.ol_container {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  margin: 10px;
+}
+
+.ol_parent {
+  display: flex;
+  justify-content: center;
+}
 </style>
