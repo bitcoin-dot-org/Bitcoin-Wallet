@@ -4,9 +4,7 @@ import * as bip32 from 'bip32'
 import * as ElectrumClient from '@keep-network/electrum-client-js'
 import * as coinSelect from 'coinselect/accumulative'
 import * as coinSelectSplit from 'coinselect/split'
-
 import Axios from 'axios'
-
 import Dexie from 'dexie'
 import BigNumber from 'bignumber.js'
 
@@ -28,23 +26,40 @@ export class Transaction {
     hash: string
     amount: string
     height: number
+    time : Date
 
-    constructor(h: string, a: string, c: number) {
+    constructor(h: string, a: string, c: number, d : Date) {
         this.hash = h
         this.amount = a
         this.height = c
+        this.time = d
     }
 }
 
 export class WalletSettings {
     id: number
     language: string
+    languageCode : string
     currency: string
     easyTransact: boolean
 
     constructor(i: number, l: string, c: string, e: boolean) {
         this.id = i
         this.language = l
+        this.languageCode = ''
+
+        switch(l) {
+            case "English":
+                this.languageCode = 'en'
+                break;
+            case "Español":
+                this.languageCode = 'es'
+                break;
+            case "Français":
+                this.languageCode = 'fr'
+                break;
+        }
+
         this.currency = c
         this.easyTransact = e
     }
@@ -172,7 +187,7 @@ export class Wallet {
                             fetchUtxos = true
                         }
 
-                        newTransactions.push(new Transaction(transactions[j].tx_hash, '0', transactions[j].height))
+                        newTransactions.push(new Transaction(transactions[j].tx_hash, '0', transactions[j].height, new Date()))
                     }
                 }
             }
@@ -309,13 +324,13 @@ export class Wallet {
                 this.unconfirmedTransactions = this.unconfirmedTransactions.filter((tx) => tx.hash != newTransactions[i].hash)
 
                 // Put it in the database
-                await WalletDB.transactions.put(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height))
+                await WalletDB.transactions.put(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, new Date(transaction.time * 1000)))
             }
 
             // It's a new unconfirmed transaction (< 6 confirmations)
             else {
                 if (this.unconfirmedTransactions.filter((tx) => tx.hash == newTransactions[i].hash).length == 0) {
-                    this.unconfirmedTransactions.push(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height))
+                    this.unconfirmedTransactions.push(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, new Date(transaction.time * 1000)))
                 }
             }
 
@@ -513,8 +528,8 @@ export class WalletDatabase extends Dexie {
         this.version(1).stores({ wallet: "++id, seed, external, internal" })
         this.version(1).stores({ externalAddresses: "index, address, balance, isLookAhead" })
         this.version(1).stores({ internalAddresses: "index, address, balance, isLookAhead" })
-        this.version(1).stores({ transactions: "++id, hash, amount, height" })
-        this.version(1).stores({ settings: "++id, language, currency, easyTransact" })
+        this.version(1).stores({ transactions: "++id, hash, amount, height, time" })
+        this.version(1).stores({ settings: "++id, language, languageCode, currency, easyTransact" })
 
         this.wallet.mapToClass(Wallet)
         this.externalAddresses.mapToClass(AddressLookup)

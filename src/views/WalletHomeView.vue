@@ -12,13 +12,12 @@
           </button>
         </div>
         <p class="balance__amount">
-          <span class="balance__amount-large">109.82124293</span>
-          <span class="balance__currency-abbr">mBTC</span>
+          <span class="balance__amount-large">{{ balance }}</span>
+          <span class="balance__currency-abbr">BTC</span>
         </p>
         <p class="balance__amount">
-          $ 18.479,79
-          <!-- {{ this.fiatSymbol + btcToFiat(balance.toString()) }} -->
-          <span class="balance__currency-abbr">USD</span>
+          {{ btcToFiat(balance.toString()) }}
+          <span class="balance__currency-abbr">{{ !btcToFiat(balance.toString()).includes(this.walletModule.settings.currency) ? this.walletModule.settings.currency : '' }}</span>
         </p>
       </div>
       <nav class="nav">
@@ -277,7 +276,6 @@ export default class WalletHomeView extends Vue {
   private fiatName = "";
   private fiatSymbol = "";
   private fiatAmount = "0";
-  private fiatRate = 0;
 
   private receivingAddress = "";
   private notEnoughBalance = false;
@@ -294,33 +292,15 @@ export default class WalletHomeView extends Vue {
   private hex = "";
 
   private lang = WalletHandlerModule.currentLanguage;
+  private walletModule = WalletHandlerModule
 
   async mounted() {
-    // Let's first get fiat currency rates
-    let request = await this.$http.get("https://www.blockchain.com/ticker");
-
+    
     // Set the language
     this.lang = this.language;
 
     this.seed = WalletHandlerModule.wallet.seed;
 
-    if (request.status == 200) {
-      // The value of the fiat relative to BTC
-      this.fiatRate = request.data[WalletHandlerModule.settings.currency].last;
-      this.fiatSymbol =
-        request.data[WalletHandlerModule.settings.currency].symbol;
-
-      // Some currencies don't have symbols so fix the formatting:
-      if (this.fiatSymbol.length > 1) {
-        this.fiatSymbol = this.fiatSymbol + " ";
-      }
-
-      // Name of the currency
-      this.fiatName = WalletHandlerModule.settings.currency;
-
-      // Keep the rates because we want to have it ready when we switch currencies
-      this.rates = request.data;
-    }
   }
 
   showSeed() {
@@ -366,7 +346,6 @@ export default class WalletHomeView extends Vue {
   // Changes the displayed fiat currency
   async switchCurrency() {
     let settings = WalletHandlerModule.settings;
-    this.fiatRate = this.rates[settings.currency].last;
     this.fiatSymbol = this.rates[settings.currency].symbol;
 
     if (this.fiatSymbol.length > 1) {
@@ -437,7 +416,7 @@ export default class WalletHomeView extends Vue {
   }
 
   btcToFiat(btc: string): string {
-    let fiat = (parseFloat(btc) * this.fiatRate).toFixed(2);
+    let fiat = (parseFloat(btc) * WalletHandlerModule.fiatRate).toFixed(2);
 
     if (isNaN(parseFloat(fiat))) {
       fiat = "0";
@@ -450,7 +429,7 @@ export default class WalletHomeView extends Vue {
     }
 
     // NOTE: This formats the currency to the user's locale, so may use commas as decimals, need to fix up later
-    return new Intl.NumberFormat(navigator.language).format(parseFloat(fiat));
+    return new Intl.NumberFormat(this.walletModule.settings.languageCode, { style: 'currency', currency: this.walletModule.settings.currency }).format(parseFloat(fiat));
   }
 
   fiatToBTC() {
@@ -458,7 +437,7 @@ export default class WalletHomeView extends Vue {
     let fiat = this.fiatAmount;
 
     // Determine the format
-    let format = new Intl.NumberFormat(navigator.language).format(1.5);
+    let format = new Intl.NumberFormat(this.walletModule.settings.languageCode).format(1.5);
 
     // Are we in commas as decimal land?
     let commasAsDecimal = format == "1,5";
@@ -471,7 +450,7 @@ export default class WalletHomeView extends Vue {
 
     // Now work with the fixed format
     this.btcAmount = (
-      parseFloat(fiat.replace(/,/g, "")) / this.fiatRate
+      parseFloat(fiat.replace(/,/g, "")) / WalletHandlerModule.fiatRate
     ).toFixed(8);
 
     if (isNaN(parseFloat(this.btcAmount))) {
@@ -509,11 +488,6 @@ export default class WalletHomeView extends Vue {
       this.refreshing = false;
     }
 
-    // Get the current fiat rate
-    let request = await this.$http.get("https://www.blockchain.com/ticker");
-    if (request.status == 200) {
-      this.fiatRate = request.data[WalletHandlerModule.settings.currency].last;
-    }
   }
 
   beforeDestroy() {

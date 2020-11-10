@@ -4,82 +4,71 @@
       <tr>
         <th></th>
         <th>
-          <button class="sort-button">Status</button>
+          <button class="sort-button">{{ lang.status }}</button>
         </th>
         <th>
           <button class="sort-button sort-button--ascending">Date</button>
         </th>
         <th>
-          <button class="sort-button">Amount</button>
+          <button class="sort-button">{{ lang.amount }}</button>
         </th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>
-          <img src="../assets/images/send.svg" alt="send">
-        </td>
-        <td>
-          <p class="status status--pending">Pending</p>
-        </td>
-        <td>1 minute ago</td>
-        <td>
-          <p class="amount-expense">-0.00136643 <span class="amount-currency">BTC</span></p>
-          <p class="amount">-$14,11 <span class="amount-currency">USD</span></p>
-        </td>
-        <td>
-          <a href="https://www.blockchain.com/uk/btc/blocks" class="external-link">
+
+      <tr v-for="(tx, index) in transactions" :key="'tx' + index">
+          <td>
+            <img v-if="!zero.gt(tx.amount)" src="../assets/images/receive.svg" alt="Receive">
+            <img v-if="zero.gt(tx.amount)" src="../assets/images/send.svg" alt="Send">
+          </td>
+          <td><p :class="'status status--' + getText(tx, false).toLowerCase()">{{ getText(tx) }}</p></td>
+          <td>{{ dateHandler(tx.date).format('MMM. D, YYYY') }}</td>
+          <td>
+            <p :class="'amount-' + (zero.gt(tx.amount) ? 'expense' : 'income') ">{{ tx.amount }} <span class="amount-currency">BTC</span></p>
+            <p class="amount">{{ tx.amount.multipliedBy(module.fiatRate).toFixed(2) }} <span class="amount-currency">{{ module.settings.currency }}</span></p>
+          </td>
+          <td>
+            <a href="https://www.blockchain.com/uk/btc/blocks" class="external-link">
             <img src="../assets/images/external-link.svg"/>
-          </a>
+            </a>
         </td>
       </tr>
-      <tr>
-        <td>
-          <img src="../assets/images/send.svg" alt="send">
-        </td>
-        <td>
-          <p class="status status--unconfirmed">Unconfirmed</p>
-        </td>
-        <td>10 minutes ago</td>
-        <td>
-          <p class="amount-expense">-0.00136643 <span class="amount-currency">BTC</span></p>
-          <p class="amount">-$14,11 <span class="amount-currency">USD</span></p>
-        </td>
-        <td>
-          <a href="https://www.blockchain.com/uk/btc/blocks" class="external-link">
-            <img src="../assets/images/external-link.svg"/>
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <img src="../assets/images/receive.svg" alt="receive">
-        </td>
-        <td>
-          <p class="status status--complete">Complete</p>
-        </td>
-        <td>
-          1 Sep,2020
-          <p class="transaction-time">9:53 AM</p>
-        </td>
-        <td>
-          <p class="amount-income">-0.00136643 <span class="amount-currency">BTC</span></p>
-          <p class="amount">-$14,11 <span class="amount-currency">USD</span></p>
-        </td>
-        <td>
-          <a href="https://www.blockchain.com/uk/btc/blocks" class="external-link">
-            <img src="../assets/images/external-link.svg"/>
-          </a>
-        </td>
-      </tr>
+
     </tbody>
   </table>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+
+import { Vue, Prop, Component } from 'vue-property-decorator';
+import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+import BigNumber from "bignumber.js";
+import moment from 'moment'
+
+@Component
+export default class OverviewTable extends Vue {
+
+@Prop() transactions!: [{}];
+private module = WalletHandlerModule
+private lang = WalletHandlerModule.currentLanguage;
+private zero = new BigNumber(0);
+private dateHandler = moment
+
+  getText(tx: any, translate = true) {
+    if (tx.unconfirmed) {
+      if (tx.blockHeight > 0) {
+        return  translate ? this.lang.processing : 'processing';
+      } else {
+        return translate ? this.lang.unconfirmed : 'unconfirmed' ;
+      }
+    } else {
+      return translate ? this.lang.complete : 'complete';
+    }
+  }
+
 }
+
 </script>
 
 <style scoped>

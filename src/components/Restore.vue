@@ -35,11 +35,13 @@
       
     </div>
     <Footer>
-      <BackLink>{{ lang.back_button }}</BackLink>
-      <ButtonPrimary v-on:click="nextPressed()">
-          <span v-if="!restoring">{{ lang.restore_button }}</span>
-          <img v-if="restoring" src="../assets/tail-spin.svg" height="16" />
-      </ButtonPrimary>
+        <BackLink>{{ lang.back_button }}</BackLink>
+        <div v-if="!restoring">
+          <ButtonPrimary :click="nextPressed">
+            <span v-if="!restoring">{{ lang.restore_button }}</span>
+          </ButtonPrimary>
+        </div>
+      <Loader v-if="restoring" class="spiner"/>
     </Footer>
   </Screen>
 </template>
@@ -56,6 +58,7 @@ import BackLink from "@/components/Buttons/BackLink.vue";
 import OL from "@/components/List/OL.vue";
 import LI from "@/components/List/LI.vue";
 import Input from "@/components/Form/Input.vue";
+import Loader from "@/components/Loader.vue";
 
 @Component({
   components:
@@ -68,7 +71,8 @@ import Input from "@/components/Form/Input.vue";
       BackLink,
       OL,
       LI,
-      Input
+      Input,
+      Loader
     }
 })
 export default class Restore extends Vue {
@@ -95,6 +99,11 @@ export default class Restore extends Vue {
   }
   .list {
     margin-top: 40px;
+  }
+
+  .spiner {
+    width: 40px;
+    height: 40px;
   }
 
 

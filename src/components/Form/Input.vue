@@ -2,14 +2,21 @@
   <input 
     class="input"
     type="text" 
-    :value="value" 
-    @input="$emit('change', $event.target.value)"
+    :value="value"
+    v-on:input="updateValue($event.target.value)"
   />
 </template>
 
 <script>
 export default {
   props: ['value'],
+
+  methods: {
+    updateValue: function (value) {
+      this.$emit('input', value)
+    }
+  }
+
 };
 </script>
 

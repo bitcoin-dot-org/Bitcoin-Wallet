@@ -1,5 +1,6 @@
 import { Module, VuexModule, Mutation, Action, getModule } from 'vuex-module-decorators'
 import { Wallet, WalletDB, WalletSettings } from '@/wallet/wallet'
+import Axios from 'axios'
 import en from '@/lang/en'
 import es from '@/lang/es'
 import fr from '@/lang/fr'
@@ -23,8 +24,12 @@ class WalletHandlerModule extends VuexModule {
   unconfirmedBalance = new BigNumber(0)
   utxos = new Array()
   feeRates: number[] = new Array()
+  fiatRate = 0
+  rates : any = {}
+  fiatSymbol = ''
   settings = new WalletSettings(1, 'English', 'USD', false)
   currentLanguage = en
+
 
   @Mutation
   incrementExternal() {
@@ -50,7 +55,7 @@ class WalletHandlerModule extends VuexModule {
     for (var i = 0; i < txs.length; i++) {
       let amount = new BigNumber(txs[i].amount)
       bal = bal.plus(amount)
-      tx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': txs[i].amount, 'unconfirmed': false })
+      tx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': amount, 'unconfirmed': false, date: txs[i].time })
     }
 
     this.transactions = tx
@@ -66,7 +71,7 @@ class WalletHandlerModule extends VuexModule {
     for (var i = 0; i < txs.length; i++) {
       let amount = new BigNumber(txs[i].amount)
       ubal = ubal.plus(amount)
-      utx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': txs[i].amount, 'unconfirmed': true })
+      utx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': amount, 'unconfirmed': true, date: txs[i].time })
 
       // We want unconfirmed spends to take away from our main balance, because when a user has just sent a transaction
       // we don't want to keep showing the old but technically correct >=6 confirmations balance
@@ -100,6 +105,22 @@ class WalletHandlerModule extends VuexModule {
   @Mutation
   setFeeRates(fees: number[]) {
     this.feeRates = fees
+  }
+
+  @Mutation
+  setFiatRate(rate : number) {
+    this.fiatRate = rate
+  }
+
+  @Mutation
+  setFiatSymbol(symbol : string) {
+    this.fiatSymbol = symbol
+  }
+
+  @Mutation
+  setFiatRates(fiatRates : any) {
+    this.rates = fiatRates
+    console.log("I got called!")
   }
 
   @Mutation
@@ -155,12 +176,34 @@ class WalletHandlerModule extends VuexModule {
   }
 
   @Action
+  async fetchRates() {
+    let request = await Axios.get("https://www.blockchain.com/ticker")
+
+    if (request.status == 200) {
+      let rate = request.data[this.settings.currency].last
+      let symbol = request.data[this.settings.currency].symbol
+
+      // Some currencies don't have symbols so fix the formatting:
+      if (symbol.length > 1) {
+        symbol = symbol + " "
+      }
+
+      this.context.commit('setFiatRate', rate)
+      this.context.commit('setFiatSymbol', symbol)
+      this.context.commit('setFiatRates', request.data)
+
+
+    }
+  }
+
+  @Action
   async syncWallet(smallSync: boolean) {
     await this.wallet.synchronize(smallSync)
     await this.fetchTransactions()
     if (!smallSync) {
       await this.fetchSettings()
     }
+    await this.fetchRates()
     this.context.commit('setUtxos', this.wallet.utxos)
     this.context.commit('setFeeRates', this.wallet.feeRates)
   }
@@ -174,6 +217,8 @@ class WalletHandlerModule extends VuexModule {
   async changeCurrency(c: string) {
     await WalletDB.changeCurrency(c)
     await this.fetchSettings()
+    this.context.commit('setFiatRate', this.rates[c]['last'])
+    this.context.commit('setFiatSymbol', this.rates[c]['symbol'])
   }
 
   @Action
