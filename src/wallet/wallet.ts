@@ -178,9 +178,9 @@ export class Wallet {
                 }
 
                 for (var j = 0; j < transactions.length; j++) {
-                    // Make sure we haven't already saved the transaction
+                    // Make sure we haven't already saved the transaction or we don't already have it
                     let exists = await WalletDB.transactions.where('hash').equals(transactions[j].tx_hash).toArray()
-                    if (exists.length == 0) {
+                    if (exists.length == 0 && newTransactions.filter((tx) => tx.hash == transactions[j].tx_hash).length == 0) {
 
                         // Gotta update the utxos now that we have a new transaction with 6 confirmations
                         if (transactions[j].confirmations >= 6) {
@@ -339,7 +339,7 @@ export class Wallet {
         // We need to fetch the utxos, so first make a call to get the current block height
         // TO DO: Use something other than blockchain.info
         if (fetchUtxos) {
-            let request = await Axios.get('https://blockchain.info/latestblock')
+            let request = await Axios.get('https://blockchain.info/latestblock?&cors=true')
             if (request.status == 200) {
 
                 let newUtxos = new Array()

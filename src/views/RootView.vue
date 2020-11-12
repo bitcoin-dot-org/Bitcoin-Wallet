@@ -4,17 +4,6 @@
       <div class="loading">
         <Loader/>
       </div>
-      <!-- <img class="loading" src="../assets/ball-triangle.svg" v-if="!noConnection" /> -->
-      <div class="loading" v-if="noConnection">
-        <div class="spectrum-Alert spectrum-Alert--warning">
-          <div class="spectrum-Alert-content">{{ lang.something_wrong }}</div>
-        </div>
-        <button class="spectrum-Button spectrum-Button--cta" v-on:click="trySyncAgain()">
-          <span class="spectrum-Button-label">
-            <span>{{ lang.try_again }}</span>
-          </span>
-        </button>
-      </div>
     </div>
     <WalletHomeView
       :language="lang"

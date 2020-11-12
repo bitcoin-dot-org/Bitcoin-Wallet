@@ -4,6 +4,7 @@
     type="text" 
     :value="value"
     v-on:input="updateValue($event.target.value)"
+    v-on:keyup="keyUp($event.target.value)"
   />
 </template>
 
@@ -14,6 +15,9 @@ export default {
   methods: {
     updateValue: function (value) {
       this.$emit('input', value)
+    },
+    keyUp: function(value) {
+      this.$emit('keyup', value)
     }
   }
 

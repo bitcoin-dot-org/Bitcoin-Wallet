@@ -14,7 +14,7 @@
           <button
             class="pagination__button pagination__next"
             v-on:click="nextPage()"
-            :disabled="this.currentPage == this.totalPages"
+            :disabled="this.currentPage == this.totalPages || this.totalPages == 0"
           ></button>
         </div>
       </div>
@@ -51,6 +51,7 @@ export default class Overview extends Vue {
   mounted() {
     this.totalPages = Math.ceil(this.transactions.length / this.itemsPerPage);
     let newDisplayed: any[] = new Array();
+    console.log(this.totalPages)
 
     for (
       var i = (this.currentPage - 1) * this.itemsPerPage;
@@ -156,6 +157,9 @@ export default class Overview extends Vue {
     background: url('../assets/images/angle-right.svg') center no-repeat;
   }
   .pagination__prev:disabled {
+    opacity: 0.2;
+  }
+    .pagination__next:disabled {
     opacity: 0.2;
   }
 </style>

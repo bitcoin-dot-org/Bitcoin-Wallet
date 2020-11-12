@@ -5,7 +5,7 @@
       {{ lang.what_to_do }}
     </p>
     <div class="overview-empty__buttons">
-      <ButtonPrimary class="button-send">{{ lang.send }}</ButtonPrimary>
+      <ButtonPrimary class="button-send">Buy Bitcoin</ButtonPrimary>
       <ButtonPrimary class="button-receive">{{ lang.receive }}</ButtonPrimary>
     </div>
   </div>

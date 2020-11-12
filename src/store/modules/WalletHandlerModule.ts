@@ -55,7 +55,7 @@ class WalletHandlerModule extends VuexModule {
     for (var i = 0; i < txs.length; i++) {
       let amount = new BigNumber(txs[i].amount)
       bal = bal.plus(amount)
-      tx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': amount, 'unconfirmed': false, date: txs[i].time })
+      tx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': amount, 'unconfirmed': false, date: txs[i].time, hash: txs[i].hash })
     }
 
     this.transactions = tx
@@ -71,7 +71,7 @@ class WalletHandlerModule extends VuexModule {
     for (var i = 0; i < txs.length; i++) {
       let amount = new BigNumber(txs[i].amount)
       ubal = ubal.plus(amount)
-      utx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': amount, 'unconfirmed': true, date: txs[i].time })
+      utx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': amount, 'unconfirmed': true, date: txs[i].time, hash: txs[i].hash })
 
       // We want unconfirmed spends to take away from our main balance, because when a user has just sent a transaction
       // we don't want to keep showing the old but technically correct >=6 confirmations balance
@@ -120,7 +120,6 @@ class WalletHandlerModule extends VuexModule {
   @Mutation
   setFiatRates(fiatRates : any) {
     this.rates = fiatRates
-    console.log("I got called!")
   }
 
   @Mutation
@@ -225,6 +224,7 @@ class WalletHandlerModule extends VuexModule {
   async changeLanguage(l: string) {
     await WalletDB.changeLanguage(l)
     await this.fetchSettings()
+    this.context.commit('setCurrentLanguage', l)
   }
 
   @Action

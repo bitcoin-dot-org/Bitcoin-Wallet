@@ -28,9 +28,14 @@ import '@spectrum-web-components/menu/sp-menu-group.js';
 import '@spectrum-web-components/menu/sp-menu-item.js';
 import '@spectrum-web-components/menu/sp-menu-divider.js';
 
+
+
 Vue.use(VueAxios, axios)
 
 Vue.config.productionTip = false
+
+
+
 
 
 new Vue({

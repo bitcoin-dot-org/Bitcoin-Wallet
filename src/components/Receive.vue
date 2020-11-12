@@ -15,7 +15,7 @@
         </div>
       </Label>
       <div class="qr-code-wrapper">
-        <qrcode-vue :value="address" size="138" level="H"></qrcode-vue>
+        <qrcode-vue :value="address" size="138" level="H"  foreground="#1F232E"></qrcode-vue>
       </div>
     </div>
   </DashboardContent>

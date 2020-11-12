@@ -50,7 +50,7 @@ var en = <Language> {
     sending: 'You are sending',
     to: 'to',
     im_sure: "I'm sure, send",
-    seed_modal: 'Seed phrase',
+    seed_modal: 'Recovery Words',
 
     // Overview
     total_balance: "Total Balance",
@@ -85,7 +85,7 @@ var en = <Language> {
     address_below: 'to the address below',
 
     // Settings
-    show_seed: 'Show seed phrase',
+    show_seed: 'Recovery',
     language: 'Language',
     currency: 'Currency',
     exit_wallet: 'Exit wallet',

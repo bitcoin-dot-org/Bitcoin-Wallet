@@ -7,7 +7,7 @@
           <button class="sort-button">{{ lang.status }}</button>
         </th>
         <th>
-          <button class="sort-button sort-button--ascending">Date</button>
+          <button class="sort-button">Date</button>
         </th>
         <th>
           <button class="sort-button">{{ lang.amount }}</button>
@@ -23,13 +23,16 @@
             <img v-if="zero.gt(tx.amount)" src="../assets/images/send.svg" alt="Send">
           </td>
           <td><p :class="'status status--' + getText(tx, false).toLowerCase()">{{ getText(tx) }}</p></td>
-          <td>{{ dateHandler(tx.date).format('MMM. D, YYYY') }}</td>
           <td>
-            <p :class="'amount-' + (zero.gt(tx.amount) ? 'expense' : 'income') ">{{ tx.amount }} <span class="amount-currency">BTC</span></p>
-            <p class="amount">{{ tx.amount.multipliedBy(module.fiatRate).toFixed(2) }} <span class="amount-currency">{{ module.settings.currency }}</span></p>
+            {{ dateHandler(tx.date).format('MMM. D, YYYY') }}
+            <p class="transaction-time">{{ dateHandler(tx.date).format('h:mm A') }}</p>
           </td>
           <td>
-            <a href="https://www.blockchain.com/uk/btc/blocks" class="external-link">
+            <p :class="'amount-' + (zero.gt(tx.amount) ? 'expense' : 'income') ">{{ tx.amount }} <span class="amount-currency">BTC</span></p>
+            <p class="amount">{{ new Intl.NumberFormat(module.settings.languageCode, { style: 'currency', currency: module.settings.currency }).format(parseFloat(tx.amount.multipliedBy(module.fiatRate).toFixed(2))) }} <span class="amount-currency">{{ module.settings.currency }}</span></p>
+          </td>
+          <td>
+            <a v-on:click="openTransactionView('https://www.blockchain.com/btc/tx/' + tx.hash)" class="external-link">
             <img src="../assets/images/external-link.svg"/>
             </a>
         </td>
@@ -40,6 +43,13 @@
 </template>
 
 <script lang="ts">
+
+declare global {
+    interface Window {
+        ipcRenderer:any;
+    }
+}
+
 
 import { Vue, Prop, Component } from 'vue-property-decorator';
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
@@ -65,6 +75,10 @@ private dateHandler = moment
     } else {
       return translate ? this.lang.complete : 'complete';
     }
+  }
+
+  openTransactionView(link : string) {
+    window.ipcRenderer.send('openLink', link)
   }
 
 }

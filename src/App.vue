@@ -25,6 +25,11 @@ body {
 	color: #ACB2BB
 }
 
+
+.container-after-titlebar {
+  border-top: 0.5px solid #2f3442;
+}
+
 #app,
 #root {
   min-height: 100vh;
@@ -61,4 +66,9 @@ button:disabled {
   display: flex;
   justify-content: center;
 }
+
+::placeholder {
+  color: #555B65;
+}
+
 </style>
