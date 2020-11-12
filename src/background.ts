@@ -85,7 +85,6 @@ app.on('ready', async () => {
   createWindow()
 })
 
-app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
 
 ipcMain.on('openLink', function(event, arg) {
   shell.openExternal(arg)
