@@ -238,10 +238,6 @@ export default class WalletHomeView extends Vue {
 
   // Unconfirmed transactions
   private unconfirmedTransactions = WalletHandlerModule.unconfirmedTransactions;
-
-  private allTransactions = this.unconfirmedTransactions.concat(
-    this.transactions
-  );
   
   private balance = WalletHandlerModule.balance;
   private refreshing = false;
@@ -255,6 +251,10 @@ export default class WalletHomeView extends Vue {
   private sending = false;
 
   @Prop() language!: Language;
+
+   get allTransactions() {
+        return this.unconfirmedTransactions.concat(this.transactions);
+    }
 
   // Transaction details
   private hash = "";
@@ -343,11 +343,6 @@ export default class WalletHomeView extends Vue {
       unconfirmed: true,
     });
 
-    // Now let's change the displayed transactions
-    this.allTransactions = this.unconfirmedTransactions.concat(
-      this.transactions
-    );
-
     // We're done sending
     this.sending = false;
 
@@ -382,9 +377,6 @@ export default class WalletHomeView extends Vue {
       await WalletHandlerModule.syncWallet(true);
       this.transactions = WalletHandlerModule.transactions;
       this.unconfirmedTransactions = WalletHandlerModule.unconfirmedTransactions;
-      this.allTransactions = this.unconfirmedTransactions.concat(
-        this.transactions
-      );
       this.refreshing = false;
     } catch {
       this.refreshing = false;

@@ -46,37 +46,22 @@ export default class Overview extends Vue {
   private totalPages = 0;
   private currentPage = 1;
   private itemsPerPage = 5;
-  private displayedTransactions: any[] = new Array();
 
   mounted() {
     this.totalPages = Math.ceil(this.transactions.length / this.itemsPerPage);
-    let newDisplayed: any[] = new Array();
-    console.log(this.totalPages)
-
-    for (
-      var i = (this.currentPage - 1) * this.itemsPerPage;
-      i < (this.currentPage - 1) * this.itemsPerPage + this.itemsPerPage;
-      i++
-    ) {
-      if (i < this.transactions.length) {
-        newDisplayed.push(this.transactions[i]);
-      }
-    }
-
-    this.displayedTransactions = newDisplayed;
   }
 
   previousPage() {
     this.currentPage = this.currentPage - 1;
-    this.replaceDisplayedTransactions();
   }
 
   nextPage() {
     this.currentPage = this.currentPage + 1;
-    this.replaceDisplayedTransactions();
   }
 
-  replaceDisplayedTransactions() {
+
+  get displayedTransactions() {
+
     let newDisplayed: any[] = new Array();
     for (
       var i = (this.currentPage - 1) * this.itemsPerPage;
@@ -87,7 +72,8 @@ export default class Overview extends Vue {
         newDisplayed.push(this.transactions[i]);
       }
     }
-    this.displayedTransactions = newDisplayed;
+
+    return newDisplayed
   }
 
   getStatusLight(tx: any) {

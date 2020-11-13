@@ -2,7 +2,7 @@
   "name": "bitcoin-wallet",
   "author": "Bitcoin.org",
   "description": "A simple modern and well designed Bitcoin Wallet",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

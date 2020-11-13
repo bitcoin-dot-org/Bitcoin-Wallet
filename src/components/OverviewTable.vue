@@ -17,7 +17,7 @@
     </thead>
     <tbody>
 
-      <tr v-for="(tx, index) in transactions" :key="'tx' + index">
+      <tr v-for="tx in transactions" :key="tx.hash">
           <td>
             <img v-if="!zero.gt(tx.amount)" src="../assets/images/receive.svg" alt="Receive">
             <img v-if="zero.gt(tx.amount)" src="../assets/images/send.svg" alt="Send">
@@ -68,7 +68,7 @@ private dateHandler = moment
   getText(tx: any, translate = true) {
     if (tx.unconfirmed) {
       if (tx.blockHeight > 0) {
-        return  translate ? this.lang.processing : 'processing';
+        return  translate ? this.lang.processing : 'pending';
       } else {
         return translate ? this.lang.unconfirmed : 'unconfirmed' ;
       }

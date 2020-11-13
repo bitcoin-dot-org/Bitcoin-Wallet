@@ -28,6 +28,7 @@ body {
 
 .container-after-titlebar {
   border-top: 0.5px solid #2f3442;
+  background: inherit;
 }
 
 #app,

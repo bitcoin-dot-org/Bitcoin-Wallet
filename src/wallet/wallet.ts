@@ -384,7 +384,7 @@ export class Wallet {
         let standard = await this.client.blockchainEstimatefee(6)
         let low = await this.client.blockchainEstimatefee(9)
 
-        this.feeRates = [new BigNumber(low).multipliedBy(100000000).dividedBy(1000).toNumber(), new BigNumber(standard).multipliedBy(100000000).dividedBy(1000).toNumber(), new BigNumber(important).multipliedBy(100000000).dividedBy(1000).toNumber()]
+        this.feeRates = [Math.ceil(new BigNumber(low).multipliedBy(100000000).dividedBy(1000).toNumber()), Math.ceil(new BigNumber(standard).multipliedBy(100000000).dividedBy(1000).toNumber()), Math.ceil(new BigNumber(important).multipliedBy(100000000).dividedBy(1000).toNumber())]
 
         // Close our connection to the server, we probably won't sychronize again until 10 mins, or until user presses
         // the refresh button, so better to just close our connection as we've done our job, no need to keep it open

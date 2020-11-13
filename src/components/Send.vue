@@ -32,7 +32,7 @@
         </svg>
         </button>
         <div class="send-row__item">
-          <button class="send-max">Send max</button>
+          <button class="send-max" v-on:click="sendMax()">Send max</button>
           <Input
           v-model="fiatAmount"
           :placeholder="0"
@@ -44,49 +44,49 @@
       
       <Label>Bitcoin Network Fee
       <div class="radio-row">
-        <button
+        <div
           class="radio"
           :style=" selectedFeeRate == 0 ? 'border: 1px solid #F7931A;' : ''"
         >
-        <div id="radio-content" v-on:click="setSelectedFeeRate(0)">
+        <div class="radio-content" v-on:click="setSelectedFeeRate(0)">
           <h3 class="radio__title">{{ language.low_priority }}</h3>
           <p class="radio__text">{{ language.low_priority_desc }}</p>
         </div>
-        </button>
-        <button
+        </div>
+        <div
           class="radio"
           :style=" selectedFeeRate == 1 ? 'border: 1px solid #F7931A;' : ''"
         >
-        <div id="radio-content" v-on:click="setSelectedFeeRate(1)">
+        <div class="radio-content" v-on:click="setSelectedFeeRate(1)">
           <h3 class="radio__title">{{ language.standard }}</h3>
           <p class="radio__text">{{ language.standard_desc }}</p>
         </div>
-        </button>
-        <button
+        </div>
+        <div
           class="radio"
           :style=" selectedFeeRate == 2 ? 'border: 1px solid #F7931A;' : ''"
         >
-        <div id="radio-content" v-on:click="setSelectedFeeRate(2)">
+        <div class="radio-content" v-on:click="setSelectedFeeRate(2)">
           <h3 class="radio__title">{{ language.important }}</h3>
           <p class="radio__text">{{ language.important_desc }}</p>
           </div>
-        </button>
+        </div>
       </div>
       </Label>
-      <div id="error" v-if="dustError">{{ language.dust_error }}</div>
-      <div id="error" v-if="transactionError">{{ language.not_enough }}</div>
     </DashboardContent>
     <Footer class="send-footer">
       <div class="send-footer__info">
-        <div class="send-footer__item">
+        <p v-if="this.cantSendAmountWithFee" class="send-footer__label">{{ language.not_enough}}</p>
+        <p v-if="this.isSendingdust" class="send-footer__label">{{ language.dust_error}}</p>
+        <div class="send-footer__item"  v-if="!this.cantSendAmountWithFee && !this.isSendingdust">
           <p class="send-footer__label">{{ language.bitcoin_network_fee }}</p>
-          <p class="send-footer__amount">0.00 BTC</p>
-          <p class="send-footer__amount-alt">$0.00 USD</p>
+          <p class="send-footer__amount">{{networkFeeBtc}} BTC</p>
+          <p class="send-footer__amount-alt">{{ networkFeeFiat }}</p>
         </div>
-        <div class="send-footer__item">
+        <div class="send-footer__item"  v-if="!this.cantSendAmountWithFee && !this.isSendingdust">
           <p class="send-footer__label">{{ language.total }}</p>
-          <p class="send-footer__amount">0.00 BTC</p>
-          <p class="send-footer__amount-alt">$0.00 USD</p>
+          <p class="send-footer__amount">{{ btcTotal }} BTC</p>
+          <p class="send-footer__amount-alt">{{ btcTotalFiat }}</p>
         </div>
       </div>
       <ButtonPrimary
@@ -102,6 +102,8 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+import * as coinSelect from 'coinselect/accumulative'
+import * as coinSelectSplit from 'coinselect/split'
 import DashboardContent from "@/components/Layout/DashboardContent.vue";
 import DashboardTitle from "@/components/Text/DashboardTitle.vue";
 import DashboardSubtitle from "@/components/Text/DashboardSubtitle.vue";
@@ -116,6 +118,7 @@ import * as bitcoin from "bitcoinjs-lib";
 /* eslint-disable no-unused-vars */
 
 import Language from "@/lang/langInterface";
+import { Wallet } from '@/wallet/wallet';
 
 /* eslint-enable no-unused-vars */
 
@@ -126,10 +129,6 @@ export default class Send extends Vue {
   private fiatAmount = ''
   private selectedFeeRate = 1;
   private addressError = false;
-  private transactionError = false;
-  private notEnoughBalance = false;
-  private dustError = false;
-  private sendDisabled = true;
 
   @Prop() currency!: string;
   @Prop() language!: Language;
@@ -142,13 +141,10 @@ export default class Send extends Vue {
     this.selectedFeeRate = r;
   }
 
-
 calculateBtc() {
-
 
     if(this.fiatAmount == '') {
       this.btcAmount = ''
-      this.notEnoughBalance = false
       return
     }
 
@@ -169,15 +165,100 @@ calculateBtc() {
     this.btcAmount = (
       parseFloat(fiat.replace(/,/g, "")) / WalletHandlerModule.fiatRate
     ).toFixed(8).replace(/(?:\.0+|(\.\d+?)0+)$/, "$1");
+
     if (isNaN(parseFloat(this.btcAmount))) {
       this.btcAmount = "0";
     }
 
-    if (new BigNumber(this.btcAmount).gt(WalletHandlerModule.balance)) {
-      this.notEnoughBalance = true;
-    } else {
-      this.notEnoughBalance = false;
+}
+
+get sendDisabled() {
+  return this.cantSendAmountWithFee || this.addressError || this.address == '' || this.notEnoughBalance || this.isSendingdust || isNaN(parseFloat(this.btcAmount)) || parseFloat(this.btcAmount) <= 0
+}
+
+get isSendingdust() {
+  if(this.btcAmount != '' && parseFloat(this.btcAmount) > 0 && !isNaN(parseFloat(this.btcAmount))) {
+    return new BigNumber(this.btcAmount).multipliedBy(100000000).toNumber() <= 800
+  }
+  else {
+    return false
+  }
+}
+
+get cantSendAmountWithFee() {
+  return this.networkFeeBtc == 'x'
+}
+
+get notEnoughBalance() {
+  return new BigNumber(this.btcAmount).gt(WalletHandlerModule.balance)
+}
+
+get sendingMax() {
+  return this.btcAmount == WalletHandlerModule.balance.toString()
+}
+
+get networkFeeBtc() {
+
+    let networkFee = '0'
+
+    if(!this.notEnoughBalance && parseFloat(this.btcAmount) > 0 && !this.isSendingdust && !isNaN(parseFloat(this.btcAmount))) {
+
+    let target = undefined
+    let select = coinSelect
+    let utxos = WalletHandlerModule.utxos
+
+      if (this.sendingMax) {
+          target = [{ address: "3E8ociqZa9mZUSwGdSmAEMAoAxBK3FNDcd" }]
+          select = coinSelectSplit
+      }
+
+      else {
+          target = [{ address: "3E8ociqZa9mZUSwGdSmAEMAoAxBK3FNDcd", value: new BigNumber(this.btcAmount).multipliedBy(100000000).toNumber() }]
+      }
+
+      let { inputs, outputs, fee } = select(utxos, target, WalletHandlerModule.feeRates[this.selectedFeeRate])
+
+      if (!inputs || !outputs || fee == 0) {
+        networkFee = 'x'
+      }
+
+      else {
+        networkFee =  this.sendingMax ? new BigNumber(fee).dividedBy(100000000).negated().toFixed(8) :  new BigNumber(fee).dividedBy(100000000).toFixed(8)
+      }
+
+      return networkFee
+  }
+
+  return '0'
+}
+
+get networkFeeFiat() {
+    let fiat = (new BigNumber(this.networkFeeBtc).multipliedBy(WalletHandlerModule.fiatRate)).toFixed(2);
+
+    if (isNaN(parseFloat(fiat))) {
+      fiat = "0";
     }
+
+    return new Intl.NumberFormat(WalletHandlerModule.settings.languageCode, { style: 'currency', currency: WalletHandlerModule.settings.currency }).format(parseFloat(fiat));
+}
+
+get btcTotal() {
+  if (parseFloat(this.btcAmount) > 0 && !this.notEnoughBalance) {
+    return new BigNumber(this.btcAmount).plus(this.networkFeeBtc).toFixed(8)
+  }
+  else {
+    return '0'
+  }
+}
+
+get btcTotalFiat() {
+    let fiat = (parseFloat(this.btcTotal) * WalletHandlerModule.fiatRate).toFixed(2);
+
+    if (isNaN(parseFloat(fiat))) {
+      fiat = "0";
+    }
+
+    return new Intl.NumberFormat(WalletHandlerModule.settings.languageCode, { style: 'currency', currency: WalletHandlerModule.settings.currency }).format(parseFloat(fiat));
 }
 
 @Watch('currency') 
@@ -186,91 +267,58 @@ calculateBtc() {
   }
 
   @Watch("address")
-  onAddressChanged() {
-    this.verifyAddress()
-  }
-
-  calculateFiat() {
-    this.transactionError = false;
-
-    if (new BigNumber(this.btcAmount).gt(WalletHandlerModule.balance)) {
-      this.notEnoughBalance = true
-    }
-    
-    else {
-      this.notEnoughBalance = false
-    }
-
-    if(this.btcAmount == '') {
-      this.fiatAmount = ''
-      this.notEnoughBalance = false
-      return
-    }
-
-    let fiat = (parseFloat(this.btcAmount) * WalletHandlerModule.fiatRate).toFixed(2);
-
-    if (isNaN(parseFloat(fiat))) {
-      fiat = ""
-    }
-
-     this.fiatAmount = new Intl.NumberFormat(WalletHandlerModule.settings.languageCode).format(parseFloat(fiat))
-
-    if (parseFloat(this.btcAmount) > 0 && !this.addressError && this.address != "" && !this.notEnoughBalance) {
-      this.sendDisabled = false;
-    } else {
-      this.sendDisabled = true;
-    }
-  }
-
   verifyAddress() {
-    this.transactionError = false;
-
+    
     if (this.address == "") {
       this.addressError = false;
-      this.sendDisabled = true;
       return;
     }
 
     try {
       bitcoin.address.toOutputScript(this.address);
       this.addressError = false;
-
-      if (parseFloat(this.btcAmount) > 0) {
-        this.sendDisabled = false;
-      }
     } catch {
       this.addressError = true;
-      this.sendDisabled = true;
     }
   }
 
+  calculateFiat() {
+
+    if(this.btcAmount == '') {
+      this.fiatAmount = ''
+      return
+    }
+
+    let fiat = (parseFloat(this.btcAmount) * WalletHandlerModule.fiatRate).toFixed(2);
+
+    if (isNaN(parseFloat(fiat))) {
+      fiat = "0"
+    }
+
+     this.fiatAmount = new Intl.NumberFormat(WalletHandlerModule.settings.languageCode).format(parseFloat(fiat))
+
+  }
+
+  sendMax() {
+    this.btcAmount = WalletHandlerModule.balance.toFixed(8)
+    this.calculateFiat()
+  }
+
+
   async sendButtclicked() {
-    let sendingMax = false;
-    this.addressError = false;
-    this.dustError = false;
 
-    if (this.btcAmount == WalletHandlerModule.balance.toString()) {
-      sendingMax = true;
-    }
-
-    // Are they trying to send dust?
-    if (new BigNumber(this.btcAmount).multipliedBy(100000000).toNumber() <= 800) {
-      this.dustError = true;
-      return;
-    }
-
-    let fee = Math.ceil(WalletHandlerModule.feeRates[this.selectedFeeRate]);
+    let fee = WalletHandlerModule.feeRates[this.selectedFeeRate];
 
     try {
       let psbt = await WalletHandlerModule.wallet.createTransaction(
         new BigNumber(this.btcAmount).multipliedBy(100000000).toNumber(),
         this.address,
         fee,
-        sendingMax
+        this.sendingMax
       );
-      this.$emit("show-transaction-confirm", [psbt, this.address, sendingMax]);
+      this.$emit("show-transaction-confirm", [psbt, this.address, this.sendingMax]);
     } catch {
-      this.transactionError = true;
+      console.log("Trigger some error here")
     }
   }
 }
@@ -340,14 +388,17 @@ calculateBtc() {
   }
   .radio-row {
     display: flex;
+    text-transform: none;
   }
   .radio {
-    padding: 16px;
     background: linear-gradient(180deg, #1F232E 0%, #13161F 100%);
     border: 1px solid #2B2F3A;
     box-shadow: 0px 12px 28px rgba(0, 0, 0, 0.3);
     border-radius: 2px;
     cursor: pointer;
+  }
+  .radio-content {
+    padding: 16px;
   }
   .radio:focus, .radio:active {
     outline: none;
@@ -398,6 +449,7 @@ calculateBtc() {
     line-height: 18px;
     text-align: right;
     color: #7E858F;
+    width: 50px;
   }
   .send-footer__item {
     display: flex;
