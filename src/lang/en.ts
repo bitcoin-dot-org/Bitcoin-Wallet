@@ -11,11 +11,7 @@ var en = <Language> {
     create_subtext: "We'll create a new wallet for you so you can start using Bitcoin.",
     restore_existing: 'Restore existing wallet',
     restore_subtext: "You already have a wallet and want to use your recovery words to restore it.",
-    something_wrong: 'Something went wrong with the connection',
-    try_again: 'Try again',
     change_language: 'Change language',
-
-    // Choose language page
     choose_language: 'Choose Language',
 
     // Create page
@@ -32,7 +28,8 @@ var en = <Language> {
     have_saved: 'I have saved my recovery words safely.',
 
     // Restore page
-    restore_notice: 'Please enter your recovery phrase to restore your wallet.',
+    restore_notice: 'Please enter your recovery words to restore your wallet.',
+    restore_warning: 'The recovery words you have entered are invalid. Words must be spelled correctly and have no capital letters.',
 
     // Wallet home
     refresh: 'Refresh',
@@ -44,19 +41,24 @@ var en = <Language> {
     not_enough_balance: 'Not enough balance to send that amount',
     send_max: 'Send max',
     amount: 'Amount',
-    miner_fee: 'Miner fee',
+    miner_fee: 'Network fee',
     total: 'Total',
     confirmation: 'Confirmation',
-    sending: 'You are sending',
-    to: 'to',
-    im_sure: "I'm sure, send",
+    they_receive: 'They receive',
+    recepient: 'Recepient',
+    sending: 'Sending...',
+    are_you_sure: 'Are you sure you want to send this transaction?',
+    im_sure: "Yes I'm sure, send",
     seed_modal: 'Recovery Words',
+    transaction: 'transaction',
+    transactions: 'transactions',
+    buy_bitcoin: 'Buy Bitcoin',
 
     // Overview
     total_balance: "Total Balance",
     no_transactions: "You have not made any transactions yet",
     what_to_do: "What would you like to do?",
-    block_height: 'Block Height',
+    date: 'Date',
     status: 'Status',
     processing: 'Processing',
     unconfirmed: 'Unconfirmed',
@@ -76,8 +78,6 @@ var en = <Language> {
     not_enough: "You don't have enough to send that amount and also pay the network fee. Try sending your entire balance with the Send Max button instead.",
     dust_error: "The amount you are trying to send is too small for the Bitcoin network to process.",
     bitcoin_network_fee: "Bitcoin Network fee",
-    you_just_send: 'You just sent',
-    view_transaction: 'You can view transaction details in',
 
     // Receive
     receive_only: 'Receive only Bitcoin',

@@ -4,15 +4,15 @@ import Language from '@/lang/langInterface'
 
 /* eslint-enable no-unused-vars */
 
-var fr = <Language> {
+var en = <Language> {
     // Initial page
     getting_started: 'Getting Started',
     create_new: 'Create new wallet',
     create_subtext: "We'll create a new wallet for you so you can start using Bitcoin.",
-    restore_existing: 'restore existing wallet',
-    restore_subtext: "You already have a wallet and wish to use your recovery phrase to restore it.",
-    something_wrong: 'Something went wrong with the connection',
-    try_again: 'Try again',
+    restore_existing: 'Restore existing wallet',
+    restore_subtext: "You already have a wallet and want to use your recovery words to restore it.",
+    change_language: 'Change language',
+    choose_language: 'Choose Language',
 
     // Create page
     seed_phrase: "Recovery Words",
@@ -28,7 +28,8 @@ var fr = <Language> {
     have_saved: 'I have saved my recovery words safely.',
 
     // Restore page
-    restore_notice: 'Enter your 12 word seed phrase to restore your wallet',
+    restore_notice: 'Please enter your recovery words to restore your wallet.',
+    restore_warning: 'The recovery words you have entered are invalid. Words must be spelled correctly and have no capital letters.',
 
     // Wallet home
     refresh: 'Refresh',
@@ -40,23 +41,32 @@ var fr = <Language> {
     not_enough_balance: 'Not enough balance to send that amount',
     send_max: 'Send max',
     amount: 'Amount',
-    miner_fee: 'Miner fee',
+    miner_fee: 'Network fee',
     total: 'Total',
     confirmation: 'Confirmation',
-    sending: 'You are sending',
-    to: 'to',
-    im_sure: "I'm sure, send",
-    seed_modal: 'Seed phrase',
+    they_receive: 'They receive',
+    recepient: 'Recepient',
+    sending: 'Sending...',
+    are_you_sure: 'Are you sure you want to send this transaction?',
+    im_sure: "Yes I'm sure, send",
+    seed_modal: 'Recovery Words',
+    transaction: 'transaction',
+    transactions: 'transactions',
+    buy_bitcoin: 'Buy Bitcoin',
 
     // Overview
-    no_transactions: "Unfortunately you don't have any transactions yet...",
-    block_height: 'Block Height',
+    total_balance: "Total Balance",
+    no_transactions: "You have not made any transactions yet",
+    what_to_do: "What would you like to do?",
+    date: 'Date',
     status: 'Status',
     processing: 'Processing',
     unconfirmed: 'Unconfirmed',
     complete: 'Complete',
 
     // Send
+    send_to: 'Send only to Bitcoin (BTC) addresses',
+    bitcoin_address: 'Bitcoin address',
     address: 'Address',
     enter_address: 'Enter address to send too and amount:',
     low_priority: 'Low priority',
@@ -65,15 +75,17 @@ var fr = <Language> {
     low_priority_desc: "You pay less in fees, but you consider this a low-priority transaction and you don't mind possibly waiting longer for confirmation.",
     standard_desc: "This will use a moderate fee, during times of high congestion this may lead to longer confirmation time, but these are rare.",
     important_desc: "Uses a premium fee to target confirmation within 30 minutes, this is a high priority transaction and you want it confirmed quickly.",
-    not_enough: "You don't have enough to send the specified amount while also paying the miner fee. Try 'Send Max'.",
-    dust_error: "Amount too small to send...",
+    not_enough: "You don't have enough to send that amount and also pay the network fee. Try sending your entire balance with the Send Max button instead.",
+    dust_error: "The amount you are trying to send is too small for the Bitcoin network to process.",
+    bitcoin_network_fee: "Bitcoin Network fee",
 
     // Receive
     receive_only: 'Receive only Bitcoin',
+    wallet_address: 'Wallet address',
     address_below: 'to the address below',
 
     // Settings
-    show_seed: 'Show seed phrase',
+    show_seed: 'Recovery',
     language: 'Language',
     currency: 'Currency',
     exit_wallet: 'Exit wallet',
@@ -83,7 +95,8 @@ var fr = <Language> {
     restore_button: 'Restore',
     next_button: 'Next',
     ok_button: 'OK',
-    copy_button: 'Copy'
+    copy_button: 'Copy',
+    save_button: 'Save',
 }
 
-export default fr
+export default en

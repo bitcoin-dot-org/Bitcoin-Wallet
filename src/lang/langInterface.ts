@@ -1,12 +1,14 @@
 export default interface Language {
     getting_started: string
-    create_new : string
+    create_new: string
     create_subtext: string
     restore_existing: string
     restore_subtext: string
-    something_wrong: string
-    try_again: string
-    seed_phrase : string
+    change_language: string
+    choose_language: string
+
+    // Create page
+    seed_phrase: string
     wrote_it_down: string
     generate: string
     warning: string
@@ -17,7 +19,12 @@ export default interface Language {
     keep_it_safe: string
     do_not_lose_it: string
     have_saved: string
+
+    // Restore page
     restore_notice: string
+    restore_warning: string
+
+    // Wallet home
     refresh: string
     overview: string
     send: string
@@ -30,16 +37,29 @@ export default interface Language {
     miner_fee: string
     total: string
     confirmation: string
+    they_receive: string
+    recepient: string
     sending: string
-    to: string
+    are_you_sure: string
     im_sure: string
     seed_modal: string
+    transaction: string
+    transactions: string
+    buy_bitcoin: string
+
+    // Overview
+    total_balance: string
     no_transactions: string
-    block_height: string
-    status: string,
+    what_to_do: string
+    date: string
+    status: string
     processing: string
     unconfirmed: string
     complete: string
+
+    // Send
+    send_to: string
+    bitcoin_address: string
     address: string
     enter_address: string
     low_priority: string
@@ -50,15 +70,24 @@ export default interface Language {
     important_desc: string
     not_enough: string
     dust_error: string
+    bitcoin_network_fee: string
+
+    // Receive
     receive_only: string
+    wallet_address: string
     address_below: string
+
+    // Settings
     show_seed: string
     language: string
     currency: string
     exit_wallet: string
-    restore_button: string
+
+    // Buttons
     back_button: string
+    restore_button: string
     next_button: string
     ok_button: string
     copy_button: string
+    save_button: string
 }

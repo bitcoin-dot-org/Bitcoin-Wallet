@@ -173,7 +173,7 @@ export class Wallet {
                 if ((transactions.length > 0) && externalAddresses[i].index >= this.external) {
                     for (var j = 0; j <= externalAddresses[i].index - this.external; j++) {
                         this.incrementExternalIndex()
-                        externalAddresses.push(new AddressLookup(this.external + 20, this.getExternalAddress(this.external + 20), 0, true))
+                        externalAddresses.push(new AddressLookup(this.external + 20, this.getExternalAddress(this.external + 20), -1, true))
                     }
                 }
 
@@ -195,6 +195,47 @@ export class Wallet {
             // This is set when the wallet is first created to force look up of the history, we can set to 0 now that we have history
             if (externalAddresses[i].balance == -1) {
                 await WalletDB.externalAddresses.where('address').equals(externalAddresses[i].address).modify({ 'balance': 0 })
+            }
+
+            
+        }
+
+        for (var i = 0; i < internalAddresses.length; i++) {
+            let balance: any = await this.client.blockchain_scripthash_getBalance(this.convertToElectrumScriptHash(internalAddresses[i].address))
+            let unconfirmed = balance.unconfirmed
+            let confirmed = balance.confirmed
+
+            // Transactions that we don't know about have occurred
+            if ((confirmed + unconfirmed) != internalAddresses[i].balance) {
+
+                let transactions: any[] = await this.client.blockchain_scripthash_getHistory(this.convertToElectrumScriptHash(internalAddresses[i].address))
+
+                // Our external index trackers are behind so we need to catch up
+                if ((transactions.length > 0) && internalAddresses[i].index >= this.internal) {
+                    for (var j = 0; j <= internalAddresses[i].index - this.internal; j++) {
+                        this.incrementInternalndex()
+                        internalAddresses.push(new AddressLookup(this.internal + 20, this.getInternalAddress(this.internal + 20), -1, true))
+                    }
+                }
+
+                for (var j = 0; j < transactions.length; j++) {
+                    // Make sure we haven't already saved the transaction or we don't already have it
+                    let exists = await WalletDB.transactions.where('hash').equals(transactions[j].tx_hash).toArray()
+                    if (exists.length == 0 && newTransactions.filter((tx) => tx.hash == transactions[j].tx_hash).length == 0) {
+
+                        // Gotta update the utxos now that we have a new transaction with 6 confirmations
+                        if (transactions[j].confirmations >= 6) {
+                            fetchUtxos = true
+                        }
+
+                        newTransactions.push(new Transaction(transactions[j].tx_hash, '0', transactions[j].height, new Date()))
+                    }
+                }
+            }
+
+            // This is set when the wallet is first created to force look up of the history, we can set to 0 now that we have history
+            if (internalAddresses[i].balance == -1) {
+                await WalletDB.internalAddresses.where('address').equals(internalAddresses[i].address).modify({ 'balance': 0 })
             }
 
         }
@@ -226,6 +267,10 @@ export class Wallet {
                                             let satoshis = new BigNumber(inputTransaction.vout[k].value).multipliedBy(100000000)
                                             let current = new BigNumber(externalAddresses[l].balance)
                                             let newBalance = current.minus(satoshis)
+
+                                            if(newBalance.lt(0)) {
+                                                newBalance = new BigNumber(0)
+                                            }
                                             if (transaction.confirmations >= 6) {
                                                 await WalletDB.externalAddresses.where('address').equals(externalAddresses[l].address).modify({ 'balance': newBalance.toNumber() })
                                             }
@@ -290,8 +335,8 @@ export class Wallet {
                         // Yep address is change
                         if (internalAddresses[x].address == address) {
 
-                            // Subtract our change from the total amount being sent in this transactions
-                            amount = amount.minus(transaction.vout[j].value)
+                            // Add back our change to the amount because we're obviously not spending it
+                            amount = amount.plus(transaction.vout[j].value)
 
                             // Convert to satoshis which is the format of the balances
                             let satoshi = new BigNumber(transaction.vout[j].value).multipliedBy(100000000)
@@ -304,11 +349,16 @@ export class Wallet {
                                 await WalletDB.internalAddresses.where('address').equals(internalAddresses[x].address).modify({ 'balance': newBalance })
                             }
 
+                            if((internalAddresses[x].index == 0 && this.internal == 0)) {
+                                this.incrementInternalndex()
+                                internalAddresses.push(new AddressLookup(this.internal + 20, this.getInternalAddress(this.internal + 20), -1, true))
+                            }
+
                             // Oops, internal addresses indexes are behind, so let's catch up
                             if (internalAddresses[x].isLookAhead) {
-                                for (var p = 0; p < internalAddresses[x].index; p++) {
+                                for (var j = 0; j <= internalAddresses[i].index - this.internal; j++) {
                                     this.incrementInternalndex()
-                                    internalAddresses.push(new AddressLookup(this.internal + 20, this.getInternalAddress(this.internal + 20), 0, true))
+                                    internalAddresses.push(new AddressLookup(this.internal + 20, this.getInternalAddress(this.internal + 20), -1, true))
                                 }
                             }
                         }
@@ -347,7 +397,9 @@ export class Wallet {
                 let height = request.data.height
 
                 // Obviously we're only interested in addresses with a balance
-                let addresses = externalAddresses.filter((a) => a.balance > 0).concat(internalAddresses.filter((a) => a.balance > 0))
+                let externals = await WalletDB.externalAddresses.where('balance').above(0).toArray()
+                let internals = await WalletDB.internalAddresses.where('balance').above(0).toArray()
+                let addresses = externals.concat(internals)
 
                 for (var i = 0; i < addresses.length; i++) {
                     let utxo: any[] = await this.client.blockchain_scripthash_listunspent(this.convertToElectrumScriptHash(addresses[i].address))

@@ -11,8 +11,8 @@ var ca = <Language> {
     create_subtext: "We'll create a new wallet for you so you can start using Bitcoin.",
     restore_existing: 'restaurar moneder existent',
     restore_subtext: "You already have a wallet and wish to use your recovery phrase to restore it.",
-    something_wrong: 'Alguna cosa ha sortit malament amb la connexió',
-    try_again: 'Intenta-ho de nou',
+    change_language: 'Change language',
+    choose_language: 'Choose Language',
 
     // Create page
     seed_phrase: "Recovery Words",
@@ -28,7 +28,8 @@ var ca = <Language> {
     have_saved: 'I have saved my recovery words safely.',
 
     // Restore page
-    restore_notice: 'Escriu la llavor de 12 paraules per restaurar el teu moneder',
+    restore_notice: 'Please enter your recovery words to restore your wallet.',
+    restore_warning: 'The recovery words you have entered are invalid. Words must be spelled correctly and have no capital letters.',
 
     // Wallet home
     refresh: 'Actualitzar',
@@ -43,37 +44,45 @@ var ca = <Language> {
     miner_fee: 'Comissió',
     total: 'Total',
     confirmation: 'Confirmació',
-    sending: 'Estàs enviant',
-    to: 'a',
+    sending: 'Sending...',
     im_sure: "Estic segur, enviar",
-    seed_modal: 'Llavor (paraules de seguretat)',
+    seed_modal: 'Recovery Words',
+    transaction: 'transaction',
+    transactions: 'transactions',
+    buy_bitcoin: 'Buy Bitcoin',
 
     // Overview
-    no_transactions: "Lamentablement, encara no tens cap transacció...",
-    block_height: 'Altura del bloc',
+
+    total_balance: "Total Balance",
+    no_transactions: "You have not made any transactions yet",
+    what_to_do: "What would you like to do?",
+    date: 'Date',
     status: 'Estat',
     processing: 'Processant',
     unconfirmed: 'Sense confirmar',
     complete: 'Completat',
 
     // Send
+    send_to: 'Send only to Bitcoin (BTC) addresses',
+    bitcoin_address: 'Bitcoin address',
     address: 'Adreça',
-    enter_address: 'Escriu la direcció i la quantitat:',
     low_priority: 'Prioritat baixa',
     standard: 'Estàndard',
     important: 'Important',
     low_priority_desc: "Pagues menys comissions però considerant que aquesta transacció és de baixa prioritat i no et fa res esperar més temps a la confirmació.",
     standard_desc: "S'utilitzarà una comissió moderada tot i que en moments de gran congestió això pot comportar un temps de confirmació més llarg (passa poques vegades)",
     important_desc: "S'utilitzarà una comissió premium per assegurar una confirmació en menys de 30 minuts, aquesta és una transacció de prioritat alta per quan es necessita una confirmació ràpida.",
-    not_enough: "No tens suficients fons per enviar la quantitat especificada i pagar la comissió dels miners. Prova amb l'opció 'Enviar el màxim'.",
-    dust_error: "Quantitat massa petita per fer l'enviament...",
+    not_enough: "You don't have enough to send that amount and also pay the network fee. Try sending your entire balance with the Send Max button instead.",
+    dust_error: "The amount you are trying to send is too small for the Bitcoin network to process.",
+    bitcoin_network_fee: "Bitcoin Network fee",
 
     // Receive
     receive_only: 'Rebre només Bitcoin',
+    wallet_address: 'Wallet address',
     address_below: 'a la següent adreça',
 
     // Settings
-    show_seed: 'Mostrar llavor',
+    show_seed: 'Recovery',
     language: 'Idioma',
     currency: 'Moneda',
     exit_wallet: 'Sortir del moneder',

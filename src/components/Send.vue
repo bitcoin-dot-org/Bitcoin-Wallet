@@ -32,7 +32,7 @@
         </svg>
         </button>
         <div class="send-row__item">
-          <button class="send-max" v-on:click="sendMax()">Send max</button>
+          <button class="send-max" v-on:click="sendMax()">{{ language.send_max }}</button>
           <Input
           v-model="fiatAmount"
           :placeholder="0"
@@ -42,7 +42,7 @@
         </div>
       </div>
       
-      <Label>Bitcoin Network Fee
+      <Label>{{ language.bitcoin_network_fee }}
       <div class="radio-row">
         <div
           class="radio"
@@ -132,6 +132,7 @@ export default class Send extends Vue {
 
   @Prop() currency!: string;
   @Prop() language!: Language;
+  @Prop() lastTransaction! : string;
 
   showModal() {
     this.$emit("show-amount-modal");
@@ -261,6 +262,14 @@ get btcTotalFiat() {
     return new Intl.NumberFormat(WalletHandlerModule.settings.languageCode, { style: 'currency', currency: WalletHandlerModule.settings.currency }).format(parseFloat(fiat));
 }
 
+
+@Watch('lastTransaction')
+  clearFields() {
+    this.btcAmount = ''
+    this.address = ''
+    this.setSelectedFeeRate(1)
+  }
+
 @Watch('currency') 
   currencyChanged() {
     this.calculateFiat()
@@ -316,7 +325,7 @@ get btcTotalFiat() {
         fee,
         this.sendingMax
       );
-      this.$emit("show-transaction-confirm", [psbt, this.address, this.sendingMax]);
+      this.$emit("show-transaction-confirm", [psbt, this.address, this.sendingMax, this.btcAmount]);
     } catch {
       console.log("Trigger some error here")
     }
@@ -362,10 +371,11 @@ get btcTotalFiat() {
     color: #555B65;
   }
   .send-max {
-    width: 72px;
+    /* width: 72px; */
     height: 22px;
     display: block;
-    padding: 0;
+    padding-right: 10px;
+    padding-left: 10px;
     margin: 0 0 8px auto;
     font-weight: 600;
     font-size: 12px;

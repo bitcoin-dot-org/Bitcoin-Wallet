@@ -7,7 +7,7 @@
           <button class="sort-button">{{ lang.status }}</button>
         </th>
         <th>
-          <button class="sort-button">Date</button>
+          <button class="sort-button">{{ lang.date }}</button>
         </th>
         <th>
           <button class="sort-button">{{ lang.amount }}</button>

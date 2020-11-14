@@ -5,8 +5,8 @@
       {{ lang.what_to_do }}
     </p>
     <div class="overview-empty__buttons">
-      <ButtonPrimary class="button-send">Buy Bitcoin</ButtonPrimary>
-      <ButtonPrimary class="button-receive">{{ lang.receive }}</ButtonPrimary>
+      <ButtonPrimary :click="buyClicked">{{ lang.buy_bitcoin }}</ButtonPrimary>
+      <ButtonPrimary :click="receiveClicked">{{ lang.receive }}</ButtonPrimary>
     </div>
   </div>
 </template>
@@ -22,6 +22,14 @@
   @Component({ components: { ButtonPrimary }})
   export default class OverviewEmpty extends Vue {
     private lang = WalletHandlerModule.currentLanguage;
+
+    receiveClicked() {
+      this.$emit('show-receive')
+    }
+
+    buyClicked() {
+      window.ipcRenderer.send('openLink', 'https://bitcoin.org/en/buy')
+    }
   }
 </script>
 <style scoped>
@@ -42,17 +50,5 @@
   }
   .overview-empty__buttons > * + * {
     margin-left: 16px;
-  }
-  .button-send {
-    padding-left: 48px;
-    background-image: url('../assets/images/send-arrow.svg');
-    background-repeat: no-repeat;
-    background-position: 24px center;
-  }
-  .button-receive {
-    padding-left: 48px;
-    background-image: url('../assets/images/receive-arrow.svg');
-    background-repeat: no-repeat;
-    background-position: 24px center;
   }
 </style>

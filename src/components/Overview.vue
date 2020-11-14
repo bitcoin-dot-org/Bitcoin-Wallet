@@ -3,7 +3,7 @@
     <div id="overview">
       <DashboardTitle>{{ language.overview }}</DashboardTitle>
       <div class="overview__header-row">
-        <p class="transactions-amount">{{ this.transactions.length }} transactions</p>
+        <p class="transactions-amount">{{ this.transactions.length }} {{ this.transactions.length == 1 ? language.transaction : language.transactions }}</p>
         <div class="pagination">
           <button
             class="pagination__button pagination__prev"
@@ -19,7 +19,7 @@
         </div>
       </div>
       <OverviewTable v-if="transactions.length > 0" :transactions="displayedTransactions"></OverviewTable>
-      <OverviewEmpty v-if="transactions.length == 0"></OverviewEmpty>
+      <OverviewEmpty v-if="transactions.length == 0" @show-receive="showReceive()"></OverviewEmpty>
     </div>
   </DashboardContent>
 </template>
@@ -98,6 +98,10 @@ export default class Overview extends Vue {
     } else {
       return this.language.complete;
     }
+  }
+
+  showReceive() {
+    this.$emit('show-receive')
   }
 }
 </script>
