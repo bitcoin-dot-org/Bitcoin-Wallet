@@ -1,4 +1,6 @@
-# bitcoin-wallet
+# Bitcoin Wallet
+
+![](https://i.imgur.com/B5TA5AS.png "Screenshot")
 
 ## Project setup
 ```
