@@ -6,7 +6,7 @@
 Bitcoin Wallet is a desktop wallet meant for new users to get started using Bitcoin. The wallet is explicity designed and focused around providing a better interface and more simple way of engaging with Bitcoin than most other desktop wallets. Most Bitcoin beginners when looking for a desktop wallet are recommended either Electrum, or Core, and while these wallets are both excellent, the feature set is far beyond what an average user will ever need, and both wallets look dated aesthetically.
 
 ## Features
-- All addresses by default are Segwit(P2WPKH-nested-in-P2SH)
+- All addresses by default are Segwit (P2WPKH-nested-in-P2SH)
 - Hierarchical deterministic keys
 - BIP-39 mnemonic 12 word seed
 - ElectrumX backend for quick sync
