@@ -4,6 +4,8 @@ import Axios from 'axios'
 import en from '@/lang/en'
 import es from '@/lang/es'
 import fr from '@/lang/fr'
+import ja from '@/lang/ja'
+import ca from '@/lang/ca'
 import store from '@/store'
 import BigNumber from 'bignumber.js'
 
@@ -27,7 +29,7 @@ class WalletHandlerModule extends VuexModule {
   fiatRate = 0
   rates : any = {}
   fiatSymbol = ''
-  settings = new WalletSettings(1, 'English', 'USD', false)
+  settings = new WalletSettings(1, 'en', 'USD', false)
   currentLanguage = en
 
 
@@ -135,6 +137,14 @@ class WalletHandlerModule extends VuexModule {
 
     if (lang == "Français" || lang == "fr") {
       this.currentLanguage = fr
+    }
+    
+    if(lang == "日本語" || lang == "ja") {
+      this.currentLanguage = ja 
+    }
+    
+    if(lang == "Catalan" || lang == "ca") {
+       this.currentLanguage = ca
     }
 
   }
