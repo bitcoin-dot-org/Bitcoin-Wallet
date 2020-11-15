@@ -86,7 +86,7 @@ export default class Settings extends Vue {
     "TRY",
     "TWD",
   ];
-  private languages = ["English", "Español", "Français"];
+  private languages = ["English", "Español", "Catalan", "Français", "Catalan", "日本語"];
   private module = WalletHandlerModule;
 
   async currencySelected(index: number) {
