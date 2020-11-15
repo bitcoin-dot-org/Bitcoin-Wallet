@@ -625,24 +625,13 @@ export class WalletDatabase extends Dexie {
             // Let's set the language initially as their locale language
             let language = navigator.language.split('-')[0]
 
-            if (language == "en") {
-                language = "English"
+            if (language == "en" || language == "es" || language == "fr" || language == "ja" || language == "ca") {
+                await this.settings.put(new WalletSettings(1, language, 'USD', false))
             }
 
-            else if (language == "es") {
-                language = "Español"
-            }
-
-            else if (language == "fr") {
-                language = "Français"
-            }
-
-            // They're using one of the languages we don't support, so default to English
             else {
-                language = "English"
+                await this.settings.put(new WalletSettings(1, "en", 'USD', false))
             }
-
-            await this.settings.put(new WalletSettings(1, language, 'USD', false))
         }
     }
 
