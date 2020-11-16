@@ -89,4 +89,7 @@ export default interface Language {
     ok_button: string
     copy_button: string
     save_button: string
+
+    // Notification
+    notification_title: string
 }

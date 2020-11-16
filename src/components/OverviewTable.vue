@@ -4,13 +4,13 @@
       <tr>
         <th></th>
         <th>
-          <button class="sort-button">{{ lang.status }}</button>
+          <button class="sort-button">{{ language.status }}</button>
         </th>
         <th>
-          <button class="sort-button">{{ lang.date }}</button>
+          <button class="sort-button">{{ language.date }}</button>
         </th>
         <th>
-          <button class="sort-button">{{ lang.amount }}</button>
+          <button class="sort-button">{{ language.amount }}</button>
         </th>
         <th></th>
       </tr>
@@ -51,34 +51,56 @@ declare global {
 }
 
 
-import { Vue, Prop, Component } from 'vue-property-decorator';
+import { Vue, Prop, Component, Watch } from 'vue-property-decorator';
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
 import BigNumber from "bignumber.js";
 import moment from 'moment'
+import 'moment/locale/es';
+import 'moment/locale/ca';
+import 'moment/locale/fr';
+import 'moment/locale/ja';
+
+/* eslint-disable no-unused-vars */
+import Language from "@/lang/langInterface";
+/* eslint-enable no-unused-vars */
 
 @Component
 export default class OverviewTable extends Vue {
 
+@Prop() language!: Language;
 @Prop() transactions!: [{}];
 private module = WalletHandlerModule
-private lang = WalletHandlerModule.currentLanguage;
 private zero = new BigNumber(0);
 private dateHandler = moment
 
   getText(tx: any, translate = true) {
     if (tx.unconfirmed) {
       if (tx.blockHeight > 0) {
-        return  translate ? this.lang.processing : 'pending';
+        return  translate ? this.language.processing : 'pending';
       } else {
-        return translate ? this.lang.unconfirmed : 'unconfirmed' ;
+        return translate ? this.language.unconfirmed : 'unconfirmed' ;
       }
     } else {
-      return translate ? this.lang.complete : 'complete';
+      return translate ? this.language.complete : 'complete';
     }
+  }
+
+  created() {
+    this.setMomentLocale()
   }
 
   openTransactionView(link : string) {
     window.ipcRenderer.send('openLink', link)
+  }
+
+  @Watch('language')
+  setMomentLocale() {
+    if(this.module.settings.language != "en") {
+      moment.locale(this.module.settings.language)
+    }
+    else {
+      moment.locale('en-GB')
+    }
   }
 
 }

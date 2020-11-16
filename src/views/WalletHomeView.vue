@@ -391,6 +391,7 @@ export default class WalletHomeView extends Vue {
       await WalletHandlerModule.syncWallet(smallSync);
       this.transactions = WalletHandlerModule.transactions;
       this.unconfirmedTransactions = WalletHandlerModule.unconfirmedTransactions;
+      this.balance = WalletHandlerModule.balance
       this.refreshing = false;
     } catch {
       this.refreshing = false;

@@ -96,6 +96,9 @@ var en = <Language> {
     ok_button: 'OK',
     copy_button: 'Copy',
     save_button: 'Save',
+
+    // Notification
+    notification_title: 'Incoming Transaction',
 }
 
 export default en

@@ -195,7 +195,7 @@ get notEnoughBalance() {
 }
 
 get sendingMax() {
-  return this.btcAmount == WalletHandlerModule.balance.toString()
+  return new BigNumber(this.btcAmount).eq(WalletHandlerModule.balance)
 }
 
 get networkFeeBtc() {

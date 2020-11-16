@@ -36,6 +36,16 @@ export class Transaction {
     }
 }
 
+export class UnconfirmedTransaction {
+    hash: string
+    firstSeen : Date
+
+    constructor(h: string, f : Date) {
+        this.hash = h
+        this.firstSeen = f
+    }
+}
+
 export class WalletSettings {
     id: number
     language: string
@@ -360,12 +370,25 @@ export class Wallet {
 
                 // Put it in the database
                 await WalletDB.transactions.put(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, new Date(transaction.time * 1000)))
+
+                // Clear it from the unconfirmed transactions list
+                await WalletDB.unconfirmedTransactions.where('hash').equals(newTransactions[i].hash).delete()
             }
 
             // It's a new unconfirmed transaction (< 6 confirmations)
             else {
-                if (this.unconfirmedTransactions.filter((tx) => tx.hash == newTransactions[i].hash).length == 0) {
-                    this.unconfirmedTransactions.push(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, new Date(transaction.time * 1000)))
+                // Check if we've seen it
+                let weAlreadyHave = await WalletDB.unconfirmedTransactions.where('hash').equals(newTransactions[i].hash).limit(1).toArray()
+
+                // We have already seen this before
+                if(weAlreadyHave.length > 0) {
+                    this.unconfirmedTransactions.push(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, weAlreadyHave[0].firstSeen))
+                }
+
+                // Otherwise save the transaction hash and the current date for future reference
+                else {
+                    await WalletDB.unconfirmedTransactions.put(new UnconfirmedTransaction(newTransactions[i].hash, new Date()))
+                    this.unconfirmedTransactions.push(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, new Date()))
                 }
             }
 
@@ -557,6 +580,7 @@ export class WalletDatabase extends Dexie {
     externalAddresses!: Dexie.Table<AddressLookup, number>
     internalAddresses!: Dexie.Table<AddressLookup, number>
     transactions!: Dexie.Table<Transaction, number>
+    unconfirmedTransactions!: Dexie.Table<UnconfirmedTransaction, number>
     settings!: Dexie.Table<WalletSettings, number>
 
     constructor() {
@@ -567,11 +591,13 @@ export class WalletDatabase extends Dexie {
         this.version(1).stores({ internalAddresses: "index, address, balance, isLookAhead" })
         this.version(1).stores({ transactions: "++id, hash, amount, height, time" })
         this.version(1).stores({ settings: "++id, language, currency, easyTransact" })
+        this.version(1).stores({ unconfirmedTransactions: "hash, firstSeen" })
 
         this.wallet.mapToClass(Wallet)
         this.externalAddresses.mapToClass(AddressLookup)
         this.internalAddresses.mapToClass(AddressLookup)
         this.transactions.mapToClass(Transaction)
+        this.unconfirmedTransactions.mapToClass(UnconfirmedTransaction)
         this.settings.mapToClass(WalletSettings)
     }
 
@@ -666,7 +692,7 @@ export class WalletDatabase extends Dexie {
 
 
     async clearAllWallets(): Promise<void[]> {
-        return Promise.all([this.wallet.clear(), this.transactions.clear(), this.externalAddresses.clear(), this.internalAddresses.clear()])
+        return Promise.all([this.wallet.clear(), this.transactions.clear(), this.unconfirmedTransactions.clear(), this.externalAddresses.clear(), this.internalAddresses.clear()])
     }
 }
 

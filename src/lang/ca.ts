@@ -94,6 +94,9 @@ var ca = <Language> {
     ok_button: 'OK',
     copy_button: 'Copiar',
     save_button: 'Save',
+
+    // Notification
+    notification_title: 'Incoming Transaction'
 }
 
 export default ca

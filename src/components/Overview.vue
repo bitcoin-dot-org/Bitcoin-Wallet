@@ -18,8 +18,8 @@
           ></button>
         </div>
       </div>
-      <OverviewTable v-if="transactions.length > 0" :transactions="displayedTransactions"></OverviewTable>
-      <OverviewEmpty v-if="transactions.length == 0" @show-receive="showReceive()"></OverviewEmpty>
+      <OverviewTable :language="language" v-if="transactions.length > 0" :transactions="displayedTransactions"></OverviewTable>
+      <OverviewEmpty :language="language" v-if="transactions.length == 0" @show-receive="showReceive()"></OverviewEmpty>
     </div>
   </DashboardContent>
 </template>
@@ -103,6 +103,7 @@ export default class Overview extends Vue {
   showReceive() {
     this.$emit('show-receive')
   }
+
 }
 </script>
 

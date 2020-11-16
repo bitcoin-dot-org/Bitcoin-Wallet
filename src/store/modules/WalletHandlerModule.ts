@@ -176,12 +176,32 @@ class WalletHandlerModule extends VuexModule {
   }
 
   @Action
-  async fetchTransactions() {
-    let transactions = await WalletDB.transactions.toArray()
-    let unconfirmed = this.wallet.unconfirmedTransactions
+  async fetchTransactions(smallSync : boolean) {
+    let newTransactions = await WalletDB.transactions.toArray()
+    let newUnconfirmed = this.wallet.unconfirmedTransactions
 
-    this.context.commit('setTransactions', transactions.reverse())
-    this.context.commit('setUnconfirmedTransactions', unconfirmed.reverse())
+    // We have some new transactions so maybe show a notification, but only during small syncs
+    if(this.transactions.concat(this.unconfirmedTransactions).length < newTransactions.concat(newUnconfirmed).length && smallSync) {
+
+      // We don't want the old transactions we already know about
+       let notify = newTransactions.concat(newUnconfirmed).filter(tx => !this.transactions.concat(this.unconfirmedTransactions).includes(tx))
+
+       // We only notify for incoming transactions
+       let received = notify.filter((n) => !n.amount.includes('-'))
+
+       // Just notify for the most recent incoming
+       if(received.length > 0) {
+          const options = { 
+            body: this.currentLanguage.notification_title, 
+            timeoutType: 'never',
+            icon: 'bitcoin.png', 
+          }
+          new Notification("+" +  received.reverse()[0].amount +  ' BTC', options) 
+       }
+    }
+
+    this.context.commit('setTransactions', newTransactions.reverse())
+    this.context.commit('setUnconfirmedTransactions', newUnconfirmed.sort(function(tx1, tx2) {return tx1.time.getMilliseconds() - tx2.time.getMilliseconds()}))
   }
 
   @Action
@@ -208,7 +228,7 @@ class WalletHandlerModule extends VuexModule {
   @Action
   async syncWallet(smallSync: boolean) {
     await this.wallet.synchronize(smallSync)
-    await this.fetchTransactions()
+    await this.fetchTransactions(smallSync)
     if (!smallSync) {
       await this.fetchSettings()
     }

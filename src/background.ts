@@ -82,6 +82,9 @@ app.on('ready', async () => {
     // }
 
   }
+  if(process.platform == 'win32') {
+    app.setAppUserModelId("Bitcoin Wallet");
+  }
   createWindow()
 })
 

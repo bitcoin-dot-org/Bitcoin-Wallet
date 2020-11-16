@@ -1,27 +1,27 @@
 <template>
   <div class="overview-empty">
     <p class="overview-empty__text">
-      {{ lang.no_transactions }}. <br>
-      {{ lang.what_to_do }}
+      {{ language.no_transactions }}. <br>
+      {{ language.what_to_do }}
     </p>
     <div class="overview-empty__buttons">
-      <ButtonPrimary :click="buyClicked">{{ lang.buy_bitcoin }}</ButtonPrimary>
-      <ButtonPrimary :click="receiveClicked">{{ lang.receive }}</ButtonPrimary>
+      <ButtonPrimary :click="buyClicked">{{ language.buy_bitcoin }}</ButtonPrimary>
+      <ButtonPrimary :click="receiveClicked">{{ language.receive }}</ButtonPrimary>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from "vue-property-decorator";
-  import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+  import { Vue, Component, Prop } from "vue-property-decorator";
   import ButtonPrimary from "@/components/Buttons/ButtonPrimary.vue";
+
   /* eslint-disable no-unused-vars */
   import Language from "@/lang/langInterface";
   /* eslint-enable no-unused-vars */
   
   @Component({ components: { ButtonPrimary }})
   export default class OverviewEmpty extends Vue {
-    private lang = WalletHandlerModule.currentLanguage;
+    @Prop() language!: Language;
 
     receiveClicked() {
       this.$emit('show-receive')

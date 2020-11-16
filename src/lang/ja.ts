@@ -95,6 +95,9 @@ var ja = <Language> {
     ok_button: 'OK',
     copy_button: 'コピー',
     save_button: 'Save',
+
+    // Notification
+    notification_title: 'Incoming Transaction',
 }
 
 export default ja
