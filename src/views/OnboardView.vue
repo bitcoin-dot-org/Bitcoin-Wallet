@@ -75,7 +75,7 @@
     <div class="language-select">
       <p class="language-select__text">{{ lang.change_language }}</p>
       <router-link to="/language" class="language-select__link"
-        >English</router-link
+        >{{ languageBigName() }}</router-link
       >
     </div>
   </Screen>
@@ -85,6 +85,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
 import Screen from "@/components/Layout/Screen.vue";
+import Utils from '@/Utils/utils.ts'
 import PageSubtitle from "@/components/Text/PageSubtitle.vue";
 /* eslint-disable no-unused-vars */
 
@@ -100,6 +101,11 @@ export default class Onboard extends Vue {
 
   mounted() {
     this.lang = this.language;
+
+  }
+
+  languageBigName() : string {
+    return Utils.languageBigName(WalletHandlerModule.settings.language)
   }
 }
 </script>

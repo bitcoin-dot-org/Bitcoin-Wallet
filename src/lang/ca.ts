@@ -92,7 +92,8 @@ var ca = <Language> {
     restore_button: 'Restaurar',
     next_button: 'Següent',
     ok_button: 'OK',
-    copy_button: 'Copiar'
+    copy_button: 'Copiar',
+    save_button: 'Save',
 }
 
 export default ca

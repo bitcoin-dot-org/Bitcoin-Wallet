@@ -3,35 +3,16 @@
     <div class="language-view__main">
       <PageTitle class="language-view__title">{{ lang.choose_language }}</PageTitle>
       <ul class="lang-list">
-        <li class="lang-list__item">
-          <button class="lang-button">Bahasa Indonesia</button>
-        </li>
-        <li class="lang-list__item">
-          <button class="lang-button">Polski</button>
-        </li>
-        <li class="lang-list__item">
-          <button class="lang-button">Dansk</button>
-        </li>
-        <li class="lang-list__item">
-          <button class="lang-button">türkçe</button>
-        </li>
-        <li class="lang-list__item">
-          <button class="lang-button">Deutsch</button>
-        </li>
-        <li class="lang-list__item">
-          <button class="lang-button">Русский</button>
-        </li>
-        <li class="lang-list__item">
-          <button class="lang-button lang-button--active">English</button>
-        </li>
-        <li class="lang-list__item">
-          <button class="lang-button">简体中文</button>
+        <li class="lang-list__item"
+        v-for="(language, index) in languages"
+        :key="language+index">
+          <button v-on:click="selectedIndex = index" v-bind:class="['lang-button', index == selectedIndex ? 'lang-button--active' : '' ]">{{ language }}</button>
         </li>
       </ul>
     </div>
     <Footer>
       <BackLink />
-      <ButtonPrimary :click="() => {}">{{ lang.save_button }}</ButtonPrimary>
+      <ButtonPrimary :click="saveButtonClicked">{{ lang.save_button }}</ButtonPrimary>
     </Footer>
   </Screen>
 </template>
@@ -41,6 +22,7 @@
   import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
   import PageTitle from "@/components/Text/PageTitle.vue";
   import Screen from "@/components/Layout/Screen.vue";
+  import Utils from "@/Utils/utils.ts"
   import Footer from "@/components/Layout/Footer.vue";
   import ButtonPrimary from "@/components/Buttons/ButtonPrimary.vue";
   import BackLink from "@/components/Buttons/BackLink.vue";
@@ -48,6 +30,14 @@
   @Component({ components: { PageTitle, Screen, Footer, ButtonPrimary, BackLink } })
   export default class ChooseLanguage extends Vue {
     private lang = WalletHandlerModule.currentLanguage;
+    private languages = ["English", "Español", "Catalan", "Français", "日本語"]
+    private selectedIndex = this.languages.findIndex((l) => l == Utils.languageBigName(WalletHandlerModule.settings.language))
+
+    saveButtonClicked() {
+      WalletHandlerModule.changeLanguage(Utils.languageShortCode(this.languages[this.selectedIndex]))
+      this.$router.go(-1)
+    }
+
   }
 </script>
 
@@ -94,5 +84,9 @@
   }
   .lang-button--active {
     background: #2B2F3A;
+  }
+
+  .lang-button--active:focus {
+    outline: none;
   }
 </style>

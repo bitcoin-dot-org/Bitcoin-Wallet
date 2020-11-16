@@ -8,7 +8,7 @@
           <sp-menu>
             <sp-menu-item
               v-for="(currency, index) in currencies"
-              :key="'cur' + index"
+              :key="currency + index"
               v-on:click="currencySelected(index)"
             >{{ currency }}</sp-menu-item>
           </sp-menu>
@@ -21,7 +21,7 @@
             <sp-menu >
               <sp-menu-item
                 v-for="(lang, index) in languages"
-                :key="'lang' + index"
+                :key="lang + index"
                 v-on:click="languageSelected(index)"
               >{{ lang }} </sp-menu-item>
             </sp-menu>

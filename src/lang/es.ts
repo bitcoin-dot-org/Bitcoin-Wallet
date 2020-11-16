@@ -94,7 +94,8 @@ var es = <Language> {
     restore_button: 'Restaurar',
     next_button: 'Siguiente',
     ok_button: 'OK',
-    copy_button: 'Copiar'
+    copy_button: 'Copiar',
+    save_button: 'Save',
 }
 
 export default es

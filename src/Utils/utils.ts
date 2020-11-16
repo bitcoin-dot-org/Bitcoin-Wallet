@@ -12,7 +12,7 @@ export default class Utils {
           return 'Français'
         }
         
-        else if(l == "fr") {
+        else if(l == "ja") {
           return '日本語'
         }
         

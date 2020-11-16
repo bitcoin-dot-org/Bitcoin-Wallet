@@ -5,7 +5,7 @@
         <div class="balance__row">
           <p class="balance__title">{{ lang.total_balance }}:</p>
           <button
-            v-on:click="refresh()"
+            v-on:click="refresh(true)"
             :class="['refresh-button', refreshing ? 'spin' : '']"
           >
             <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -278,6 +278,9 @@ export default class WalletHomeView extends Vue {
 
     this.seed = WalletHandlerModule.wallet.seed;
 
+    // Let's fully sync up
+    this.refresh(false)
+
   }
 
   showSeed() {
@@ -323,6 +326,7 @@ export default class WalletHomeView extends Vue {
 
   switchLanguage() {
     this.lang = WalletHandlerModule.currentLanguage;
+    this.$emit('language-changed')
   }
 
   // Hide the transaction modal
@@ -375,7 +379,7 @@ export default class WalletHomeView extends Vue {
     this.$emit("close-wallet");
   }
 
-  async refresh() {
+  async refresh( smallSync : boolean) {
     if (this.refreshing || this.sending || this.transactionModalShowing) {
       return;
     }
@@ -384,7 +388,7 @@ export default class WalletHomeView extends Vue {
 
     try {
       // Sync the wallet
-      await WalletHandlerModule.syncWallet(true);
+      await WalletHandlerModule.syncWallet(smallSync);
       this.transactions = WalletHandlerModule.transactions;
       this.unconfirmedTransactions = WalletHandlerModule.unconfirmedTransactions;
       this.refreshing = false;

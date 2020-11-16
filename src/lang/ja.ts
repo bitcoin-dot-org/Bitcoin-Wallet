@@ -12,6 +12,7 @@ var ja = <Language> {
     restore_existing: '既存ウォレットの復元',
     restore_subtext: "You already have a wallet and wish to use your recovery phrase to restore it.",
     choose_language: 'Choose Language',
+    change_language: 'Change language',
 
     // Create page
     seed_phrase: "Recovery Words",
@@ -92,7 +93,8 @@ var ja = <Language> {
     restore_button: '復元',
     next_button: '次へ',
     ok_button: 'OK',
-    copy_button: 'コピー'
+    copy_button: 'コピー',
+    save_button: 'Save',
 }
 
 export default ja
