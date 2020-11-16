@@ -61,7 +61,6 @@ export default interface Language {
     send_to: string
     bitcoin_address: string
     address: string
-    enter_address: string
     low_priority: string
     standard: string
     important: string

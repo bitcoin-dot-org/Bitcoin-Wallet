@@ -29,7 +29,7 @@
           </td>
           <td>
             <p :class="'amount-' + (zero.gt(tx.amount) ? 'expense' : 'income') ">{{ tx.amount }} <span class="amount-currency">BTC</span></p>
-            <p class="amount">{{ new Intl.NumberFormat(module.settings.languageCode, { style: 'currency', currency: module.settings.currency }).format(parseFloat(tx.amount.multipliedBy(module.fiatRate).toFixed(2))) }} <span class="amount-currency">{{ module.settings.currency }}</span></p>
+            <p class="amount">{{ new Intl.NumberFormat(module.settings.language, { style: 'currency', currency: module.settings.currency }).format(parseFloat(tx.amount.multipliedBy(module.fiatRate).toFixed(2))) }} <span class="amount-currency">{{ module.settings.currency }}</span></p>
           </td>
           <td>
             <a v-on:click="openTransactionView('https://www.blockchain.com/btc/tx/' + tx.hash)" class="external-link">

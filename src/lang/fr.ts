@@ -68,7 +68,6 @@ var en = <Language> {
     send_to: 'Send only to Bitcoin (BTC) addresses',
     bitcoin_address: 'Bitcoin address',
     address: 'Address',
-    enter_address: 'Enter address to send too and amount:',
     low_priority: 'Low priority',
     standard: 'Standard',
     important: 'Important',

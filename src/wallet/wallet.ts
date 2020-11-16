@@ -39,27 +39,12 @@ export class Transaction {
 export class WalletSettings {
     id: number
     language: string
-    languageCode : string
     currency: string
     easyTransact: boolean
 
     constructor(i: number, l: string, c: string, e: boolean) {
         this.id = i
         this.language = l
-        this.languageCode = ''
-
-        switch(l) {
-            case "English":
-                this.languageCode = 'en'
-                break;
-            case "Español":
-                this.languageCode = 'es'
-                break;
-            case "Français":
-                this.languageCode = 'fr'
-                break;
-        }
-
         this.currency = c
         this.easyTransact = e
     }
@@ -581,7 +566,7 @@ export class WalletDatabase extends Dexie {
         this.version(1).stores({ externalAddresses: "index, address, balance, isLookAhead" })
         this.version(1).stores({ internalAddresses: "index, address, balance, isLookAhead" })
         this.version(1).stores({ transactions: "++id, hash, amount, height, time" })
-        this.version(1).stores({ settings: "++id, language, languageCode, currency, easyTransact" })
+        this.version(1).stores({ settings: "++id, language, currency, easyTransact" })
 
         this.wallet.mapToClass(Wallet)
         this.externalAddresses.mapToClass(AddressLookup)

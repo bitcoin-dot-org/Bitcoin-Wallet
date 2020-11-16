@@ -152,7 +152,7 @@ calculateBtc() {
     let fiat = this.fiatAmount;
 
     // Determine the format
-    let format = new Intl.NumberFormat(WalletHandlerModule.settings.languageCode).format(1.5);
+    let format = new Intl.NumberFormat(WalletHandlerModule.settings.language).format(1.5);
 
     // Are we in commas as decimal land?
     let commasAsDecimal = format == "1,5";
@@ -240,7 +240,7 @@ get networkFeeFiat() {
       fiat = "0";
     }
 
-    return new Intl.NumberFormat(WalletHandlerModule.settings.languageCode, { style: 'currency', currency: WalletHandlerModule.settings.currency }).format(parseFloat(fiat));
+    return new Intl.NumberFormat(WalletHandlerModule.settings.language, { style: 'currency', currency: WalletHandlerModule.settings.currency }).format(parseFloat(fiat));
 }
 
 get btcTotal() {
@@ -259,7 +259,7 @@ get btcTotalFiat() {
       fiat = "0";
     }
 
-    return new Intl.NumberFormat(WalletHandlerModule.settings.languageCode, { style: 'currency', currency: WalletHandlerModule.settings.currency }).format(parseFloat(fiat));
+    return new Intl.NumberFormat(WalletHandlerModule.settings.language, { style: 'currency', currency: WalletHandlerModule.settings.currency }).format(parseFloat(fiat));
 }
 
 
@@ -304,7 +304,7 @@ get btcTotalFiat() {
       fiat = "0"
     }
 
-     this.fiatAmount = new Intl.NumberFormat(WalletHandlerModule.settings.languageCode).format(parseFloat(fiat))
+     this.fiatAmount = new Intl.NumberFormat(WalletHandlerModule.settings.language).format(parseFloat(fiat))
 
   }
 

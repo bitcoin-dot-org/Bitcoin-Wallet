@@ -4,7 +4,7 @@
       <DashboardTitle class="settings__title">{{ language.settings }}</DashboardTitle>
       <Label class="settings-label">
         {{ language.currency }}
-        <sp-dropdown class="dropdown-wrapper" :label="module.settings.currency">
+        <sp-dropdown class="dropdown-wrapper" :label="this.module.settings.currency">
           <sp-menu>
             <sp-menu-item
               v-for="(currency, index) in currencies"
@@ -17,13 +17,13 @@
       <Label class="settings-label">
         {{ language.language }}
         <div>
-          <sp-dropdown class="dropdown-wrapper" :label="module.settings.language">
-            <sp-menu>
+          <sp-dropdown class="dropdown-wrapper" :label="languageBigName(module.settings.language)">
+            <sp-menu >
               <sp-menu-item
                 v-for="(lang, index) in languages"
                 :key="'lang' + index"
                 v-on:click="languageSelected(index)"
-              >{{ lang }}</sp-menu-item>
+              >{{ lang }} </sp-menu-item>
             </sp-menu>
           </sp-dropdown>
         </div>
@@ -43,12 +43,14 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+import Utils from '@/Utils/utils.ts'
 import DashboardTitle from "@/components/Text/DashboardTitle.vue";
 import Label from "@/components/Form/Label.vue";
 import DashboardContent from "@/components/Layout/DashboardContent.vue";
 import Screen from "@/components/Layout/Screen.vue";
 import Footer from "@/components/Layout/Footer.vue";
 import ButtonSecondary from "@/components/Buttons/ButtonSecondary.vue";
+
 
 /* eslint-disable no-unused-vars */
 
@@ -59,6 +61,8 @@ import Language from "@/lang/langInterface";
 @Component({components: { DashboardTitle, Label, Screen, Footer, DashboardContent, ButtonSecondary }})
 export default class Settings extends Vue {
   @Prop() language!: Language;
+
+  private module = WalletHandlerModule;
 
   // Probably should have these in a config file, but cba bothering to load it in, so just keep it here
   private currencies = [
@@ -85,9 +89,14 @@ export default class Settings extends Vue {
     "THB",
     "TRY",
     "TWD",
-  ];
-  private languages = ["English", "Español", "Catalan", "Français", "Catalan", "日本語"];
-  private module = WalletHandlerModule;
+  ].filter((c) => c != this.module.settings.currency);
+
+  private languages = ["English", "Español", "Catalan", "Français", "日本語"].filter((l) => l != Utils.languageBigName(this.module.settings.language))
+
+  mounted() {
+    this.languages = [this.languageBigName(this.module.settings.language)].concat(this.languages)
+    this.currencies = [this.module.settings.currency].concat(this.currencies)
+  }
 
   async currencySelected(index: number) {
     await WalletHandlerModule.changeCurrency(this.currencies[index]);
@@ -95,7 +104,7 @@ export default class Settings extends Vue {
   }
 
   async languageSelected(index: number) {
-    await WalletHandlerModule.changeLanguage(this.languages[index]);
+    await WalletHandlerModule.changeLanguage(Utils.languageShortCode(this.languages[index]));
     this.$emit("language-changed");
   }
 
@@ -106,6 +115,11 @@ export default class Settings extends Vue {
   showSeed() {
     this.$emit("show-seed");
   }
+
+  languageBigName(l : string) : string {
+    return Utils.languageBigName(l)
+  }
+
 }
 </script>
 

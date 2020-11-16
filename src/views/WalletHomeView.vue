@@ -368,7 +368,7 @@ export default class WalletHomeView extends Vue {
       fiat = "0";
     }
 
-    return new Intl.NumberFormat(this.walletModule.settings.languageCode, { style: 'currency', currency: this.walletModule.settings.currency }).format(parseFloat(fiat));
+    return new Intl.NumberFormat(this.walletModule.settings.language, { style: 'currency', currency: this.walletModule.settings.currency }).format(parseFloat(fiat));
   }
 
   close() {

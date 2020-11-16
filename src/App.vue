@@ -17,6 +17,22 @@
   -webkit-font-smoothing: antialiased;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1A1E29 black;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+}
+*::-webkit-scrollbar-track {
+  background: black;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #1A1E29 ;
+  border: none;
+}
+
 body {
   font-family: "Titillium Web", Arial, sans-serif;
   font-size: 16px;
