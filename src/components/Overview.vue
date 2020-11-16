@@ -45,7 +45,7 @@ export default class Overview extends Vue {
   private zero = new BigNumber(0);
   private totalPages = 0;
   private currentPage = 1;
-  private itemsPerPage = 5;
+  private itemsPerPage = 6;
 
   mounted() {
     this.totalPages = Math.ceil(this.transactions.length / this.itemsPerPage);

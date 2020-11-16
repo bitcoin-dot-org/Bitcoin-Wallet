@@ -156,7 +156,25 @@
       </div>
     </div>
 
-    <div class="modal-wrapper" :style="this.seedModal ? '' : 'display: none;'">
+    <div class="modal-wrapper" v-if="deleteModal">
+      <div class="modal-overlay"></div>
+      <div class="modal modal-warning">
+        <button v-on:click="deleteModal = false" class="modal__close">
+          <img src="../assets/images/close.svg" alt="close">
+        </button>
+        <PageTitle>{{ lang.exit_wallet}}</PageTitle>
+        <p>{{ lang.exit_text }}.</p>
+        <br>
+        <br>
+        <p>{{ lang.exit_are_you_sure }}</p>
+        <div class="send-modal-buttons-container">
+          <Checkbox v-if="!sending" class="seed-phrase-checkbox" v-model="deleteWallet" :label="lang.exit_label_text"/>
+          <ButtonPrimary :click="deleteAndDestroyWallet" :disabled="!deleteWallet">{{ lang.exit_delete }}</ButtonPrimary>
+          </div>
+      </div>
+    </div>
+
+    <div class="modal-wrapper" v-if="this.seedModal">
       <div class="modal-overlay"></div>
       <div class="modal">
         <button v-on:click="hideSeed()" class="modal__close">
@@ -217,6 +235,7 @@ import BigNumber from "bignumber.js";
 /* eslint-disable no-unused-vars */
 
 import Language from "@/lang/langInterface";
+import { promises } from 'dns';
 
 /* eslint-enable no-unused-vars */
 
@@ -226,6 +245,9 @@ export default class WalletHomeView extends Vue {
 
   // Seed modal
   private seedModal = false;
+
+  // Delete modal
+  private deleteModal = false
 
   // Transaction modal
   private transactionModalShowing = false;
@@ -266,6 +288,7 @@ export default class WalletHomeView extends Vue {
   private sendingMax = false;
   private hex = "";
   private thisLooksRight = false;
+  private deleteWallet = false
   private lastTransaction = ""
 
   private lang = WalletHandlerModule.currentLanguage;
@@ -278,8 +301,11 @@ export default class WalletHomeView extends Vue {
 
     this.seed = WalletHandlerModule.wallet.seed;
 
-    // Let's fully sync up
-    this.refresh(false)
+    // Let's do a small sync first
+    await this.refresh(true)
+
+    // Then do a larger sync a short time after we've loaded the inital data
+    setTimeout(() =>{this.refresh(false)}, 5000)
 
   }
 
@@ -376,7 +402,11 @@ export default class WalletHomeView extends Vue {
   }
 
   close() {
-    this.$emit("close-wallet");
+    this.deleteModal = true
+  }
+
+  deleteAndDestroyWallet() {
+    this.$emit("close-wallet")
   }
 
   async refresh( smallSync : boolean) {
@@ -628,6 +658,9 @@ export default class WalletHomeView extends Vue {
 .modal--send {
   width: 450px;
   padding: 44px 32px 65px;
+}
+.modal-warning {
+  width: 400px;
 }
 .send-modal-icon {
   width: 24px;

@@ -36,16 +36,6 @@ export class Transaction {
     }
 }
 
-export class UnconfirmedTransaction {
-    hash: string
-    firstSeen : Date
-
-    constructor(h: string, f : Date) {
-        this.hash = h
-        this.firstSeen = f
-    }
-}
-
 export class WalletSettings {
     id: number
     language: string
@@ -74,7 +64,7 @@ export class Wallet {
     internal: number
     root!: bip32.BIP32Interface
     client!: any
-    unconfirmedTransactions: Transaction[] = new Array()
+    unconfirmedTransactions : Transaction[] = new Array()
     utxos = new Array()
     feeRates: number[] = new Array()
     setUpRoot = false
@@ -120,9 +110,6 @@ export class Wallet {
 
         // This will be set to true if any new transactions have occurred and we need to fetch utxos
         let fetchUtxos = false
-
-        // Clear out the unconfirmed transactions after every refresh
-        this.unconfirmedTransactions = new Array()
 
         // Let's initialize our client if we haven't done so already
         if (!this.setUpClient) {
@@ -365,14 +352,14 @@ export class Wallet {
             // We only add transactions to our database if they have 6 or more confirmations, as we don't want to deal with re-orgs
             if (transaction.confirmations >= 6) {
 
-                // Remove the transaction from our list of unconfirmed transactions (<6 confs)
-                this.unconfirmedTransactions = this.unconfirmedTransactions.filter((tx) => tx.hash != newTransactions[i].hash)
-
                 // Put it in the database
                 await WalletDB.transactions.put(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, new Date(transaction.time * 1000)))
 
                 // Clear it from the unconfirmed transactions list
                 await WalletDB.unconfirmedTransactions.where('hash').equals(newTransactions[i].hash).delete()
+
+                // Remove the transaction from our list of unconfirmed transactions (<6 confs)
+                this.unconfirmedTransactions = await WalletDB.unconfirmedTransactions.toArray()
             }
 
             // It's a new unconfirmed transaction (< 6 confirmations)
@@ -380,15 +367,10 @@ export class Wallet {
                 // Check if we've seen it
                 let weAlreadyHave = await WalletDB.unconfirmedTransactions.where('hash').equals(newTransactions[i].hash).limit(1).toArray()
 
-                // We have already seen this before
-                if(weAlreadyHave.length > 0) {
-                    this.unconfirmedTransactions.push(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, weAlreadyHave[0].firstSeen))
-                }
+                // We haven't seen this, so put it in
+                if(weAlreadyHave.length == 0) {
+                    await WalletDB.unconfirmedTransactions.put(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, new Date()))
 
-                // Otherwise save the transaction hash and the current date for future reference
-                else {
-                    await WalletDB.unconfirmedTransactions.put(new UnconfirmedTransaction(newTransactions[i].hash, new Date()))
-                    this.unconfirmedTransactions.push(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, new Date()))
                 }
             }
 
@@ -448,6 +430,7 @@ export class Wallet {
 
         // Close our connection to the server, we probably won't sychronize again until 10 mins, or until user presses
         // the refresh button, so better to just close our connection as we've done our job, no need to keep it open
+
         await this.client.close()
 
     }
@@ -580,7 +563,7 @@ export class WalletDatabase extends Dexie {
     externalAddresses!: Dexie.Table<AddressLookup, number>
     internalAddresses!: Dexie.Table<AddressLookup, number>
     transactions!: Dexie.Table<Transaction, number>
-    unconfirmedTransactions!: Dexie.Table<UnconfirmedTransaction, number>
+    unconfirmedTransactions!: Dexie.Table<Transaction, number>
     settings!: Dexie.Table<WalletSettings, number>
 
     constructor() {
@@ -591,13 +574,13 @@ export class WalletDatabase extends Dexie {
         this.version(1).stores({ internalAddresses: "index, address, balance, isLookAhead" })
         this.version(1).stores({ transactions: "++id, hash, amount, height, time" })
         this.version(1).stores({ settings: "++id, language, currency, easyTransact" })
-        this.version(1).stores({ unconfirmedTransactions: "hash, firstSeen" })
+        this.version(1).stores({ unconfirmedTransactions: "hash, amount, firstSeen" })
 
         this.wallet.mapToClass(Wallet)
         this.externalAddresses.mapToClass(AddressLookup)
         this.internalAddresses.mapToClass(AddressLookup)
         this.transactions.mapToClass(Transaction)
-        this.unconfirmedTransactions.mapToClass(UnconfirmedTransaction)
+        this.unconfirmedTransactions.mapToClass(Transaction)
         this.settings.mapToClass(WalletSettings)
     }
 

@@ -178,7 +178,7 @@ class WalletHandlerModule extends VuexModule {
   @Action
   async fetchTransactions(smallSync : boolean) {
     let newTransactions = await WalletDB.transactions.toArray()
-    let newUnconfirmed = this.wallet.unconfirmedTransactions
+    let newUnconfirmed = await WalletDB.unconfirmedTransactions.toArray()
 
     // We have some new transactions so maybe show a notification, but only during small syncs
     if(this.transactions.concat(this.unconfirmedTransactions).length < newTransactions.concat(newUnconfirmed).length && smallSync) {

@@ -96,7 +96,13 @@ var ca = <Language> {
     save_button: 'Save',
 
     // Notification
-    notification_title: 'Incoming Transaction'
+    notification_title: 'Incoming Transaction',
+
+    // Exit wallet
+    exit_text: 'This will destroy your wallet files and all records of your transactions. The only way to restore your wallet will be through your recovery words',
+    exit_are_you_sure: 'Are you sure you want to delete and exit this wallet?',
+    exit_label_text: 'Yes, delete this wallet',
+    exit_delete: 'Delete',
 }
 
 export default ca

@@ -92,4 +92,10 @@ export default interface Language {
 
     // Notification
     notification_title: string
+
+    // Exit wallet
+    exit_text: string
+    exit_are_you_sure: string
+    exit_label_text: string
+    exit_delete: string
 }

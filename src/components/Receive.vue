@@ -43,7 +43,9 @@ export default class Overview extends Vue {
 
   @Prop() language! : Language
 
-  private address = WalletHandlerModule.nextFreeExternalAddress
+  get address() {
+    return WalletHandlerModule.nextFreeExternalAddress
+  }
 
   copyAddress() {
     navigator.clipboard.writeText(this.address)
