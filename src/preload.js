@@ -7,7 +7,8 @@ window.addEventListener('DOMContentLoaded', () => {
         new customTitlebar.Titlebar({
             backgroundColor: customTitlebar.Color.fromHex('#090C14'),
             overflow: 'hidden',
-            maximizable: false
+            maximizable: false,
+            icon: 'bitcoin.png',
         });
     }
 

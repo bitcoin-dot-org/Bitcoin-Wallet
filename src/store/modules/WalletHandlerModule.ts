@@ -19,8 +19,8 @@ import { Transaction } from '@/wallet/wallet'
 class WalletHandlerModule extends VuexModule {
 
   wallet = new Wallet('', 0, 0)
-  transactions = [{}]
-  unconfirmedTransactions = [{}]
+  transactions : Transaction[] = new Array()
+  unconfirmedTransactions  : Transaction[] = new Array()
   synced = false
   balance = new BigNumber(0)
   unconfirmedBalance = new BigNumber(0)
@@ -31,6 +31,7 @@ class WalletHandlerModule extends VuexModule {
   fiatSymbol = ''
   settings = new WalletSettings(1, 'en', 'USD', false)
   currentLanguage = en
+  restoring = false
 
 
   @Mutation
@@ -49,31 +50,32 @@ class WalletHandlerModule extends VuexModule {
   }
 
   @Mutation
+  setRestoring(r : boolean) {
+    this.restoring = r
+  }
+
+  @Mutation
   setTransactions(txs: Transaction[]) {
 
-    let tx = new Array()
     let bal = new BigNumber(0)
 
     for (var i = 0; i < txs.length; i++) {
       let amount = new BigNumber(txs[i].amount)
       bal = bal.plus(amount)
-      tx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': amount, 'unconfirmed': false, date: txs[i].time, hash: txs[i].hash })
     }
 
-    this.transactions = tx
+    this.transactions = txs
     this.balance = bal
   }
 
   @Mutation
   setUnconfirmedTransactions(txs: Transaction[]) {
 
-    let utx = new Array()
     let ubal = new BigNumber(0)
 
     for (var i = 0; i < txs.length; i++) {
       let amount = new BigNumber(txs[i].amount)
       ubal = ubal.plus(amount)
-      utx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': amount, 'unconfirmed': true, date: txs[i].time, hash: txs[i].hash })
 
       // We want unconfirmed spends to take away from our main balance, because when a user has just sent a transaction
       // we don't want to keep showing the old but technically correct >=6 confirmations balance
@@ -84,7 +86,7 @@ class WalletHandlerModule extends VuexModule {
     }
 
 
-    this.unconfirmedTransactions = utx
+    this.unconfirmedTransactions = txs
     this.unconfirmedBalance = ubal
 
   }
@@ -200,8 +202,8 @@ class WalletHandlerModule extends VuexModule {
        }
     }
 
-    this.context.commit('setTransactions', newTransactions.reverse())
-    this.context.commit('setUnconfirmedTransactions', newUnconfirmed.sort(function(tx1, tx2) {return tx1.time.getMilliseconds() - tx2.time.getMilliseconds()}))
+    this.context.commit('setTransactions', newTransactions)
+    this.context.commit('setUnconfirmedTransactions', newUnconfirmed)
   }
 
   @Action
@@ -229,9 +231,7 @@ class WalletHandlerModule extends VuexModule {
   async syncWallet(smallSync: boolean) {
     await this.wallet.synchronize(smallSync)
     await this.fetchTransactions(smallSync)
-    if (!smallSync) {
-      await this.fetchSettings()
-    }
+    await this.fetchSettings()
     await this.fetchRates()
     this.context.commit('setUtxos', this.wallet.utxos)
     this.context.commit('setFeeRates', this.wallet.feeRates)

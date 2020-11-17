@@ -85,23 +85,6 @@ export default class Main extends Vue {
       this.loaded = true;
     }
   }
-
-  async trySyncAgain() {
-    try {
-      this.noConnection = false;
-
-      // Let's sync it up
-      await WalletHandlerModule.syncWallet(false);
-
-      this.noConnection = false;
-
-      // We've finished the syncing
-      this.loaded = true;
-    } catch {
-      // Something went wrong with the sync, likely no internet?
-      this.noConnection = true;
-    }
-  }
 }
 </script>
 

@@ -96,6 +96,7 @@ export default class Restore extends Vue {
 
   async nextPressed() {
     this.restoring = true;
+    WalletHandlerModule.setRestoring(true)
     await WalletHandlerModule.createWallet(this.words.join(" "));
     this.$router.back();
     this.restoring = false;

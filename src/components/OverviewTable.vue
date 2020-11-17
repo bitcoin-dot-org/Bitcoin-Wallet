@@ -24,12 +24,12 @@
           </td>
           <td><p :class="'status status--' + getText(tx, false).toLowerCase()">{{ getText(tx) }}</p></td>
           <td>
-            {{ dateHandler(tx.date).format('MMM. D, YYYY') }}
-            <p class="transaction-time">{{ dateHandler(tx.date).format('h:mm A') }}</p>
+            {{ dateHandler(tx.time).format('MMM. D, YYYY') }}
+            <p class="transaction-time">{{ dateHandler(tx.time).format('h:mm A') }}</p>
           </td>
           <td>
             <p :class="'amount-' + (zero.gt(tx.amount) ? 'expense' : 'income') ">{{ tx.amount }} <span class="amount-currency">BTC</span></p>
-            <p class="amount">{{ new Intl.NumberFormat(module.settings.language, { style: 'currency', currency: module.settings.currency }).format(parseFloat(tx.amount.multipliedBy(module.fiatRate).toFixed(2))) }} <span class="amount-currency">{{ module.settings.currency }}</span></p>
+            <p class="amount">{{ new Intl.NumberFormat(module.settings.language, { style: 'currency', currency: module.settings.currency }).format(parseFloat(zero.plus(tx.amount).multipliedBy(module.fiatRate).toFixed(2))) }} <span class="amount-currency">{{ module.settings.currency }}</span></p>
           </td>
           <td>
             <a v-on:click="openTransactionView('https://www.blockchain.com/btc/tx/' + tx.hash)" class="external-link">
@@ -62,20 +62,21 @@ import 'moment/locale/ja';
 
 /* eslint-disable no-unused-vars */
 import Language from "@/lang/langInterface";
+import { Transaction } from '@/wallet/wallet.ts'
 /* eslint-enable no-unused-vars */
 
 @Component
 export default class OverviewTable extends Vue {
 
 @Prop() language!: Language;
-@Prop() transactions!: [{}];
+@Prop() transactions! : Transaction[];
 private module = WalletHandlerModule
 private zero = new BigNumber(0);
 private dateHandler = moment
 
   getText(tx: any, translate = true) {
-    if (tx.unconfirmed) {
-      if (tx.blockHeight > 0) {
+    if (!tx.confirmed) {
+      if (tx.height > 0) {
         return  translate ? this.language.processing : 'pending';
       } else {
         return translate ? this.language.unconfirmed : 'unconfirmed' ;

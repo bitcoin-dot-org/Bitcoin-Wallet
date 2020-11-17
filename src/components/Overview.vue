@@ -43,13 +43,8 @@ export default class Overview extends Vue {
   @Prop() transactions!: [{}];
   @Prop() language!: Language;
   private zero = new BigNumber(0);
-  private totalPages = 0;
   private currentPage = 1;
   private itemsPerPage = 6;
-
-  mounted() {
-    this.totalPages = Math.ceil(this.transactions.length / this.itemsPerPage);
-  }
 
   previousPage() {
     this.currentPage = this.currentPage - 1;
@@ -59,6 +54,9 @@ export default class Overview extends Vue {
     this.currentPage = this.currentPage + 1;
   }
 
+  get totalPages() {
+    return Math.ceil(this.transactions.length / this.itemsPerPage)
+  }
 
   get displayedTransactions() {
 
