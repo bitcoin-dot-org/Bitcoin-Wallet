@@ -177,7 +177,7 @@
     <div class="modal-wrapper" v-if="isRestoring">
       <div class="modal-overlay"></div>
       <div class="modal modal-restore">
-        <p class="modal-restore-p">Restoring...</p>
+        <p class="modal-restore-p">{{ lang.restoring }}</p>
               <div class="refresh-button spin" >
               <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0)">

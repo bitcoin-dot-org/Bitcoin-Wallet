@@ -10,7 +10,7 @@
             v-on:click="previousPage()"
             :disabled="this.currentPage == 1"
           ></button>
-          <p class="pagination__text">Page {{ this.currentPage }} of {{ this.totalPages > 0 ? this.totalPages : '1' }}</p>
+          <p class="pagination__text">{{ language.page + ' ' + this.currentPage + ' ' + language.of + ' ' + (this.totalPages > 0 ? this.totalPages : '1') }}</p>
           <button
             class="pagination__button pagination__next"
             v-on:click="nextPage()"

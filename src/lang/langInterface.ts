@@ -23,6 +23,7 @@ export default interface Language {
     // Restore page
     restore_notice: string
     restore_warning: string
+    restoring: string
 
     // Wallet home
     refresh: string
@@ -46,6 +47,10 @@ export default interface Language {
     transaction: string
     transactions: string
     buy_bitcoin: string
+
+    // Pagination
+    page: string
+    of: string
 
     // Overview
     total_balance: string

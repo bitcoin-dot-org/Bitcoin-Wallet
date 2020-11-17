@@ -30,6 +30,7 @@ var en = <Language> {
     // Restore page
     restore_notice: 'Please enter your recovery words to restore your wallet.',
     restore_warning: 'The recovery words you have entered are invalid. Words must be spelled correctly and have no capital letters.',
+    restoring: 'Restoring...',
 
     // Wallet home
     refresh: 'Refresh',
@@ -53,6 +54,10 @@ var en = <Language> {
     transaction: 'transaction',
     transactions: 'transactions',
     buy_bitcoin: 'Buy Bitcoin',
+
+    // Pagination
+    page: 'Page', // Displayed as 'Page 1 of 1'
+    of: 'of',
 
     // Overview
     total_balance: "Total Balance",
