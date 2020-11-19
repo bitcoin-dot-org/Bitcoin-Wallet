@@ -9,8 +9,8 @@ var fr = <Language> {
     getting_started: 'Démarrer',
     create_new: 'Créer un nouveau portefeuille',
     create_subtext: "Pour que vous puissiez commencer à utiliser Bitcoin nous allons vous créer un nouveau portefeuille.",
-    restore_existing: 'Restaurer un portefeuille existant.',
-    restore_subtext: "Vous possedez déjà un portefeuille et souhaitez utiliser votre phrase de récupération pour le restaurer.",
+    restore_existing: 'Restaurer un portefeuille existant',
+    restore_subtext: "Vous possédez déjà un portefeuille et souhaitez utiliser votre phrase de récupération pour le restaurer.",
     change_language: 'Changer de langue',
     choose_language: 'Choisir une langue',
 
@@ -20,8 +20,8 @@ var fr = <Language> {
     generate: 'Générer',
     warning: 'Attention',
     we_will_generate: 'Nous allons vous générer une phrase de récupération composée de 12 mots.',
-    warning_text_1: "Écrivez les mots dans l'ordre et conservez les en sécurité, hors ligne. Si vous perdez ces mots, vous ne serez plus en mesure d'accéder à vos Bitcoins.",
-    warning_text_2: "Cette phrase de récupération vous permettra de restaurer votre portefeuille. Écrivez les mots sur du papier et gardez le en sécurité, hors ligne.",
+    warning_text_1: "Écrivez ces mots dans l'ordre et conservez les en sécurité, hors ligne. Si vous perdez ces mots, vous ne serez plus en mesure d'accéder à vos Bitcoins.",
+    warning_text_2: "Cette phrase de récupération vous permettra de restaurer votre portefeuille. Conservez ces mots en sécurité, hors ligne.",
     write_it_down: 'Écrivez cette phrase',
     keep_it_safe: 'Protégez-la',
     do_not_lose_it: 'Ne la perdez pas',
@@ -40,7 +40,7 @@ var fr = <Language> {
     settings: 'Réglages',
     amount_to_send: 'Montant à envoyer',
     not_enough_balance: 'Solde insuffisant pour envoyer ce montant',
-    send_max: 'Envoyer au max',
+    send_max: 'Envoi max',
     amount: 'Montant',
     miner_fee: 'Frais de réseau',
     total: 'Total',
@@ -76,17 +76,17 @@ var fr = <Language> {
     low_priority: 'Priorité faible',
     standard: 'Standard',
     important: 'Important',
-    low_priority_desc: "Vous payez moins de frais, mais vous considérez que la priorité de cette transaction est faible et vous ne vous préoccupez pas d'attendre plus longtemps qu'elle soit confirmée.",
+    low_priority_desc: "Vous payez moins de frais, car vous considérez que la priorité de cette transaction est faible et vous attendrez plus longtemps sa confirmation.",
     standard_desc: "Utiliser des frais modérés pendant une période de forte congestion peuvent entraîner un temps de confirmation plus long, mais c'est rare.",
-    important_desc: "Utiliser des frais supplémentaires pour cibler une confirmation dans les 30 minutes, c'est une transaction dont la priorité élevée et vous souhaitez qu'elle soit confirmée rapidement.",
+    important_desc: "Augmentez les frais pour cibler une confirmation dans les 30 minutes, la priorité de votre transaction est élevée et elle sera confirmée rapidement.",
     not_enough: "Vous n'avez pas assez pour envoyer ce montant et payer les frais de réseau. Essayez plutôt d'envoyer votre solde entier avec le bouton Envoyer au max.",
-    dust_error: "Le montant que vous essayez d'envoyer est trop petit pour être traité par le réseau Bitcoin.",
-    bitcoin_network_fee: "Frais du réseau Bitcoin",
+    dust_error: "Le montant que vous essayez d'envoyer est trop faible pour être traité par le réseau Bitcoin.",
+    bitcoin_network_fee: "Frais de réseau Bitcoin",
 
     // Receive
     receive_only: 'Réception uniquement',
     wallet_address: 'Adresse du portefeuille',
-    address_below: 'À L\'adresse ci-dessous',
+    address_below: 'à l\'adresse ci-dessous',
 
     // Settings
     show_seed: 'Restaurer',
@@ -108,7 +108,7 @@ var fr = <Language> {
     // Exit wallet
     exit_text: 'Cela détruira les fichiers de votre portefeuille et tous les enregistrements de vos transactions. L\'unique façon de restaurer votre portefeuille nécessitera votre phrase de récupération',
     exit_are_you_sure: 'Souhaitez vous réellement supprimer et quitter ce portefeuille?',
-    exit_label_text: 'Oui, supprimez ce portefeuille',
+    exit_label_text: 'Oui, supprimez ce portefeuille.',
     exit_delete: 'Supprimer'
 }
 
