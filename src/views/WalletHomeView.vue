@@ -405,7 +405,7 @@ export default class WalletHomeView extends Vue {
 
     // Displays the new transaction on our table
 
-    let tx = new Transaction(this.hash, this.total, 0, new Date(), false)
+    let tx = new Transaction(this.hash, "-" + this.total, 0, new Date(), false)
 
     this.unconfirmedTransactions.push(tx)
 

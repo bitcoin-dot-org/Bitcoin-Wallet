@@ -126,15 +126,15 @@ export class Wallet {
                 for (var x = 0; x < utxo.length; x++) {
                     if ((height - utxo[x].height) >= 6) { // Only utxos with 6 confirmations
 
+
                         if (!this.setUpRoot) {
-                            let seed = await bip39.mnemonicToSeed(this.seed)
-                            this.root = bip32.fromSeed(seed)
+                            let seedBuffer = await bip39.mnemonicToSeed(this.seed)
+                            this.root = bip32.fromSeed(seedBuffer)
                             this.setUpRoot = true
                         }
 
-                        let isExternal = externals.filter((a) => a.address != addresses[i].address).length > 0
+                        let isExternal = externals.includes(addresses[i])
                         let index = addresses[i].index
-
                         let path = this.root.derivePath(`m/49'/0'/0'/${isExternal ? '0' : '1'}/${index}`)
                         let p2wpkh = bitcoin.payments.p2wpkh({ pubkey: path.publicKey })
                         let p2sh = bitcoin.payments.p2sh({ redeem: p2wpkh })
@@ -408,8 +408,15 @@ export class Wallet {
 
                 // We haven't seen this, so put it in
                 if(weAlreadyHave.length == 0) {
-                    await WalletDB.unconfirmedTransactions.put(new Transaction(newTransactions[i].hash, amount.toString(), 0, new Date(), false))
+                    await WalletDB.unconfirmedTransactions.put(new Transaction(newTransactions[i].hash, amount.toString(), transaction.confirmations > 0 ? newTransactions[i].height : 0, new Date(), false))
 
+                }
+                
+                // Update the height
+                else {
+                    if (transaction.confirmations > 0) {
+                        await WalletDB.unconfirmedTransactions.where('hash').equals(newTransactions[i].hash).modify({'height' : newTransactions[i].height})
+                    }
                 }
             }
 
