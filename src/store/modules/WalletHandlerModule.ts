@@ -178,28 +178,31 @@ class WalletHandlerModule extends VuexModule {
   }
 
   @Action
-  async fetchTransactions(smallSync : boolean) {
+  async fetchTransactions() {
     let newTransactions = await WalletDB.transactions.toArray()
     let newUnconfirmed = await WalletDB.unconfirmedTransactions.toArray()
 
-    // We have some new transactions so maybe show a notification, but only during small syncs
-    if(this.transactions.concat(this.unconfirmedTransactions).length < newTransactions.concat(newUnconfirmed).length && smallSync) {
+    // We have some new transactions so maybe show a notification
+    if((this.transactions.concat(this.unconfirmedTransactions).length > 0 && (this.transactions.concat(this.unconfirmedTransactions).length < newTransactions.concat(newUnconfirmed).length))) {
 
-      // We don't want the old transactions we already know about
-       let notify = newTransactions.concat(newUnconfirmed).filter(tx => !this.transactions.concat(this.unconfirmedTransactions).includes(tx))
+      // We don't want the old transactions we already know about: let's find only the new stuff
+       let allNew = newUnconfirmed.concat(newTransactions)
+       let allOld = this.transactions.concat(this.unconfirmedTransactions)
+       let notify = allNew.filter(tx => !(allOld.filter(oldTx => oldTx.hash == tx.hash).length>0))
 
        // We only notify for incoming transactions
        let received = notify.filter((n) => !n.amount.includes('-'))
 
-       // Just notify for the most recent incoming
-       if(received.length > 0) {
-          const options = { 
-            body: this.currentLanguage.notification_title, 
-            timeoutType: 'never',
-            icon: 'bitcoin.png', 
-          }
-          new Notification("+" +  received.reverse()[0].amount +  ' BTC', options) 
+       const options = { 
+        body: this.currentLanguage.notification_title, 
+        timeoutType: 'never',
+        icon: 'bitcoin.png', 
+      }
+
+       for(var x = 0; x<received.length; x++) {
+        new Notification("+" +  received.reverse()[0].amount +  ' BTC', options) 
        }
+
     }
 
     this.context.commit('setTransactions', newTransactions)
@@ -208,7 +211,7 @@ class WalletHandlerModule extends VuexModule {
 
   @Action
   async fetchRates() {
-    let request = await Axios.get("https://www.blockchain.com/ticker")
+    let request = await Axios.get("https://www.blockchain.com/ticker?&cors=true")
 
     if (request.status == 200) {
       let rate = request.data[this.settings.currency].last
@@ -230,7 +233,7 @@ class WalletHandlerModule extends VuexModule {
   @Action
   async syncWallet(smallSync: boolean) {
     await this.wallet.synchronize(smallSync)
-    await this.fetchTransactions(smallSync)
+    await this.fetchTransactions()
     await this.fetchSettings()
     await this.fetchRates()
     this.context.commit('setUtxos', this.wallet.utxos)

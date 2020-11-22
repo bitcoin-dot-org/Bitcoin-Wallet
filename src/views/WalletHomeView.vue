@@ -273,7 +273,7 @@ export default class WalletHomeView extends Vue {
   private transactionModalShowing = false;
 
   // Our refresh handler
-  private timer = setInterval(this.doSmallSync, 600000);
+  private timer : null | NodeJS.Timeout = null;
 
   // Transactions with >=6 confirmations
   private transactions = WalletHandlerModule.transactions;
@@ -329,11 +329,8 @@ export default class WalletHomeView extends Vue {
     }
 
     else {
-      // Let's do a small sync first, and set it as our first sync so utxos are fetched
-      await this.syncWallet(true)
-
-      // Then do a larger sync a short time after we've loaded the inital data
-      setTimeout(() =>{this.syncWallet(false)}, 5000)
+      await this.syncWallet(false)
+      this.timer = setInterval(this.doSmallSync, 600000);
     }
 
   }
@@ -465,7 +462,7 @@ export default class WalletHomeView extends Vue {
   }
 
   beforeDestroy() {
-    clearInterval(this.timer);
+    clearInterval(this.timer!);
   }
 }
 </script>

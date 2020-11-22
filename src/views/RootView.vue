@@ -69,7 +69,7 @@ export default class Main extends Vue {
          await WalletHandlerModule.fetchRates()
 
         // Let's fetch the transations
-        await WalletHandlerModule.fetchTransactions(false)
+        await WalletHandlerModule.fetchTransactions()
 
         // We've finished fetching
         this.loaded = true;
