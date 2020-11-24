@@ -1,6 +1,8 @@
 {
   "name": "bitcoin-wallet",
-  "version": "0.1.0",
+  "author": "Bitcoin.org",
+  "description": "A simple modern and well designed Bitcoin Wallet",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -28,6 +30,7 @@
     "@spectrum-css/vars": "^2.3.0",
     "@spectrum-web-components/dropdown": "^0.7.1",
     "@spectrum-web-components/menu": "^0.3.1",
+    "@treverix/custom-electron-titlebar": "^4.1.6",
     "axios": "^0.19.2",
     "bignumber.js": "^9.0.0",
     "bip32": "^2.0.5",
@@ -36,7 +39,10 @@
     "coinselect": "^3.1.12",
     "core-js": "^3.6.5",
     "dexie": "^3.0.1",
+    "moment": "^2.29.1",
+    "node-sass": "^4.14.1",
     "qrcode.vue": "^1.7.0",
+    "sass-loader": "^10.0.2",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
     "vue-class-component": "^7.2.3",
@@ -46,6 +52,7 @@
     "vuex-module-decorators": "^0.17.0"
   },
   "devDependencies": {
+    "@types/node": "^14.14.7",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.4.0",
@@ -56,7 +63,7 @@
     "@vue/cli-service": "~4.4.0",
     "@vue/eslint-config-typescript": "^5.0.2",
     "babel-eslint": "^10.1.0",
-    "electron": "^9.0.0",
+    "electron": "^10.1.5",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "typescript": "~3.9.3",

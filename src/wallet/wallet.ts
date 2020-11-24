@@ -4,9 +4,7 @@ import * as bip32 from 'bip32'
 import * as ElectrumClient from '@keep-network/electrum-client-js'
 import * as coinSelect from 'coinselect/accumulative'
 import * as coinSelectSplit from 'coinselect/split'
-
 import Axios from 'axios'
-
 import Dexie from 'dexie'
 import BigNumber from 'bignumber.js'
 
@@ -28,11 +26,15 @@ export class Transaction {
     hash: string
     amount: string
     height: number
+    time : Date
+    confirmed : boolean
 
-    constructor(h: string, a: string, c: number) {
+    constructor(h: string, a: string, c: number, d : Date, confirm : boolean) {
         this.hash = h
         this.amount = a
         this.height = c
+        this.time = d
+        this.confirmed = confirm
     }
 }
 
@@ -64,7 +66,7 @@ export class Wallet {
     internal: number
     root!: bip32.BIP32Interface
     client!: any
-    unconfirmedTransactions: Transaction[] = new Array()
+    unconfirmedTransactions : Transaction[] = new Array()
     utxos = new Array()
     feeRates: number[] = new Array()
     setUpRoot = false
@@ -106,13 +108,52 @@ export class Wallet {
         return address
     }
 
+    async fetchUtxos() {
+        let request = await Axios.get('https://blockchain.info/latestblock?&cors=true')
+        if (request.status == 200) {
+
+            let newUtxos = new Array()
+
+            let height = request.data.height
+
+            // Obviously we're only interested in addresses with a balance
+            let externals = await WalletDB.externalAddresses.where('balance').above(0).toArray()
+            let internals = await WalletDB.internalAddresses.where('balance').above(0).toArray()
+            let addresses = externals.concat(internals)
+
+            for (var i = 0; i < addresses.length; i++) {
+                let utxo: any[] = await this.client.blockchain_scripthash_listunspent(this.convertToElectrumScriptHash(addresses[i].address))
+                for (var x = 0; x < utxo.length; x++) {
+                    if ((height - utxo[x].height) >= 6) { // Only utxos with 6 confirmations
+
+
+                        if (!this.setUpRoot) {
+                            let seedBuffer = await bip39.mnemonicToSeed(this.seed)
+                            this.root = bip32.fromSeed(seedBuffer)
+                            this.setUpRoot = true
+                        }
+
+                        let isExternal = externals.includes(addresses[i])
+                        let index = addresses[i].index
+                        let path = this.root.derivePath(`m/49'/0'/0'/${isExternal ? '0' : '1'}/${index}`)
+                        let p2wpkh = bitcoin.payments.p2wpkh({ pubkey: path.publicKey })
+                        let p2sh = bitcoin.payments.p2sh({ redeem: p2wpkh })
+
+                        newUtxos.push({ height: utxo[x].height, txId: utxo[x].tx_hash, value: utxo[x].value, vout: utxo[x].tx_pos, script: p2sh.output!, witnessUtxo: { script: p2sh.output!, value: utxo[x].value } })
+                    }
+
+                }
+
+            }
+
+            this.utxos = newUtxos
+        }
+    }
+
     async synchronize(smallSync: boolean) {
 
         // This will be set to true if any new transactions have occurred and we need to fetch utxos
-        let fetchUtxos = false
-
-        // Clear out the unconfirmed transactions after every refresh
-        this.unconfirmedTransactions = new Array()
+        let shouldFetchUtxos = false || !this.setUpClient
 
         // Let's initialize our client if we haven't done so already
         if (!this.setUpClient) {
@@ -130,13 +171,16 @@ export class Wallet {
             internalAddresses = internalAddresses.filter((a) => !a.isLookAhead)
         }
 
-        // This is a full sync (at launch) so we're going to want to fetch utxos
-        else {
-            fetchUtxos = true
-        }
-
         // Connect to electrum
         await this.client.connect()
+
+        // Get the current fee rates
+        let important = await this.client.blockchainEstimatefee(3)
+        let standard = await this.client.blockchainEstimatefee(6)
+        let low = await this.client.blockchainEstimatefee(9)
+        
+        // Set the fees
+        this.feeRates = [Math.ceil(new BigNumber(low).multipliedBy(100000000).dividedBy(1000).toNumber()), Math.ceil(new BigNumber(standard).multipliedBy(100000000).dividedBy(1000).toNumber()), Math.ceil(new BigNumber(important).multipliedBy(100000000).dividedBy(1000).toNumber())]
 
         // We use this to keep track of and store newly observed transactions we don't yet know about
         let newTransactions: Transaction[] = new Array()
@@ -157,22 +201,25 @@ export class Wallet {
                 // Our external index trackers are behind so we need to catch up
                 if ((transactions.length > 0) && externalAddresses[i].index >= this.external) {
                     for (var j = 0; j <= externalAddresses[i].index - this.external; j++) {
-                        this.incrementExternalIndex()
-                        externalAddresses.push(new AddressLookup(this.external + 20, this.getExternalAddress(this.external + 20), 0, true))
+                        await this.incrementExternalIndex()
+                        externalAddresses.push(new AddressLookup(this.external + 20, this.getExternalAddress(this.external + 20), -1, true))
                     }
                 }
 
                 for (var j = 0; j < transactions.length; j++) {
-                    // Make sure we haven't already saved the transaction
+                    // Make sure we haven't already saved the transaction or we don't already have it
                     let exists = await WalletDB.transactions.where('hash').equals(transactions[j].tx_hash).toArray()
-                    if (exists.length == 0) {
+                    if (exists.length == 0 && newTransactions.filter((tx) => tx.hash == transactions[j].tx_hash).length == 0) {
 
                         // Gotta update the utxos now that we have a new transaction with 6 confirmations
                         if (transactions[j].confirmations >= 6) {
-                            fetchUtxos = true
+                            shouldFetchUtxos = true
+                            newTransactions.push(new Transaction(transactions[j].tx_hash, '0', transactions[j].height, new Date(), true))
                         }
 
-                        newTransactions.push(new Transaction(transactions[j].tx_hash, '0', transactions[j].height))
+                        else {
+                            newTransactions.push(new Transaction(transactions[j].tx_hash, '0', transactions[j].height, new Date(), false))
+                        }
                     }
                 }
             }
@@ -180,6 +227,49 @@ export class Wallet {
             // This is set when the wallet is first created to force look up of the history, we can set to 0 now that we have history
             if (externalAddresses[i].balance == -1) {
                 await WalletDB.externalAddresses.where('address').equals(externalAddresses[i].address).modify({ 'balance': 0 })
+            }
+
+            
+        }
+
+        for (var i = 0; i < internalAddresses.length; i++) {
+            let balance: any = await this.client.blockchain_scripthash_getBalance(this.convertToElectrumScriptHash(internalAddresses[i].address))
+            let unconfirmed = balance.unconfirmed
+            let confirmed = balance.confirmed
+
+            // Transactions that we don't know about have occurred
+            if ((confirmed + unconfirmed) != internalAddresses[i].balance) {
+
+                let transactions: any[] = await this.client.blockchain_scripthash_getHistory(this.convertToElectrumScriptHash(internalAddresses[i].address))
+
+                // Our internal index trackers are behind so we need to catch up
+                if ((transactions.length > 0) && internalAddresses[i].index >= this.internal) {
+                    for (var j = 0; j <= internalAddresses[i].index - this.internal; j++) {
+                        await this.incrementInternalndex()
+                        internalAddresses.push(new AddressLookup(this.internal + 20, this.getInternalAddress(this.internal + 20), -1, true))
+                    }
+                }
+
+                for (var j = 0; j < transactions.length; j++) {
+                    // Make sure we haven't already saved the transaction or we don't already have it
+                    let exists = await WalletDB.transactions.where('hash').equals(transactions[j].tx_hash).toArray()
+                    if (exists.length == 0 && newTransactions.filter((tx) => tx.hash == transactions[j].tx_hash).length == 0) {
+
+                        // Gotta update the utxos now that we have a new transaction with 6 confirmations
+                        if (transactions[j].confirmations >= 6) {
+                            shouldFetchUtxos = true
+                            newTransactions.push(new Transaction(transactions[j].tx_hash, '0', transactions[j].height, new Date(), true))
+                        }
+                        else {
+                            newTransactions.push(new Transaction(transactions[j].tx_hash, '0', transactions[j].height, new Date(), false))
+                        }
+                    }
+                }
+            }
+
+            // This is set when the wallet is first created to force look up of the history, we can set to 0 now that we have history
+            if (internalAddresses[i].balance == -1) {
+                await WalletDB.internalAddresses.where('address').equals(internalAddresses[i].address).modify({ 'balance': 0 })
             }
 
         }
@@ -211,6 +301,10 @@ export class Wallet {
                                             let satoshis = new BigNumber(inputTransaction.vout[k].value).multipliedBy(100000000)
                                             let current = new BigNumber(externalAddresses[l].balance)
                                             let newBalance = current.minus(satoshis)
+
+                                            if(newBalance.lt(0)) {
+                                                newBalance = new BigNumber(0)
+                                            }
                                             if (transaction.confirmations >= 6) {
                                                 await WalletDB.externalAddresses.where('address').equals(externalAddresses[l].address).modify({ 'balance': newBalance.toNumber() })
                                             }
@@ -275,8 +369,8 @@ export class Wallet {
                         // Yep address is change
                         if (internalAddresses[x].address == address) {
 
-                            // Subtract our change from the total amount being sent in this transactions
-                            amount = amount.minus(transaction.vout[j].value)
+                            // Add back our change to the amount because we're obviously not spending it
+                            amount = amount.plus(transaction.vout[j].value)
 
                             // Convert to satoshis which is the format of the balances
                             let satoshi = new BigNumber(transaction.vout[j].value).multipliedBy(100000000)
@@ -288,14 +382,6 @@ export class Wallet {
                             if (transaction.confirmations >= 6) {
                                 await WalletDB.internalAddresses.where('address').equals(internalAddresses[x].address).modify({ 'balance': newBalance })
                             }
-
-                            // Oops, internal addresses indexes are behind, so let's catch up
-                            if (internalAddresses[x].isLookAhead) {
-                                for (var p = 0; p < internalAddresses[x].index; p++) {
-                                    this.incrementInternalndex()
-                                    internalAddresses.push(new AddressLookup(this.internal + 20, this.getInternalAddress(this.internal + 20), 0, true))
-                                }
-                            }
                         }
                     }
                 }
@@ -305,74 +391,45 @@ export class Wallet {
             // We only add transactions to our database if they have 6 or more confirmations, as we don't want to deal with re-orgs
             if (transaction.confirmations >= 6) {
 
-                // Remove the transaction from our list of unconfirmed transactions (<6 confs)
-                this.unconfirmedTransactions = this.unconfirmedTransactions.filter((tx) => tx.hash != newTransactions[i].hash)
-
                 // Put it in the database
-                await WalletDB.transactions.put(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height))
+                await WalletDB.transactions.put(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height, new Date(transaction.time * 1000), true))
+
+                // Clear it from the unconfirmed transactions list
+                await WalletDB.unconfirmedTransactions.where('hash').equals(newTransactions[i].hash).delete()
+
+                // Remove the transaction from our list of unconfirmed transactions (<6 confs)
+                this.unconfirmedTransactions = await WalletDB.unconfirmedTransactions.toArray()
             }
 
             // It's a new unconfirmed transaction (< 6 confirmations)
             else {
-                if (this.unconfirmedTransactions.filter((tx) => tx.hash == newTransactions[i].hash).length == 0) {
-                    this.unconfirmedTransactions.push(new Transaction(newTransactions[i].hash, amount.toString(), newTransactions[i].height))
+                // Check if we've seen it
+                let weAlreadyHave = await WalletDB.unconfirmedTransactions.where('hash').equals(newTransactions[i].hash).limit(1).toArray()
+
+                // We haven't seen this, so put it in
+                if(weAlreadyHave.length == 0) {
+                    await WalletDB.unconfirmedTransactions.put(new Transaction(newTransactions[i].hash, amount.toString(), transaction.confirmations > 0 ? newTransactions[i].height : 0, new Date(), false))
+
                 }
-            }
-
-        }
-
-        // We need to fetch the utxos, so first make a call to get the current block height
-        // TO DO: Use something other than blockchain.info
-        if (fetchUtxos) {
-            let request = await Axios.get('https://blockchain.info/latestblock')
-            if (request.status == 200) {
-
-                let newUtxos = new Array()
-
-                let height = request.data.height
-
-                // Obviously we're only interested in addresses with a balance
-                let addresses = externalAddresses.filter((a) => a.balance > 0).concat(internalAddresses.filter((a) => a.balance > 0))
-
-                for (var i = 0; i < addresses.length; i++) {
-                    let utxo: any[] = await this.client.blockchain_scripthash_listunspent(this.convertToElectrumScriptHash(addresses[i].address))
-                    for (var x = 0; x < utxo.length; x++) {
-                        if ((height - utxo[x].height) >= 6) { // Only utxos with 6 confirmations
-
-                            if (!this.setUpRoot) {
-                                let seed = await bip39.mnemonicToSeed(this.seed)
-                                this.root = bip32.fromSeed(seed)
-                                this.setUpRoot = true
-                            }
-
-                            let isExternal = externalAddresses.filter((a) => a.address != addresses[i].address).length > 0
-                            let index = addresses[i].index
-
-                            let path = this.root.derivePath(`m/49'/0'/0'/${isExternal ? '0' : '1'}/${index}`)
-                            let p2wpkh = bitcoin.payments.p2wpkh({ pubkey: path.publicKey })
-                            let p2sh = bitcoin.payments.p2sh({ redeem: p2wpkh })
-
-                            newUtxos.push({ height: utxo[x].height, txId: utxo[x].tx_hash, value: utxo[x].value, vout: utxo[x].tx_pos, script: p2sh.output!, witnessUtxo: { script: p2sh.output!, value: utxo[x].value } })
-                        }
-
+                
+                // Update the height
+                else {
+                    if (transaction.confirmations > 0) {
+                        await WalletDB.unconfirmedTransactions.where('hash').equals(newTransactions[i].hash).modify({'height' : newTransactions[i].height})
                     }
-
                 }
-
-                this.utxos = newUtxos
             }
 
         }
 
-        // Get the current fee rates
-        let important = await this.client.blockchainEstimatefee(3)
-        let standard = await this.client.blockchainEstimatefee(6)
-        let low = await this.client.blockchainEstimatefee(9)
-
-        this.feeRates = [new BigNumber(low).multipliedBy(100000000).dividedBy(1000).toNumber(), new BigNumber(standard).multipliedBy(100000000).dividedBy(1000).toNumber(), new BigNumber(important).multipliedBy(100000000).dividedBy(1000).toNumber()]
+        // We need to fetch the utxos
+        if (shouldFetchUtxos) {
+            await this.fetchUtxos()
+        }
 
         // Close our connection to the server, we probably won't sychronize again until 10 mins, or until user presses
         // the refresh button, so better to just close our connection as we've done our job, no need to keep it open
+
         await this.client.close()
 
     }
@@ -505,6 +562,7 @@ export class WalletDatabase extends Dexie {
     externalAddresses!: Dexie.Table<AddressLookup, number>
     internalAddresses!: Dexie.Table<AddressLookup, number>
     transactions!: Dexie.Table<Transaction, number>
+    unconfirmedTransactions!: Dexie.Table<Transaction, number>
     settings!: Dexie.Table<WalletSettings, number>
 
     constructor() {
@@ -513,13 +571,15 @@ export class WalletDatabase extends Dexie {
         this.version(1).stores({ wallet: "++id, seed, external, internal" })
         this.version(1).stores({ externalAddresses: "index, address, balance, isLookAhead" })
         this.version(1).stores({ internalAddresses: "index, address, balance, isLookAhead" })
-        this.version(1).stores({ transactions: "++id, hash, amount, height" })
+        this.version(1).stores({ transactions: "++id, hash, amount, height, time, confirmed" })
         this.version(1).stores({ settings: "++id, language, currency, easyTransact" })
+        this.version(1).stores({ unconfirmedTransactions: "++id, hash, amount, height, time, confirmed" })
 
         this.wallet.mapToClass(Wallet)
         this.externalAddresses.mapToClass(AddressLookup)
         this.internalAddresses.mapToClass(AddressLookup)
         this.transactions.mapToClass(Transaction)
+        this.unconfirmedTransactions.mapToClass(Transaction)
         this.settings.mapToClass(WalletSettings)
     }
 
@@ -558,24 +618,13 @@ export class WalletDatabase extends Dexie {
             // Let's set the language initially as their locale language
             let language = navigator.language.split('-')[0]
 
-            if (language == "en") {
-                language = "English"
+            if (language == "en" || language == "es" || language == "fr" || language == "ja" || language == "ca") {
+                await this.settings.put(new WalletSettings(1, language, 'USD', false))
             }
 
-            else if (language == "es") {
-                language = "Español"
-            }
-
-            else if (language == "fr") {
-                language = "Français"
-            }
-
-            // They're using one of the languages we don't support, so default to English
             else {
-                language = "English"
+                await this.settings.put(new WalletSettings(1, "en", 'USD', false))
             }
-
-            await this.settings.put(new WalletSettings(1, language, 'USD', false))
         }
     }
 
@@ -625,7 +674,7 @@ export class WalletDatabase extends Dexie {
 
 
     async clearAllWallets(): Promise<void[]> {
-        return Promise.all([this.wallet.clear(), this.transactions.clear(), this.externalAddresses.clear(), this.internalAddresses.clear()])
+        return Promise.all([this.wallet.clear(), this.transactions.clear(), this.unconfirmedTransactions.clear(), this.externalAddresses.clear(), this.internalAddresses.clear()])
     }
 }
 

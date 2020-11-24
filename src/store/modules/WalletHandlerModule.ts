@@ -1,8 +1,11 @@
 import { Module, VuexModule, Mutation, Action, getModule } from 'vuex-module-decorators'
 import { Wallet, WalletDB, WalletSettings } from '@/wallet/wallet'
+import Axios from 'axios'
 import en from '@/lang/en'
 import es from '@/lang/es'
 import fr from '@/lang/fr'
+import ja from '@/lang/ja'
+import ca from '@/lang/ca'
 import store from '@/store'
 import BigNumber from 'bignumber.js'
 
@@ -16,15 +19,20 @@ import { Transaction } from '@/wallet/wallet'
 class WalletHandlerModule extends VuexModule {
 
   wallet = new Wallet('', 0, 0)
-  transactions = [{}]
-  unconfirmedTransactions = [{}]
+  transactions : Transaction[] = new Array()
+  unconfirmedTransactions  : Transaction[] = new Array()
   synced = false
   balance = new BigNumber(0)
   unconfirmedBalance = new BigNumber(0)
   utxos = new Array()
   feeRates: number[] = new Array()
-  settings = new WalletSettings(1, 'English', 'USD', false)
+  fiatRate = 0
+  rates : any = {}
+  fiatSymbol = ''
+  settings = new WalletSettings(1, 'en', 'USD', false)
   currentLanguage = en
+  restoring = false
+
 
   @Mutation
   incrementExternal() {
@@ -42,31 +50,32 @@ class WalletHandlerModule extends VuexModule {
   }
 
   @Mutation
+  setRestoring(r : boolean) {
+    this.restoring = r
+  }
+
+  @Mutation
   setTransactions(txs: Transaction[]) {
 
-    let tx = new Array()
     let bal = new BigNumber(0)
 
     for (var i = 0; i < txs.length; i++) {
       let amount = new BigNumber(txs[i].amount)
       bal = bal.plus(amount)
-      tx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': txs[i].amount, 'unconfirmed': false })
     }
 
-    this.transactions = tx
+    this.transactions = txs
     this.balance = bal
   }
 
   @Mutation
   setUnconfirmedTransactions(txs: Transaction[]) {
 
-    let utx = new Array()
     let ubal = new BigNumber(0)
 
     for (var i = 0; i < txs.length; i++) {
       let amount = new BigNumber(txs[i].amount)
       ubal = ubal.plus(amount)
-      utx.push({ 'blockHeight': new BigNumber(txs[i].height).toNumber(), 'amount': txs[i].amount, 'unconfirmed': true })
 
       // We want unconfirmed spends to take away from our main balance, because when a user has just sent a transaction
       // we don't want to keep showing the old but technically correct >=6 confirmations balance
@@ -77,7 +86,7 @@ class WalletHandlerModule extends VuexModule {
     }
 
 
-    this.unconfirmedTransactions = utx
+    this.unconfirmedTransactions = txs
     this.unconfirmedBalance = ubal
 
   }
@@ -103,6 +112,21 @@ class WalletHandlerModule extends VuexModule {
   }
 
   @Mutation
+  setFiatRate(rate : number) {
+    this.fiatRate = rate
+  }
+
+  @Mutation
+  setFiatSymbol(symbol : string) {
+    this.fiatSymbol = symbol
+  }
+
+  @Mutation
+  setFiatRates(fiatRates : any) {
+    this.rates = fiatRates
+  }
+
+  @Mutation
   setCurrentLanguage(lang: string) {
 
     if (lang == "English" || lang == "en") {
@@ -115,6 +139,14 @@ class WalletHandlerModule extends VuexModule {
 
     if (lang == "Français" || lang == "fr") {
       this.currentLanguage = fr
+    }
+    
+    if(lang == "日本語" || lang == "ja") {
+      this.currentLanguage = ja 
+    }
+    
+    if(lang == "Catalan" || lang == "ca") {
+       this.currentLanguage = ca
     }
 
   }
@@ -147,20 +179,63 @@ class WalletHandlerModule extends VuexModule {
 
   @Action
   async fetchTransactions() {
-    let transactions = await WalletDB.transactions.toArray()
-    let unconfirmed = this.wallet.unconfirmedTransactions
+    let newTransactions = await WalletDB.transactions.toArray()
+    let newUnconfirmed = await WalletDB.unconfirmedTransactions.toArray()
 
-    this.context.commit('setTransactions', transactions.reverse())
-    this.context.commit('setUnconfirmedTransactions', unconfirmed.reverse())
+    // We have some new transactions so maybe show a notification
+    if((this.transactions.concat(this.unconfirmedTransactions).length > 0 && (this.transactions.concat(this.unconfirmedTransactions).length < newTransactions.concat(newUnconfirmed).length))) {
+
+      // We don't want the old transactions we already know about: let's find only the new stuff
+       let allNew = newUnconfirmed.concat(newTransactions)
+       let allOld = this.transactions.concat(this.unconfirmedTransactions)
+       let notify = allNew.filter(tx => !(allOld.filter(oldTx => oldTx.hash == tx.hash).length>0))
+
+       // We only notify for incoming transactions
+       let received = notify.filter((n) => !n.amount.includes('-'))
+
+       const options = { 
+        body: this.currentLanguage.notification_title, 
+        timeoutType: 'never',
+        icon: 'bitcoin.png', 
+      }
+
+       for(var x = 0; x<received.length; x++) {
+        new Notification("+" +  received.reverse()[0].amount +  ' BTC', options) 
+       }
+
+    }
+
+    this.context.commit('setTransactions', newTransactions)
+    this.context.commit('setUnconfirmedTransactions', newUnconfirmed)
+  }
+
+  @Action
+  async fetchRates() {
+    let request = await Axios.get("https://www.blockchain.com/ticker?&cors=true")
+
+    if (request.status == 200) {
+      let rate = request.data[this.settings.currency].last
+      let symbol = request.data[this.settings.currency].symbol
+
+      // Some currencies don't have symbols so fix the formatting:
+      if (symbol.length > 1) {
+        symbol = symbol + " "
+      }
+
+      this.context.commit('setFiatRate', rate)
+      this.context.commit('setFiatSymbol', symbol)
+      this.context.commit('setFiatRates', request.data)
+
+
+    }
   }
 
   @Action
   async syncWallet(smallSync: boolean) {
     await this.wallet.synchronize(smallSync)
     await this.fetchTransactions()
-    if (!smallSync) {
-      await this.fetchSettings()
-    }
+    await this.fetchSettings()
+    await this.fetchRates()
     this.context.commit('setUtxos', this.wallet.utxos)
     this.context.commit('setFeeRates', this.wallet.feeRates)
   }
@@ -174,12 +249,15 @@ class WalletHandlerModule extends VuexModule {
   async changeCurrency(c: string) {
     await WalletDB.changeCurrency(c)
     await this.fetchSettings()
+    this.context.commit('setFiatRate', this.rates[c]['last'])
+    this.context.commit('setFiatSymbol', this.rates[c]['symbol'])
   }
 
   @Action
   async changeLanguage(l: string) {
     await WalletDB.changeLanguage(l)
     await this.fetchSettings()
+    this.context.commit('setCurrentLanguage', l)
   }
 
   @Action

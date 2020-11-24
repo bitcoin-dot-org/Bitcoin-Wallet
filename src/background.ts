@@ -1,11 +1,13 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Menu } from 'electron'
+import { app, protocol, BrowserWindow, Menu, ipcMain, shell } from 'electron'
 import {
   createProtocol,
   /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+var path = require('path')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -16,12 +18,17 @@ Menu.setApplicationMenu(null)
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
 
+require('@treverix/remote/main').initialize()
+
 function createWindow () {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600, webPreferences: {
+  win = new BrowserWindow({ width: 800, height: 600, maximizable: false, resizable: false, frame: process.platform === 'darwin', webPreferences: {
     // Use pluginOptions.nodeIntegration, leave this alone
     // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-    nodeIntegration: false
+    nodeIntegration: false,
+    enableRemoteModule: true,
+    // preload: `${__dirname}/preload.js`,
+    preload: path.join(__dirname, "preload.js")
   } })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -75,7 +82,15 @@ app.on('ready', async () => {
     // }
 
   }
+  if(process.platform == 'win32') {
+    app.setAppUserModelId("Bitcoin Wallet");
+  }
   createWindow()
+})
+
+
+ipcMain.on('openLink', function(event, arg) {
+  shell.openExternal(arg)
 })
 
 // Exit cleanly on request from parent process in development mode.

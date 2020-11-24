@@ -1,22 +1,15 @@
 <template>
   <div id="root">
     <div id="loadingScreen" v-if="!this.loaded">
-      <img class="loading" src="../assets/ball-triangle.svg" v-if="!noConnection" />
-      <div class="loading" v-if="noConnection">
-        <div class="spectrum-Alert spectrum-Alert--warning">
-          <div class="spectrum-Alert-content">{{ lang.something_wrong }}</div>
-        </div>
-        <button class="spectrum-Button spectrum-Button--cta" v-on:click="trySyncAgain()">
-          <span class="spectrum-Button-label">
-            <span>{{ lang.try_again }}</span>
-          </span>
-        </button>
+      <div class="loading">
+        <Loader/>
       </div>
     </div>
     <WalletHomeView
       :language="lang"
       v-if="this.walletSetUp && this.loaded"
       v-on:close-wallet="closeWallet()"
+      v-on:language-changed="changeLanguage()"
     ></WalletHomeView>
     <OnboardView :language="lang" v-if="!this.walletSetUp && this.loaded"></OnboardView>
   </div>
@@ -27,11 +20,13 @@ import { Component, Vue } from "vue-property-decorator";
 import OnboardView from "@/views/OnboardView.vue";
 import WalletHomeView from "@/views/WalletHomeView.vue";
 import WalletHandlerModule from "@/store/modules/WalletHandlerModule";
+import Loader from "@/components/Loader.vue";
 
 @Component({
   components: {
     OnboardView,
     WalletHomeView,
+    Loader
   },
 })
 export default class Main extends Vue {
@@ -45,6 +40,10 @@ export default class Main extends Vue {
     this.walletSetUp = false;
   }
 
+  changeLanguage() {
+    this.lang = WalletHandlerModule.currentLanguage
+  }
+
   async mounted() {
     // We want to check if there's already settings, if not, create some with reasonable defaults
     await WalletHandlerModule.createSettingsIfNotExist();
@@ -54,6 +53,10 @@ export default class Main extends Vue {
 
     // Is there a wallet set up?
     try {
+
+      // Get the settings
+      await WalletHandlerModule.fetchSettings()
+
       // Attempt to grab the wallet
       await WalletHandlerModule.fetchWallet();
 
@@ -61,10 +64,14 @@ export default class Main extends Vue {
       this.walletSetUp = true;
 
       try {
-        // Let's sync it up
-        await WalletHandlerModule.syncWallet(false);
 
-        // We've finished the syncing
+        // Get the fiat rates
+         await WalletHandlerModule.fetchRates()
+
+        // Let's fetch the transations
+        await WalletHandlerModule.fetchTransactions()
+
+        // We've finished fetching
         this.loaded = true;
       } catch {
         // Something went wrong with the sync, likely no internet?
@@ -76,23 +83,6 @@ export default class Main extends Vue {
 
       // Done with the loading, show the onboard screen
       this.loaded = true;
-    }
-  }
-
-  async trySyncAgain() {
-    try {
-      this.noConnection = false;
-
-      // Let's sync it up
-      await WalletHandlerModule.syncWallet(false);
-
-      this.noConnection = false;
-
-      // We've finished the syncing
-      this.loaded = true;
-    } catch {
-      // Something went wrong with the sync, likely no internet?
-      this.noConnection = true;
     }
   }
 }
@@ -108,9 +98,22 @@ export default class Main extends Vue {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #loadingScreen {
   height: 100%;
+  animation: fade-in 2s linear;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

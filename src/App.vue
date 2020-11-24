@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-      <router-view></router-view>
+    <router-view></router-view>
   </div>
 </template>
-<style>
 
+<style>
 @font-face {
   font-family: 'Titillium Web';
   src:  url('assets/fonts/TitilliumWeb-Regular.woff2') format('woff2'),
@@ -12,95 +12,80 @@
 }
 
 * {
-    margin:0;
+   margin:0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
 }
 
-html, body{
-  height: 100vh;
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1A1E29 black;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+}
+*::-webkit-scrollbar-track {
+  background: black;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #1A1E29 ;
+  border: none;
+}
+
+body {
   font-family: "Titillium Web", Arial, sans-serif;
   font-size: 16px;
-}
-
-a {
-  color: #FFFFFF;
-  text-decoration: none;
-  cursor: pointer;
-  outline: none;
-}
-
-#app {
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  height: 100%;
-  /* background: url('assets/overview-bg.svg') top no-repeat; */
-  background-color: #efefef;
-}
-
-.btn {
-    display: inline-block;
-    max-width: 100%;
-    padding: 16px 25px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    font-weight: 600;
-    font-size: 100%;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    outline: none;
-}
-
-.btn-orange {
-    color: white;
-    background: #FF9500;
-}
-
-.btn-light {
-    background-color: #ffffff;
-    border: 1px solid #ff9500;
-    color: #ff9500;
-}
-
-.btn-home {
-    width: 200px;
-    height: 55px;
-}
-
-.btn:not(:first-child) {
-    margin-left: 20px;
-}
-
-#box {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-#inner {
-    padding: 20px;
-    width: 80%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+	background: linear-gradient(360deg, #090C14 0%, #1A1E29 100%);
+	color: #ACB2BB
 }
 
 
-#inner h2 {
-    margin: 10px;
+.container-after-titlebar {
+  border-top: 0.5px solid #2f3442;
+  background: inherit;
 }
 
-#notice {
-    padding: 20px;
-    color: #77767e;
-    background-color: #FFF9F3;
-
+#app,
+#root {
+  min-height: 100vh;
+}
+button, a {
+  cursor: pointer;
+  font-family: "Titillium Web", Arial, sans-serif;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+.phrase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 164px;
+  height: 40px;
+  border: 1px solid #2B2F3A;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  text-transform: uppercase;
+  color: #DCE0E7;
 }
 
-#navigation {
-    margin-top: 20px;
+.ol_container {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  margin: 10px;
+}
+
+.ol_parent {
+  display: flex;
+  justify-content: center;
+}
+
+::placeholder {
+  color: #555B65;
 }
 
 </style>
