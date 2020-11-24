@@ -8,70 +8,70 @@ var es = <Language> {
     // Initial page
     getting_started: 'Empezando',
     create_new: 'Crear nuevo monedero',
-    create_subtext: "We'll create a new wallet for you so you can start using Bitcoin.",
+    create_subtext: "Vamos a crear un nuevo monedero para que puedas empezar a usar Bitcoin.",
     restore_existing: 'restaurar monedero existente',
-    restore_subtext: "You already have a wallet and wish to use your recovery phrase to restore it.",
-    change_language: 'Change language',
-    choose_language: 'Choose Language',
+    restore_subtext: "Ya tienes un monedero y quieres usar la frase semilla para restaurarlo.",
+    change_language: 'Cambiar idioma',
+    choose_language: 'Escoger idioma',
 
     // Create page
-    seed_phrase: "Recovery Words",
+    seed_phrase: "Frase Semilla",
     wrote_it_down: 'La he guardado',
     generate: 'Generar',
-    warning: 'Warning',
-    we_will_generate: 'We will generate for you 12 recovery words.',
-    warning_text_1: "Write the words down in the correct order, and keep them safe, offline. If you lose these words, you won't be able to access your Bitcoin.",
-    warning_text_2: "These recovery words will allow you to recover your wallet. Write the words down and keep them safe, offline.",
-    write_it_down: 'Write it down',
-    keep_it_safe: 'Keep it safe',
-    do_not_lose_it: 'Don’t lose it',
-    have_saved: 'I have saved my recovery words safely.',
+    warning: 'Alerta',
+    we_will_generate: 'Vamos a generar 12 palabras de recuperación (frase semilla).',
+    warning_text_1: "Anota las palabras en el orden correcto y mantenlas a salvo (offline). Si pierdes estas palabras, no podrás acceder a tu Bitcoin.",
+    warning_text_2: "Estas palabras de recuperación (frase semilla) te permitirán recuperar tu monedero. Guárdalas en un lugar seguro (offline).",
+    write_it_down: 'Anota la frase semilla',
+    keep_it_safe: 'Mantenla a salvo',
+    do_not_lose_it: 'No la pierdas',
+    have_saved: 'He guardado mi frase semilla en un lugar seguro.',
 
     // Restore page
-    restore_notice: 'Please enter your recovery words to restore your wallet.',
-    restore_warning: 'The recovery words you have entered are invalid. Words must be spelled correctly and have no capital letters.',
-    restoring: 'Restoring...',
+    restore_notice: 'Porfavor escribe la frase semilla para restaurar el monedero.',
+    restore_warning: 'La frase semilla que has introducido no es válida. Las palabras deben estar escritas correctamente y no deben contener mayúsculas.',
+    restoring: 'Restaurando...',
 
     // Wallet home
     refresh: 'Actualizar',
     overview: 'Resumen',
     send: 'Enviar',
     receive: 'Recibir',
-    settings: 'Configuraciones',
+    settings: 'Configuración',
     amount_to_send: 'Cantidad a enviar',
-    not_enough_balance: 'Not enough balance to send that amount',
+    not_enough_balance: 'No hay saldo suficiente para enviar esa cantidad',
     send_max: 'Enviar el máximo',
     amount: 'Cantidad',
     miner_fee: 'Comisión',
     total: 'Total',
     confirmation: 'Confirmación',
-    they_receive: 'They receive',
-    recepient: 'Recepient',
-    sending: 'Sending...',
-    are_you_sure: 'Are you sure you want to send this transaction?',
+    they_receive: 'Reciben',
+    recepient: 'Destinatario',
+    sending: 'Enviando...',
+    are_you_sure: '¿Estás seguro que quieres enviar esta transacción?',
     im_sure: "Estoy seguro, enviar",
-    seed_modal: 'Recovery Words',
-    transaction: 'transaction',
-    transactions: 'transactions',
-    buy_bitcoin: 'Buy Bitcoin',
+    seed_modal: 'Frase Semilla',
+    transaction: 'transacción',
+    transactions: 'transacciones',
+    buy_bitcoin: 'Comprar Bitcoin',
 
     // Pagination
-    page: 'Page', // Displayed as 'Page 1 of 1'
-    of: 'of',
+    page: 'Página', // Displayed as 'Page 1 of 1'
+    of: 'de',
 
     // Overview
     total_balance: "Total Balance",
-    no_transactions: "You have not made any transactions yet",
-    what_to_do: "What would you like to do?",
-    date: 'Date',
+    no_transactions: "Todavía no has hecho ninguna transacción",
+    what_to_do: "¿Qué te gustaría hacer?",
+    date: 'Fecha',
     status: 'Estado',
     processing: 'Procesando',
     unconfirmed: 'Sin confirmar',
     complete: 'Completado',
 
     // Send
-    send_to: 'Send only to Bitcoin (BTC) addresses',
-    bitcoin_address: 'Bitcoin address',
+    send_to: 'Enviar solo a direcciones de Bitcoin (BTC)',
+    bitcoin_address: 'Dirección de Bitcoin',
     address: 'Dirección',
     low_priority: 'Prioridad baja',
     standard: 'Estándar',
@@ -79,17 +79,17 @@ var es = <Language> {
     low_priority_desc: "Pagas menos comisiones pero considerando que esta es una transacción de baja prioridad y no te importa esperar más tiempo para su confirmación.",
     standard_desc: "Se usará una comisión moderada aunque en momentos de gran congestión esto puede comportar un tiempo de confirmación más largo (ocurre pocas veces)",
     important_desc: "Se usará una comisión premium para asegurar la confirmación en menos de 30 minutos, esta es una transacción de alta prioridad para cuando se desea una confirmación rápida.",
-    not_enough: "You don't have enough to send that amount and also pay the network fee. Try sending your entire balance with the Send Max button instead.",
-    dust_error: "The amount you are trying to send is too small for the Bitcoin network to process.",
-    bitcoin_network_fee: "Bitcoin Network fee",
+    not_enough: "No tienes saldo suficiente para enviar esta cantidad y pagar la comisión de red. Para enviar todo el saldo disponible intenta usar el botón (Enviar el máximo).",
+    dust_error: "La cantidad que intentas enviar es demasiado pequeña para que la red Bitcoin pueda procesarla.",
+    bitcoin_network_fee: "Comisión de red",
 
     // Receive
     receive_only: 'Recibir solo Bitcoin',
-    wallet_address: 'Wallet address',
+    wallet_address: 'Dirección del monedero',
     address_below: 'a la siguiente dirección',
 
     // Settings
-    show_seed: 'Recovery',
+    show_seed: 'Recuperación',
     language: 'Idioma',
     currency: 'Moneda',
     exit_wallet: 'Salir del monedero',
@@ -100,16 +100,16 @@ var es = <Language> {
     next_button: 'Siguiente',
     ok_button: 'OK',
     copy_button: 'Copiar',
-    save_button: 'Save',
+    save_button: 'Guardar',
 
     // Notification
-    notification_title: 'Incoming Transaction',
+    notification_title: 'Transacción Entrante',
 
     // Exit wallet
-    exit_text: 'This will destroy your wallet files and all records of your transactions. The only way to restore your wallet will be through your recovery words',
-    exit_are_you_sure: 'Are you sure you want to delete and exit this wallet?',
-    exit_label_text: 'Yes, delete this wallet',
-    exit_delete: 'Delete'
+    exit_text: 'Esto eliminará los archivos del monedero y todos los registros de tus transacciones. La única forma de recuperar tu monedera será usando la frase semilla.',
+    exit_are_you_sure: '¿Estás seguro que quieres eliminar y salir de este monedero?',
+    exit_label_text: 'Sí, eliminar este monedero',
+    exit_delete: 'Eliminar'
 }
 
 export default es
