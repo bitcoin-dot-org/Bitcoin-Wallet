@@ -60,7 +60,7 @@ var es = <Language> {
     of: 'de',
 
     // Overview
-    total_balance: "Total Balance",
+    total_balance: "Saldo",
     no_transactions: "Todavía no has hecho ninguna transacción",
     what_to_do: "¿Qué te gustaría hacer?",
     date: 'Fecha',
