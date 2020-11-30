@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <aside class="sidebar">
-      <div class="balance">
+      <div class="balance pushDown">
         <div class="balance__row">
           <p class="balance__title">{{ lang.total_balance }}:</p>
           <button
@@ -529,6 +529,7 @@ export default class WalletHomeView extends Vue {
   padding: 0;
   border: none;
   background: none;
+  -webkit-app-region: no-drag;
 }
 .refresh-button:focus {
   outline: none;
@@ -561,6 +562,7 @@ export default class WalletHomeView extends Vue {
   border-left: 3px solid transparent;
   background: none;
   outline: none;
+  -webkit-app-region: no-drag;
 }
 .nav__btn.active {
   color: #FFFFFF;

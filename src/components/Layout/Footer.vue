@@ -13,6 +13,6 @@
     position: absolute;
     bottom: 0;
     width: 100%;
-    padding-bottom: 50px;
+    padding-bottom: 30px;
   }
 </style>

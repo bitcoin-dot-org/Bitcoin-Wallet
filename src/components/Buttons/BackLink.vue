@@ -22,6 +22,7 @@
     color: #DCE0E7;
     border: 1px solid #434854;
     border-radius: 2px;
+    -webkit-app-region: no-drag;
   }
   .back-link::before {
     content: "";

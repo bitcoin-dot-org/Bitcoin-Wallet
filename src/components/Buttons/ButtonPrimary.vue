@@ -34,6 +34,7 @@ export default {
     line-height: 24px;
     text-transform: uppercase;
     color: #FFFFFF;
+    -webkit-app-region: no-drag;
   }
   .btn-primary:hover:not(:disabled) {
     background: #FFA02D;

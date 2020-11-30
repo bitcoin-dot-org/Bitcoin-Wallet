@@ -143,6 +143,7 @@ export default class Onboard extends Vue {
   box-shadow: 0px 12px 28px rgba(0, 0, 0, 0.3);
   border-radius: 2px;
   text-decoration: none;
+  -webkit-app-region: no-drag;
 }
 .onboarding-link:hover {
   border: 1px solid #f7931a;
@@ -171,6 +172,7 @@ export default class Onboard extends Vue {
   display: flex;
   align-items: center;
   margin-top: 56px;
+  -webkit-app-region: no-drag;
 }
 .language-select__text {
   margin-right: 8px;

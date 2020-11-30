@@ -22,7 +22,7 @@ require('@treverix/remote/main').initialize()
 
 function createWindow () {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600, maximizable: false, resizable: false, frame: process.platform === 'darwin', webPreferences: {
+  win = new BrowserWindow({ width: 800, height: 600, frame: false, resizable: false, titleBarStyle: 'hiddenInset', maximizable: false, webPreferences: {
     // Use pluginOptions.nodeIntegration, leave this alone
     // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
     nodeIntegration: false,

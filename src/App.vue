@@ -38,7 +38,8 @@ body {
   font-size: 16px;
   -moz-osx-font-smoothing: grayscale;
 	background: linear-gradient(360deg, #090C14 0%, #1A1E29 100%);
-	color: #ACB2BB
+	color: #ACB2BB;
+  -webkit-app-region: drag;
 }
 
 
@@ -86,6 +87,10 @@ button:disabled {
 
 ::placeholder {
   color: #555B65;
+}
+
+.pushDown {
+  margin-top: 30px;
 }
 
 </style>

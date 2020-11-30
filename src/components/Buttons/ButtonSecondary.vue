@@ -28,6 +28,7 @@ export default {
     border: 1px solid #434854;
     background: none;
     border-radius: 2px;
+    -webkit-app-region: no-drag;
   }
   .btn-secondary:hover:not(:disabled) {
     border: 1px solid #ACB2BB;

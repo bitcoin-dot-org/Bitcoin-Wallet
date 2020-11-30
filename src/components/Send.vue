@@ -385,6 +385,7 @@ get btcTotalFiat() {
     border: none;
     background: #2B2F3A;
     border-radius: 2px;
+    -webkit-app-region: no-drag;
   }
   .send-max:hover {
     background: #434854;
@@ -406,6 +407,7 @@ get btcTotalFiat() {
     box-shadow: 0px 12px 28px rgba(0, 0, 0, 0.3);
     border-radius: 2px;
     cursor: pointer;
+    -webkit-app-region: no-drag;
   }
   .radio-content {
     padding: 16px;

@@ -74,6 +74,7 @@
     border: none;
     border-radius: 3px;
     background: transparent;
+    -webkit-app-region: no-drag;
   }
   .lang-button:not(.lang-button--active):hover {
     color: #F7931A;
