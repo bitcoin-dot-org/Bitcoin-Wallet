@@ -672,6 +672,7 @@ export default class WalletHomeView extends Vue {
   height: 24px;
   background: none;
   border: none;
+  -webkit-app-region: no-drag;
 }
 .modal__close:hover,
 .modal__close:focus {

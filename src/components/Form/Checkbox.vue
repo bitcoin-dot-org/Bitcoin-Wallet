@@ -21,6 +21,7 @@ export default {
     cursor: pointer;
   }
   .checkbox__input {
+    -webkit-app-region: no-drag;
     position: absolute;
     z-index: -1;
     opacity: 0;
