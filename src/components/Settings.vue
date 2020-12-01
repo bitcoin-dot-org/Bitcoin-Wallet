@@ -126,6 +126,7 @@ export default class Settings extends Vue {
 <style>
   .dropdown-wrapper {
     width: 100%;
+    -webkit-app-region: no-drag;
   }
   sp-dropdown {
     --spectrum-dropdown-height: 40px;
@@ -143,16 +144,19 @@ export default class Settings extends Vue {
     --spectrum-dropdown-placeholder-text-color: #fff;
     --spectrum-dropdown-placeholder-text-font-style: normal;
     --spectrum-dropdown-icon-color-hover: #7E858F;
+    -webkit-app-region: no-drag;
   }
   sp-popover {
     max-height: 250px;
     transform: translateY(0);
     --spectrum-popover-background-color: #090C14;
     --spectrum-popover-border-color: #2B2F3A;
+    -webkit-app-region: no-drag;
   }
   sp-menu {
     padding: 15px 0;
     border-radius: 2px;
+    -webkit-app-region: no-drag;
   }
   sp-menu-item {
     --spectrum-selectlist-option-text-color-selected: #F7931A;
@@ -162,6 +166,7 @@ export default class Settings extends Vue {
     --spectrum-selectlist-option-text-size: 14px;
     --spectrum-selectlist-option-icon-color-selected: transparent;
     --spectrum-selectlist-option-background-color-hover: #13161F;
+    -webkit-app-region: no-drag;
   }
   sp-menu-item[selected] {
     display: block;
