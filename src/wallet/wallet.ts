@@ -622,6 +622,10 @@ export class WalletDatabase extends Dexie {
                 await this.settings.put(new WalletSettings(1, language, 'USD', false))
             }
 
+            else if(navigator.language == "pt-br") {
+                await this.settings.put(new WalletSettings(1, "pt-br", 'USD', false))
+            }
+
             else {
                 await this.settings.put(new WalletSettings(1, "en", 'USD', false))
             }

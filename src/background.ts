@@ -31,6 +31,10 @@ function createWindow () {
     preload: path.join(__dirname, "preload.js")
   } })
 
+  win.webContents.on("did-finish-load", () => {
+    win!.webContents.send('user-os', process.platform)
+  })
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)

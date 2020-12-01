@@ -45,6 +45,14 @@ export default class Main extends Vue {
   }
 
   async mounted() {
+
+    // Get the OS
+    window.ipcRenderer.on('user-os', (e: any, m: string) => {
+      if(m == 'darwin') {
+        WalletHandlerModule.setIsMac(true)
+      }
+    })
+
     // We want to check if there's already settings, if not, create some with reasonable defaults
     await WalletHandlerModule.createSettingsIfNotExist();
 

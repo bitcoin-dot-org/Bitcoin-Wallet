@@ -9,7 +9,7 @@ var ca = <Language> {
     getting_started: 'Començant',
     create_new: 'Crear un nou moneder',
     create_subtext: "Crearem un nou moneder perquè puguis començar a utilitzar Bitcoin.",
-    restore_existing: 'restaurar moneder existent',
+    restore_existing: 'Restaurar moneder existent',
     restore_subtext: "Ja tens un moneder i vols utilitzar les paraules de seguretat per restaurar-lo.",
     change_language: 'Canviar idioma',
     choose_language: 'Escollir idioma',

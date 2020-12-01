@@ -35,6 +35,7 @@ export default {
     font-size: 14px;
     line-height: 20px;
     color: #FFFFFF;
+    -webkit-app-region: no-drag;
   }
   .input:focus {
     border: 1px solid #555B65;

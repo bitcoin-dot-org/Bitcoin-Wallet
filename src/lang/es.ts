@@ -9,7 +9,7 @@ var es = <Language> {
     getting_started: 'Empezando',
     create_new: 'Crear nuevo monedero',
     create_subtext: "Vamos a crear un nuevo monedero para que puedas empezar a usar Bitcoin.",
-    restore_existing: 'restaurar monedero existente',
+    restore_existing: 'Restaurar monedero existente',
     restore_subtext: "Ya tienes un monedero y quieres usar la frase semilla para restaurarlo.",
     change_language: 'Cambiar idioma',
     choose_language: 'Escoger idioma',

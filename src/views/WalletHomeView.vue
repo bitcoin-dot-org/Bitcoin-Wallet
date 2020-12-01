@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <aside class="sidebar">
-      <div class="balance pushDown">
+      <div :class="['balance', isMac ? 'pushDown' : '']">
         <div class="balance__row">
           <p class="balance__title">{{ lang.total_balance }}:</p>
           <button
@@ -268,6 +268,8 @@ export default class WalletHomeView extends Vue {
 
   // Delete modal
   private deleteModal = false
+
+  private isMac = WalletHandlerModule.isMac
 
   // Transaction modal
   private transactionModalShowing = false;

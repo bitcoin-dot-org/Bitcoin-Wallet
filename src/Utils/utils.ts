@@ -19,6 +19,10 @@ export default class Utils {
         else if(l == "ca") {
            return 'Catalan'
         }
+
+        else if(l == "pt-br") {
+          return 'Português Brasil'
+        }
     
         else {
           return 'English'
@@ -45,6 +49,10 @@ export default class Utils {
         
         else if(l == "Catalan") {
            return 'ca'
+        }
+
+        else if(l == 'Português Brasil') {
+          return 'pt-br'
         }
     
         else {

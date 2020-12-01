@@ -131,6 +131,7 @@ export default class Overview extends Vue {
     border: none;
     width: 32px;
     height: 32px;
+    -webkit-app-region: no-drag;
   }
   .pagination__button:focus,
   .pagination__button:hover {

@@ -30,7 +30,7 @@
   @Component({ components: { PageTitle, Screen, Footer, ButtonPrimary, BackLink } })
   export default class ChooseLanguage extends Vue {
     private lang = WalletHandlerModule.currentLanguage;
-    private languages = ["English", "Español", "Catalan", "Français", "日本語"]
+    private languages = ["English", "Español", "Catalan", "Français", 'Português Brasil', "日本語"]
     private selectedIndex = this.languages.findIndex((l) => l == Utils.languageBigName(WalletHandlerModule.settings.language))
 
     saveButtonClicked() {

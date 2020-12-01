@@ -6,6 +6,7 @@ import es from '@/lang/es'
 import fr from '@/lang/fr'
 import ja from '@/lang/ja'
 import ca from '@/lang/ca'
+import pt_br from '@/lang/pt_br'
 import store from '@/store'
 import BigNumber from 'bignumber.js'
 
@@ -32,6 +33,7 @@ class WalletHandlerModule extends VuexModule {
   settings = new WalletSettings(1, 'en', 'USD', false)
   currentLanguage = en
   restoring = false
+  isMac = false
 
 
   @Mutation
@@ -47,6 +49,11 @@ class WalletHandlerModule extends VuexModule {
   @Mutation
   setWallet(w: Wallet) {
     this.wallet = w
+  }
+
+  @Mutation
+  setIsMac(mac: boolean) {
+    this.isMac = mac
   }
 
   @Mutation
@@ -147,6 +154,10 @@ class WalletHandlerModule extends VuexModule {
     
     if(lang == "Catalan" || lang == "ca") {
        this.currentLanguage = ca
+    }
+
+    if(lang == "Português Brasil" || lang == "pt-br") {
+      this.currentLanguage = pt_br
     }
 
   }

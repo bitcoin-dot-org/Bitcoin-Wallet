@@ -59,6 +59,7 @@ import 'moment/locale/es';
 import 'moment/locale/ca';
 import 'moment/locale/fr';
 import 'moment/locale/ja';
+import 'moment/locale/pt-br';
 
 /* eslint-disable no-unused-vars */
 import Language from "@/lang/langInterface";
