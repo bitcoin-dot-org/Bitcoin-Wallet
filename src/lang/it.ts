@@ -4,7 +4,7 @@ import Language from '@/lang/langInterface'
 
 /* eslint-enable no-unused-vars */
 
-var en = <Language> {
+var it = <Language> {
     // Initial page
     getting_started: 'Iniziare',
     create_new: 'Crea un nuovo wallet',
@@ -112,4 +112,4 @@ var en = <Language> {
     exit_delete: 'Elimina'
 }
 
-export default en
+export default it
