@@ -7,6 +7,7 @@ import fr from '@/lang/fr'
 import ja from '@/lang/ja'
 import ca from '@/lang/ca'
 import pt_br from '@/lang/pt_br'
+import it from '@/lang/it'
 import store from '@/store'
 import BigNumber from 'bignumber.js'
 
@@ -150,6 +151,11 @@ class WalletHandlerModule extends VuexModule {
     
     if(lang == "日本語" || lang == "ja") {
       this.currentLanguage = ja 
+    
+    }
+
+    if(lang == "Italiano" || lang == "it") {
+      this.currentLanguage = it
     }
     
     if(lang == "Catalan" || lang == "ca") {
@@ -269,6 +275,12 @@ class WalletHandlerModule extends VuexModule {
     await WalletDB.changeLanguage(l)
     await this.fetchSettings()
     this.context.commit('setCurrentLanguage', l)
+  }
+
+  @Action
+  async changeMultiDeviceSupport(enabled: boolean) {
+    await WalletDB.changeMultiDeviceSupport(enabled)
+    await this.fetchSettings()
   }
 
   @Action

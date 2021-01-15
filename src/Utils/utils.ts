@@ -15,6 +15,10 @@ export default class Utils {
         else if(l == "ja") {
           return '日本語'
         }
+
+        else if(l == "it") {
+          return 'Italiano'
+        }
         
         else if(l == "ca") {
            return 'Catalan'
@@ -45,6 +49,10 @@ export default class Utils {
         
         else if(l == "日本語") {
           return 'ja'
+        }
+
+        else if(l == "Italiano") {
+          return 'it'
         }
         
         else if(l == "Catalan") {

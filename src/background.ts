@@ -25,7 +25,7 @@ function createWindow () {
   win = new BrowserWindow({ width: 800, height: 600, frame: false, resizable: false, titleBarStyle: 'hiddenInset', maximizable: false, webPreferences: {
     // Use pluginOptions.nodeIntegration, leave this alone
     // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-    nodeIntegration: false,
+    nodeIntegration: true,
     enableRemoteModule: true,
     // preload: `${__dirname}/preload.js`,
     preload: path.join(__dirname, "preload.js")

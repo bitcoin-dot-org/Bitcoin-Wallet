@@ -28,6 +28,17 @@
           </sp-dropdown>
         </div>
       </Label>
+      <Label class="settings-label">
+        Support multiple devices
+        <div>
+          <sp-dropdown class="dropdown-wrapper" :label="module.settings.multiDeviceSupport ? 'Yes' : 'No'">
+            <sp-menu >
+              <sp-menu-item v-on:click="changeMultiDeviceSupport(true)">Yes</sp-menu-item>
+              <sp-menu-item v-on:click="changeMultiDeviceSupport(false)">No</sp-menu-item>
+            </sp-menu>
+          </sp-dropdown>
+        </div>
+      </Label>
     </DashboardContent>
 
     <Footer>
@@ -91,7 +102,7 @@ export default class Settings extends Vue {
     "TWD",
   ].filter((c) => c != this.module.settings.currency);
 
-  private languages = ["English", "Español", "Catalan", "Français", "Português Brasil", "日本語"].filter((l) => l != Utils.languageBigName(this.module.settings.language))
+  private languages = ["English", "Español", "Catalan", "Français", "Italiano", "Português Brasil", "日本語"].filter((l) => l != Utils.languageBigName(this.module.settings.language))
 
   mounted() {
     this.languages = [this.languageBigName(this.module.settings.language)].concat(this.languages)
@@ -101,6 +112,10 @@ export default class Settings extends Vue {
   async currencySelected(index: number) {
     await WalletHandlerModule.changeCurrency(this.currencies[index]);
     this.$emit("currency-changed");
+  }
+
+  async changeMultiDeviceSupport(enabled : boolean) {
+    await WalletHandlerModule.changeMultiDeviceSupport(enabled)
   }
 
   async languageSelected(index: number) {

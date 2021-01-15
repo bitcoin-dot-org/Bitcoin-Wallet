@@ -331,7 +331,7 @@ export default class WalletHomeView extends Vue {
     }
 
     else {
-      await this.syncWallet(false)
+      await this.syncWallet(true)
       this.timer = setInterval(this.doSmallSync, 600000);
     }
 
@@ -403,8 +403,7 @@ export default class WalletHomeView extends Vue {
     this.balance = this.balance.minus(new BigNumber(this.total));
 
     // Displays the new transaction on our table
-
-    let tx = new Transaction(this.hash, "-" + this.total, 0, new Date(), false)
+    let tx = new Transaction(this.hash, "-" + (this.sendingMax ? new BigNumber(this.btcAmount).toString() : this.total), 0, new Date(), false)
 
     this.unconfirmedTransactions.push(tx)
 

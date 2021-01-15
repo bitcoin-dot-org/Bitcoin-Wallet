@@ -8,7 +8,7 @@
       <Label>
         {{ language.wallet_address }}
         <div class="input-wrapper">
-          <Input type="text" name="field" :value="address" disabled />
+          <Input type="text" name="field" :value="this.address.split('bitcoin:')[1]" disabled />
           <button class="copy-button" v-on:click="copyAddress()">
             <img src="../assets/images/copy.svg" alt="Copy">
           </button>
@@ -44,11 +44,11 @@ export default class Overview extends Vue {
   @Prop() language! : Language
 
   get address() {
-    return WalletHandlerModule.nextFreeExternalAddress
+    return 'bitcoin:' + WalletHandlerModule.nextFreeExternalAddress
   }
 
   copyAddress() {
-    navigator.clipboard.writeText(this.address)
+    navigator.clipboard.writeText(this.address.split('bitcoin:')[1])
   }
 }
 

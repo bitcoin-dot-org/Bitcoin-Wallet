@@ -44,7 +44,7 @@ export default class Overview extends Vue {
   @Prop() language!: Language;
   private zero = new BigNumber(0);
   private currentPage = 1;
-  private itemsPerPage = 6;
+  private itemsPerPage = 7;
 
   previousPage() {
     this.currentPage = this.currentPage - 1;
