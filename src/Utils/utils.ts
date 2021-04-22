@@ -27,6 +27,10 @@ export default class Utils {
         else if(l == "pt-br") {
           return 'Português Brasil'
         }
+        
+        else if(l == "tr") {
+          return 'Türkçe'
+        }
     
         else {
           return 'English'
@@ -61,6 +65,10 @@ export default class Utils {
 
         else if(l == 'Português Brasil') {
           return 'pt-br'
+        }
+          
+        else if(l == "Türkçe") {
+          return 'tr'
         }
     
         else {
