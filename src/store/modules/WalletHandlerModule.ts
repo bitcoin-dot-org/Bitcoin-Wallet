@@ -8,6 +8,7 @@ import ja from '@/lang/ja'
 import ca from '@/lang/ca'
 import pt_br from '@/lang/pt_br'
 import it from '@/lang/it'
+import tr from '@/lang/tr'
 import store from '@/store'
 import BigNumber from 'bignumber.js'
 
@@ -164,6 +165,10 @@ class WalletHandlerModule extends VuexModule {
 
     if(lang == "Português Brasil" || lang == "pt-br") {
       this.currentLanguage = pt_br
+    }
+    
+    if(lang == "Türkçe" || lang == "tr") {
+      this.currentLanguage = tr
     }
 
   }
