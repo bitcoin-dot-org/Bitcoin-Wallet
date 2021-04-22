@@ -166,6 +166,10 @@ class WalletHandlerModule extends VuexModule {
     if(lang == "Português Brasil" || lang == "pt-br") {
       this.currentLanguage = pt_br
     }
+    
+    if(lang == "Türkçe" || lang == "tr") {
+      this.currentLanguage = tr
+    }
 
   }
 
