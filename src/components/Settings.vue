@@ -102,7 +102,7 @@ export default class Settings extends Vue {
     "TWD",
   ].filter((c) => c != this.module.settings.currency);
 
-  private languages = ["English", "Español", "Catalan", "Français", "Italiano", "Português Brasil", "日本語"].filter((l) => l != Utils.languageBigName(this.module.settings.language))
+  private languages = ["English", "Español", "Catalan", "Français", "Italiano", "Português Brasil", "日本語", "中文-简体"].filter((l) => l != Utils.languageBigName(this.module.settings.language))
 
   mounted() {
     this.languages = [this.languageBigName(this.module.settings.language)].concat(this.languages)

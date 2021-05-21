@@ -27,7 +27,11 @@ export default class Utils {
         else if(l == "pt-br") {
           return 'Português Brasil'
         }
-    
+
+        else if(l == 'zh-cn') {
+          return '中文-简体'
+        }
+
         else {
           return 'English'
         }
@@ -62,7 +66,11 @@ export default class Utils {
         else if(l == 'Português Brasil') {
           return 'pt-br'
         }
-    
+
+        else if(l == '中文-简体') {
+          return 'zh-cn'
+        }
+
         else {
           return 'en'
         }
